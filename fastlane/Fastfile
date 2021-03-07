@@ -1,0 +1,21 @@
+
+platform :ios do
+  desc 'Push a new beta build to TestFlight'
+  lane :beta do
+    xcversion(version: '~> 12.4')
+
+    match(type: 'appstore')
+
+    UI.message("Build flutter library")
+    Dir.chdir('..') do
+      sh 'fvm flutter clean'
+      sh 'fvm flutter doctor'
+      sh 'fvm flutter pub get'
+      sh 'fvm flutter build ios --release --no-codesign'
+    end
+
+    build_app(workspace: 'ios/Runner.xcworkspace', scheme: 'Runner')
+
+    upload_to_testflight
+  end
+end
