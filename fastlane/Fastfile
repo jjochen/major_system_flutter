@@ -23,15 +23,27 @@ end
 platform :android do
   desc "Submit a new Beta Build to Crashlytics Beta"
   lane :beta do
-    gradle(task: "clean assembleRelease")
+    UI.message("Build flutter library")
+    Dir.chdir('..') do
+      sh 'fvm flutter clean'
+      sh 'fvm flutter doctor'
+      sh 'fvm flutter pub get'
+      sh 'fvm flutter build appbundle'
+    end
 
-    upload_to_play_store(track: 'beta')
+    upload_to_play_store(track: 'beta', aab: 'build/app/outputs/bundle/release/app-release.aab')
   end
 
   desc "Deploy a new version to the Google Play"
   lane :release do
-    gradle(task: "clean assembleRelease")
+    UI.message("Build flutter library")
+    Dir.chdir('..') do
+      sh 'fvm flutter clean'
+      sh 'fvm flutter doctor'
+      sh 'fvm flutter pub get'
+      sh 'fvm flutter build appbundle'
+    end
 
-    upload_to_play_store
+    upload_to_play_store(track: 'production', aab: 'build/app/outputs/bundle/release/app-release.aab')
   end
 end
