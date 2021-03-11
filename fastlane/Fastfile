@@ -6,13 +6,11 @@ platform :ios do
 
     match(type: 'appstore')
 
-    UI.message("Build flutter library")
-    Dir.chdir('..') do
-      sh 'fvm flutter clean'
-      sh 'fvm flutter doctor'
-      sh 'fvm flutter pub get'
-      sh 'fvm flutter build ios --release --no-codesign'
-    end
+    UI.message('Build flutter library')
+    run_flutter_command('clean')
+    run_flutter_command('doctor')
+    run_flutter_command('pub get')
+    run_flutter_command('build ios --release --no-codesign')
 
     build_app(workspace: 'ios/Runner.xcworkspace', scheme: 'Runner')
 
@@ -21,29 +19,22 @@ platform :ios do
 end
 
 platform :android do
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
-    UI.message("Build flutter library")
-    Dir.chdir('..') do
-      sh 'fvm flutter clean'
-      sh 'fvm flutter doctor'
-      sh 'fvm flutter pub get'
-      sh 'fvm flutter build appbundle'
-    end
+  desc "Submit a new version to the Google Play with given track"
+  lane :submit do |options|
+    UI.message('Build flutter library')
+    run_flutter_command('clean')
+    run_flutter_command('doctor')
+    run_flutter_command('pub get')
+    run_flutter_command('build appbundle')
 
-    upload_to_play_store(track: 'beta', aab: 'build/app/outputs/bundle/release/app-release.aab')
+    track = options['track'] || 'internal'
+    upload_to_play_store(track: track, aab: 'build/app/outputs/bundle/release/app-release.aab')
   end
+end
 
-  desc "Deploy a new version to the Google Play"
-  lane :release do
-    UI.message("Build flutter library")
-    Dir.chdir('..') do
-      sh 'fvm flutter clean'
-      sh 'fvm flutter doctor'
-      sh 'fvm flutter pub get'
-      sh 'fvm flutter build appbundle'
-    end
 
-    upload_to_play_store(track: 'production', aab: 'build/app/outputs/bundle/release/app-release.aab')
+def run_flutter_command(command)
+  Dir.chdir('..') do
+    sh "fvm flutter #{ command }"
   end
 end
