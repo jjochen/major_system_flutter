@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.major_system">
+    package="com.jochenpfeiffer.majorsystem2">
    <application
-        android:label="major_system"
+        android:label="Major System 2"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -38,4 +38,7 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <uses-permission 
+      android:name="android.permission.INTERNET" 
+      />
 </manifest>

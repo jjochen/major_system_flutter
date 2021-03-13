@@ -1,0 +1,40 @@
+
+platform :ios do
+  desc 'Push a new beta build to TestFlight'
+  lane :beta do
+    xcversion(version: '~> 12.4')
+
+    match(type: 'appstore')
+
+    UI.message('Build flutter library')
+    run_flutter_command('clean')
+    run_flutter_command('doctor')
+    run_flutter_command('pub get')
+    run_flutter_command('build ios --release --no-codesign')
+
+    build_app(workspace: 'ios/Runner.xcworkspace', scheme: 'Runner')
+
+    upload_to_testflight
+  end
+end
+
+platform :android do
+  desc "Submit a new version to the Google Play with given track"
+  lane :submit do |options|
+    UI.message('Build flutter library')
+    run_flutter_command('clean')
+    run_flutter_command('doctor')
+    run_flutter_command('pub get')
+    run_flutter_command('build appbundle')
+
+    track = options['track'] || 'internal'
+    upload_to_play_store(track: track, aab: 'build/app/outputs/bundle/release/app-release.aab')
+  end
+end
+
+
+def run_flutter_command(command)
+  Dir.chdir('..') do
+    sh "fvm flutter #{ command }"
+  end
+end
