@@ -12,7 +12,7 @@ class Number extends Equatable {
   Number(this.id, this.numberOfDigits, this.value);
 
   @override
-  List<Object?> get props => [numberOfDigits, value];
+  List<Object?> get props => [id, numberOfDigits, value];
 
   @override
   bool? get stringify => true;

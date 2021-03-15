@@ -9,7 +9,7 @@ class NumberEntity extends Equatable {
   NumberEntity(this.id, this.numberOfDigits, this.value);
 
   @override
-  List<Object?> get props => [numberOfDigits, value];
+  List<Object?> get props => [id, numberOfDigits, value];
 
   @override
   bool? get stringify => true;

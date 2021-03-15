@@ -31,7 +31,7 @@ jobs:
         run: flutter pub get
 
       - name: Verify formatting
-        run: flutter format --line-length 120 --set-exit-if-changed .
+        run: flutter format --dry-run --line-length 120 --set-exit-if-changed .
 
       - name: Analyze project source (type checking, etc)
         run: flutter analyze
