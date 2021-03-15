@@ -11,8 +11,10 @@ on:
 
 jobs:
   build:
+    defaults:
+      run:
+        working-directory: packages/nubers_repository
     runs-on: ubuntu-latest
-    working-directory: packages/numbers_repository
 
     steps:
       - uses: actions/checkout@v2
