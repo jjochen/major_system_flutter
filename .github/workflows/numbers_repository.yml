@@ -16,7 +16,7 @@ jobs:
   build:
     defaults:
       run:
-        working-directory: packages/nubers_repository
+        working-directory: packages/numbers_repository
     runs-on: ubuntu-latest
 
     steps:
