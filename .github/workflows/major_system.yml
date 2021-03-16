@@ -44,6 +44,7 @@ jobs:
         with:
           path: ./coverage/lcov.info
           min_coverage: 90
+          exclude: ./packages/**/*
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1

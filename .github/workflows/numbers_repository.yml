@@ -25,7 +25,7 @@ jobs:
       - name: Install flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: 'stable'
+          channel: stable
 
       - name: Print Flutter/Dart version
         run: flutter --version
@@ -40,32 +40,18 @@ jobs:
         run: flutter analyze
 
       - name: Run tests
-        run: flutter test --coverage --no-pub --test-randomize-ordering-seed random
+        run: flutter test --coverage
 
-      - name: 'Ensure 90% test coverage'
+      - name: Ensure 90% test coverage
         uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
         with:
-          path: "./coverage/lcov.info"
+          path: ./packages/numbers_repository/coverage/lcov.info
           min_coverage: 90
-          exclude: "**/*_observer.dart **/change.dart"
 
-      - name: Install lcov (for `genhtml`)
-        run: sudo apt-get install lcov
-
-      - name: Generate HTML coverage page
-        run: genhtml -o cov-output coverage/lcov.info
-
-      - name: Zip up cov-output
-        run: zip -r html-coverage.zip cov-output/
-
-      - name: Upload test coverage info
-        uses: actions/upload-artifact@v2
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
         with:
-          name: lcov.info
-          path: coverage/lcov.info
-
-      - name: Upload HTML coverage report
-        uses: actions/upload-artifact@v2
-        with:
-          name: html-coverage
-          path: html-coverage.zip
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          path_to_write_report: ./packages/numbers_repository/coverage/codecov_report.txt
+          verbose: true
