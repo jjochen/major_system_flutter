@@ -15,6 +15,13 @@ void main() {
       );
     });
 
+    test('uses stringify', () {
+      expect(
+        Number(id, numberOfDigits, value).toString(),
+        'Number(mock-id, 3, 42)',
+      );
+    });
+
     test('copies with new id', () {
       final newId = 'new-id';
       expect(

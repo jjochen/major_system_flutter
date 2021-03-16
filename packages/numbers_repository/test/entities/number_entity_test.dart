@@ -14,6 +14,13 @@ void main() {
       );
     });
 
+    test('uses stringify', () {
+      expect(
+        NumberEntity(id, numberOfDigits, value).toString(),
+        'NumberEntity(mock-id, 2, 23)',
+      );
+    });
+
     test('from json', () {
       final json = {
         'id': id,
