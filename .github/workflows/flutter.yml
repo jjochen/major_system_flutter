@@ -2,12 +2,15 @@ name: Flutter
 
 on:
   push:
-    branches: main
+    branches: [main]
+
   pull_request:
-    branches: main
+    branches: [main]
 
   schedule:
     - cron: '0 9 * * 5'
+
+  workflow_dispatch:
 
 jobs:
   build:
@@ -19,7 +22,7 @@ jobs:
       - name: Install flutter
         uses: subosito/flutter-action@v1
         with:
-          channel: 'stable'
+          channel: stable
 
       - name: Print Flutter/Dart version
         run: flutter --version
@@ -36,13 +39,11 @@ jobs:
       - name: Run tests
         run: flutter test --coverage
 
-      - name: 'Ensure 90% test coverage'
+      - name: Ensure 90% test coverage
         uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
         with:
-          path: "./coverage/lcov.info"
+          path: ./coverage/lcov.info
           min_coverage: 90
-          exclude: "**/*_observer.dart **/change.dart"
-
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
