@@ -9,7 +9,11 @@ class Number extends Equatable {
   final int numberOfDigits;
   final int value;
 
-  Number(this.id, this.numberOfDigits, this.value);
+  Number({
+    required this.id,
+    required this.numberOfDigits,
+    required this.value,
+  });
 
   @override
   List<Object?> get props => [id, numberOfDigits, value];
@@ -19,17 +23,25 @@ class Number extends Equatable {
 
   Number copyWith({String? id, int? numberOfDigits, int? value}) {
     return Number(
-      id ?? this.id,
-      numberOfDigits ?? this.numberOfDigits,
-      value ?? this.value,
+      id: id ?? this.id,
+      numberOfDigits: numberOfDigits ?? this.numberOfDigits,
+      value: value ?? this.value,
     );
   }
 
   factory Number.fromEntity(NumberEntity entity) {
-    return Number(entity.id, entity.numberOfDigits, entity.value);
+    return Number(
+      id: entity.id,
+      numberOfDigits: entity.numberOfDigits,
+      value: entity.value,
+    );
   }
 
   NumberEntity toEntity() {
-    return NumberEntity(id, numberOfDigits, value);
+    return NumberEntity(
+      id: id,
+      numberOfDigits: numberOfDigits,
+      value: value,
+    );
   }
 }

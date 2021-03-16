@@ -10,14 +10,26 @@ void main() {
 
     test('uses value equality', () {
       expect(
-        Number(id, numberOfDigits, value),
-        Number(id, numberOfDigits, value),
+        Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ),
+        Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ),
       );
     });
 
     test('uses stringify', () {
       expect(
-        Number(id, numberOfDigits, value).toString(),
+        Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ).toString(),
         'Number(mock-id, 3, 42)',
       );
     });
@@ -25,38 +37,78 @@ void main() {
     test('copies with new id', () {
       final newId = 'new-id';
       expect(
-        Number(id, numberOfDigits, value).copyWith(id: newId),
-        Number(newId, numberOfDigits, value),
+        Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ).copyWith(id: newId),
+        Number(
+          id: newId,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ),
       );
     });
 
     test('copies with new number of digits', () {
       final newNumberOfDigits = 2;
       expect(
-        Number(id, numberOfDigits, value).copyWith(numberOfDigits: newNumberOfDigits),
-        Number(id, newNumberOfDigits, value),
+        Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ).copyWith(numberOfDigits: newNumberOfDigits),
+        Number(
+          id: id,
+          numberOfDigits: newNumberOfDigits,
+          value: value,
+        ),
       );
     });
 
     test('copies with new value', () {
       final newValue = 99;
       expect(
-        Number(id, numberOfDigits, value).copyWith(value: newValue),
-        Number(id, numberOfDigits, newValue),
+        Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ).copyWith(value: newValue),
+        Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: newValue,
+        ),
       );
     });
 
     test('model to entity', () {
       expect(
-        Number(id, numberOfDigits, value).toEntity(),
-        NumberEntity(id, numberOfDigits, value),
+        Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ).toEntity(),
+        NumberEntity(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ),
       );
     });
 
     test('model from entity', () {
       expect(
-        Number.fromEntity(NumberEntity(id, numberOfDigits, value)),
-        Number(id, numberOfDigits, value),
+        Number.fromEntity(NumberEntity(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        )),
+        Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ),
       );
     });
   });

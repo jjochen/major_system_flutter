@@ -9,14 +9,26 @@ void main() {
 
     test('uses value equality', () {
       expect(
-        NumberEntity(id, numberOfDigits, value),
-        NumberEntity(id, numberOfDigits, value),
+        NumberEntity(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ),
+        NumberEntity(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ),
       );
     });
 
     test('uses stringify', () {
       expect(
-        NumberEntity(id, numberOfDigits, value).toString(),
+        NumberEntity(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ).toString(),
         'NumberEntity(mock-id, 2, 23)',
       );
     });
@@ -29,7 +41,11 @@ void main() {
       };
       expect(
         NumberEntity.fromJson(json),
-        NumberEntity(id, numberOfDigits, value),
+        NumberEntity(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ),
       );
     });
 
@@ -40,7 +56,11 @@ void main() {
         'value': value,
       };
       expect(
-        NumberEntity(id, numberOfDigits, value).toJson(),
+        NumberEntity(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ).toJson(),
         json,
       );
     });
@@ -51,7 +71,11 @@ void main() {
         'value': value,
       };
       expect(
-        NumberEntity(id, numberOfDigits, value).toDocument(),
+        NumberEntity(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+        ).toDocument(),
         document,
       );
     });
