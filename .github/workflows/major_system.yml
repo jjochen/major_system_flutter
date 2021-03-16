@@ -39,13 +39,6 @@ jobs:
       - name: Run tests
         run: flutter test --coverage
 
-      - name: Ensure 90% test coverage
-        uses: VeryGoodOpenSource/very_good_coverage@v1.1.1
-        with:
-          path: ./coverage/lcov.info
-          min_coverage: 90
-          exclude: ./packages/**/*
-
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
