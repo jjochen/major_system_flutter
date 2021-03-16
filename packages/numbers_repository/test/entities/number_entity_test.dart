@@ -1,3 +1,4 @@
+import 'package:numbers_repository/numbers_repository.dart';
 import 'package:numbers_repository/src/entities/entities.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -42,6 +43,17 @@ void main() {
       expect(
         NumberEntity(id, numberOfDigits, value).toJson(),
         json,
+      );
+    });
+
+    test('to document', () {
+      final document = {
+        'number_of_digits': numberOfDigits,
+        'value': value,
+      };
+      expect(
+        NumberEntity(id, numberOfDigits, value).toDocument(),
+        document,
       );
     });
   });

@@ -8,12 +8,6 @@
             "name": "major_system_flutter",
             "request": "launch",
             "type": "dart"
-        },
-        {
-            "name": "numbers_repository",
-            "cwd": "numbers_repository",
-            "request": "launch",
-            "type": "dart"
         }
     ]
 }
