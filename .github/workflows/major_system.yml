@@ -1,4 +1,4 @@
-name: Flutter
+name: major_system
 
 on:
   push:
