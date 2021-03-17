@@ -20,6 +20,7 @@ jobs:
           [
             '.',
             'packages/numbers_repository',
+            'packages/authentication_repository',
           ]
       fail-fast: false
     runs-on: ubuntu-latest
