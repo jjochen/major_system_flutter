@@ -11,31 +11,7 @@ import 'authentication_repository_test.mocks.dart';
 const _mockFirebaseUserUid = 'mock-uid';
 const _mockFirebaseUserEmail = 'mock-email';
 
-class FakeUserCredential extends Fake implements firebase_auth.UserCredential {}
-
-// class MockFirebaseAuth extends Mock implements firebase_auth.FirebaseAuth {
-//   @override
-//   Future<firebase_auth.UserCredential> signInWithCredential(firebase_auth.AuthCredential? credential) async =>
-//       (super.noSuchMethod(Invocation.method(#signInWithCredential, [credential]),
-//           returnValue: Future.value(_FakeUserCredential())) as Future<firebase_auth.UserCredential>);
-// //   @override
-// //   Future<firebase_auth.UserCredential> signInWithCredential(firebase_auth.AuthCredential? credential) async =>
-// //       super.noSuchMethod(Invocation.method(#signInWithCredential, [credential]));
-// }
-
-// class MockFirebaseUser extends Mock implements firebase_auth.User {
-//   @override
-//   String get uid => _mockFirebaseUserUid;
-
-//   @override
-//   String get email => _mockFirebaseUserEmail;
-// }
-
-// class MockGoogleSignIn extends Mock implements GoogleSignIn {}
-
-// class MockGoogleSignInAccount extends Mock implements GoogleSignInAccount {}
-
-// class MockGoogleSignInAuthentication extends Mock implements GoogleSignInAuthentication {}
+class _FakeUserCredential extends Fake implements firebase_auth.UserCredential {}
 
 @GenerateMocks([
   firebase_auth.FirebaseAuth,
@@ -114,7 +90,7 @@ void main() {
         when(mockFirebaseAuth.createUserWithEmailAndPassword(
           email: anyNamed('email'),
           password: anyNamed('password'),
-        )).thenAnswer((_) async => FakeUserCredential());
+        )).thenAnswer((_) async => _FakeUserCredential());
       });
 
       test('calls createUserWithEmailAndPassword', () async {
@@ -155,7 +131,7 @@ void main() {
         when(
           mockGoogleSignIn.signIn(),
         ).thenAnswer((_) async => googleSignInAccount);
-        when(mockFirebaseAuth.signInWithCredential(any)).thenAnswer((_) async => FakeUserCredential());
+        when(mockFirebaseAuth.signInWithCredential(any)).thenAnswer((_) async => _FakeUserCredential());
       });
 
       test('calls signIn authentication, and signInWithCredential', () async {
@@ -182,7 +158,7 @@ void main() {
         when(mockFirebaseAuth.signInWithEmailAndPassword(
           email: anyNamed('email'),
           password: anyNamed('password'),
-        )).thenAnswer((_) async => FakeUserCredential());
+        )).thenAnswer((_) async => _FakeUserCredential());
       });
 
       test('calls signInWithEmailAndPassword', () async {
