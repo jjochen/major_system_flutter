@@ -4,7 +4,12 @@ import 'package:numbers_repository/numbers_repository.dart';
 import 'entities/entities.dart';
 
 class FirebaseNumbersRepository implements NumbersRepository {
-  final numberCollection = FirebaseFirestore.instance.collection('numbers');
+  FirebaseNumbersRepository({FirebaseFirestore? firestore}) : _firestore = firestore ?? FirebaseFirestore.instance;
+
+  final FirebaseFirestore _firestore;
+
+  CollectionReference? _numberCollection;
+  CollectionReference get numberCollection => _numberCollection ??= _firestore.collection('numbers');
 
   @override
   Future<void> addNewNumber(Number number) {
