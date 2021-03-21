@@ -7,12 +7,11 @@ import 'package:mockito/annotations.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 import 'firebase_numbers_repository_test.mocks.dart';
 
-//class _FakeDocumentReference extends Fake implements DocumentReference {}
-
 @GenerateMocks([
   FirebaseFirestore,
   CollectionReference,
   QuerySnapshot,
+  QueryDocumentSnapshot,
   DocumentReference,
 ])
 void main() {
@@ -94,6 +93,26 @@ void main() {
       verify(mockDocumentReference.delete()).called(1);
     });
 
+    // Stream<List<Number>> numbers() {
+    //   return numberCollection.snapshots().map((snapshot) {
+    //     return snapshot.docs.map((doc) => Number.fromEntity(NumberEntity.fromSnapshot(doc))).toList();
+    //   });
+    // }
+
+    // test('fetches stream of numbers', () async {
+    //   var queryDocumentSnapshot = MockQueryDocumentSnapshot();
+    //   when(queryDocumentSnapshot.id).thenReturn(id);
+    //   var querySnapshot = MockQuerySnapshot();
+    //   when(querySnapshot.docs).thenReturn([queryDocumentSnapshot]);
+    //   var stream = MockQuerySnapshotStream();
+    //   when(stream.listen(any)).thenAnswer((Invocation invocation) {
+    //     var callback = invocation.positionalArguments.single;
+    //     callback(querySnapshot);
+    //   });
+
+    //   await expectLater(firebaseNumbersRepository.numbers(), emitsInOrder([number]));
+    // });
+
     test('calls update', () async {
       final mockDocumentReference = MockDocumentReference();
       when(mockNumberCollection.doc(id)).thenReturn(mockDocumentReference);
@@ -105,3 +124,5 @@ void main() {
     });
   });
 }
+
+class MockQuerySnapshotStream extends Mock implements Stream<QuerySnapshot> {}

@@ -244,6 +244,27 @@ class MockQuerySnapshot extends _i1.Mock implements _i4.QuerySnapshot {
   int get size => (super.noSuchMethod(Invocation.getter(#size), returnValue: 0) as int);
 }
 
+/// A class which mocks [QueryDocumentSnapshot].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockQueryDocumentSnapshot extends _i1.Mock implements _i4.QueryDocumentSnapshot {
+  MockQueryDocumentSnapshot() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  bool get exists => (super.noSuchMethod(Invocation.getter(#exists), returnValue: false) as bool);
+  @override
+  String get id => (super.noSuchMethod(Invocation.getter(#id), returnValue: '') as String);
+  @override
+  _i4.DocumentReference get reference =>
+      (super.noSuchMethod(Invocation.getter(#reference), returnValue: _FakeDocumentReference())
+          as _i4.DocumentReference);
+  @override
+  _i4.SnapshotMetadata get metadata =>
+      (super.noSuchMethod(Invocation.getter(#metadata), returnValue: _FakeSnapshotMetadata()) as _i4.SnapshotMetadata);
+}
+
 /// A class which mocks [DocumentReference].
 ///
 /// See the documentation for Mockito's code generation for more information.
