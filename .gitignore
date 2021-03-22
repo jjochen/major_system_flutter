@@ -1,14 +1,20 @@
 ### Custom ###
+
 # account related fastlane config
 fastlane/Appfile
 fastlane/Matchfile
+
 # build output
 *.dSYM.zip
 *.ipa
 
+# Google Firebase / Firestore related
+**/ios/Runner/GoogleService-Info.plist
+**/android/app/google-services.json
 
-# Created by https://www.toptal.com/developers/gitignore/api/xcode,android,flutter,fastlane,androidstudio,visualstudiocode,intellij
-# Edit at https://www.toptal.com/developers/gitignore?templates=xcode,android,flutter,fastlane,androidstudio,visualstudiocode,intellij
+
+# Created by https://www.toptal.com/developers/gitignore/api/xcode,android,flutter,fastlane,intellij,androidstudio,visualstudiocode,firebase
+# Edit at https://www.toptal.com/developers/gitignore?templates=xcode,android,flutter,fastlane,intellij,androidstudio,visualstudiocode,firebase
 
 ### Android ###
 # Built application files
@@ -124,6 +130,15 @@ fastlane/screenshots/screenshots.html
 
 # Fastlane.swift runner binary
 fastlane/FastlaneRunner
+
+### Firebase ###
+.idea
+**/node_modules/*
+**/.firebaserc
+
+### Firebase Patch ###
+.runtimeconfig.json
+.firebase/
 
 ### Flutter ###
 # Flutter/Dart/Pub related
@@ -443,4 +458,4 @@ hs_err_pid*
 
 !/gradle/wrapper/gradle-wrapper.jar
 
-# End of https://www.toptal.com/developers/gitignore/api/xcode,android,flutter,fastlane,androidstudio,visualstudiocode,intellij
+# End of https://www.toptal.com/developers/gitignore/api/xcode,android,flutter,fastlane,intellij,androidstudio,visualstudiocode,firebase
