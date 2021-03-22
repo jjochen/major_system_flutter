@@ -2,14 +2,13 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_firebase_login/authentication/authentication.dart';
-import 'package:flutter_firebase_login/home/home.dart';
-import 'package:flutter_firebase_login/home/widgets/widgets.dart';
+import 'package:major_system/authentication/authentication.dart';
+import 'package:major_system/home/home.dart';
+import 'package:major_system/home/widgets/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-class MockAuthenticationBloc extends MockBloc<AuthenticationState>
-    implements AuthenticationBloc {}
+class MockAuthenticationBloc extends MockBloc<AuthenticationState> implements AuthenticationBloc {}
 
 // ignore: must_be_immutable
 class MockUser extends Mock implements User {
@@ -32,8 +31,7 @@ void main() {
     });
 
     group('calls', () {
-      testWidgets('AuthenticationLogoutRequested when logout is pressed',
-          (tester) async {
+      testWidgets('AuthenticationLogoutRequested when logout is pressed', (tester) async {
         await tester.pumpWidget(
           BlocProvider.value(
             value: authenticationBloc,

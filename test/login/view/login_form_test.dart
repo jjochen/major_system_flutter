@@ -2,15 +2,14 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_firebase_login/authentication/authentication.dart';
-import 'package:flutter_firebase_login/login/login.dart';
-import 'package:flutter_firebase_login/sign_up/sign_up.dart';
+import 'package:major_system/authentication/authentication.dart';
+import 'package:major_system/login/login.dart';
+import 'package:major_system/sign_up/sign_up.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formz/formz.dart';
 import 'package:mockito/mockito.dart';
 
-class MockAuthenticationRepository extends Mock
-    implements AuthenticationRepository {}
+class MockAuthenticationRepository extends Mock implements AuthenticationRepository {}
 
 class MockLoginCubit extends MockBloc<LoginState> implements LoginCubit {}
 
@@ -67,8 +66,7 @@ void main() {
         verify(loginCubit.passwordChanged(testPassword)).called(1);
       });
 
-      testWidgets('logInWithCredentials when login button is pressed',
-          (tester) async {
+      testWidgets('logInWithCredentials when login button is pressed', (tester) async {
         when(loginCubit.state).thenReturn(
           const LoginState(status: FormzStatus.valid),
         );
@@ -86,8 +84,7 @@ void main() {
         verify(loginCubit.logInWithCredentials()).called(1);
       });
 
-      testWidgets('logInWithGoogle when sign in with google button is pressed',
-          (tester) async {
+      testWidgets('logInWithGoogle when sign in with google button is pressed', (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -104,8 +101,7 @@ void main() {
     });
 
     group('renders', () {
-      testWidgets('AuthenticationFailure SnackBar when submission fails',
-          (tester) async {
+      testWidgets('AuthenticationFailure SnackBar when submission fails', (tester) async {
         whenListen(
           loginCubit,
           Stream.fromIterable(const <LoginState>[
@@ -127,8 +123,7 @@ void main() {
         expect(find.text('Authentication Failure'), findsOneWidget);
       });
 
-      testWidgets('invalid email error text when email is invalid',
-          (tester) async {
+      testWidgets('invalid email error text when email is invalid', (tester) async {
         final email = MockEmail();
         when(email.invalid).thenReturn(true);
         when(loginCubit.state).thenReturn(LoginState(email: email));
@@ -145,8 +140,7 @@ void main() {
         expect(find.text('invalid email'), findsOneWidget);
       });
 
-      testWidgets('invalid password error text when password is invalid',
-          (tester) async {
+      testWidgets('invalid password error text when password is invalid', (tester) async {
         final password = MockPassword();
         when(password.invalid).thenReturn(true);
         when(loginCubit.state).thenReturn(LoginState(password: password));
@@ -163,8 +157,7 @@ void main() {
         expect(find.text('invalid password'), findsOneWidget);
       });
 
-      testWidgets('disabled login button when status is not validated',
-          (tester) async {
+      testWidgets('disabled login button when status is not validated', (tester) async {
         when(loginCubit.state).thenReturn(
           const LoginState(status: FormzStatus.invalid),
         );
@@ -184,8 +177,7 @@ void main() {
         expect(loginButton.enabled, isFalse);
       });
 
-      testWidgets('enabled login button when status is validated',
-          (tester) async {
+      testWidgets('enabled login button when status is validated', (tester) async {
         when(loginCubit.state).thenReturn(
           const LoginState(status: FormzStatus.valid),
         );
@@ -221,8 +213,7 @@ void main() {
     });
 
     group('navigates', () {
-      testWidgets('to SignUpPage when Create Account is pressed',
-          (tester) async {
+      testWidgets('to SignUpPage when Create Account is pressed', (tester) async {
         await tester.pumpWidget(
           RepositoryProvider<AuthenticationRepository>(
             create: (_) => MockAuthenticationRepository(),

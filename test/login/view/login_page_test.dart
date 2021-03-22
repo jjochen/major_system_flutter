@@ -1,12 +1,11 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_firebase_login/login/login.dart';
+import 'package:major_system/login/login.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
-class MockAuthenticationRepository extends Mock
-    implements AuthenticationRepository {}
+class MockAuthenticationRepository extends Mock implements AuthenticationRepository {}
 
 void main() {
   group('LoginPage', () {

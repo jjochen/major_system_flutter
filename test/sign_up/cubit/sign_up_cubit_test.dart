@@ -1,14 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter_firebase_login/authentication/authentication.dart';
-import 'package:flutter_firebase_login/sign_up/sign_up.dart';
+import 'package:major_system/authentication/authentication.dart';
+import 'package:major_system/sign_up/sign_up.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formz/formz.dart';
 import 'package:mockito/mockito.dart';
 
-class MockAuthenticationRepository extends Mock
-    implements AuthenticationRepository {}
+class MockAuthenticationRepository extends Mock implements AuthenticationRepository {}
 
 void main() {
   const invalidEmailString = 'invalid';
@@ -119,8 +118,7 @@ void main() {
       blocTest<SignUpCubit, SignUpState>(
         'emits [invalid] when email/password/confirmedPassword are invalid',
         build: () => SignUpCubit(authenticationRepository),
-        act: (cubit) =>
-            cubit.confirmedPasswordChanged(invalidConfirmedPasswordString),
+        act: (cubit) => cubit.confirmedPasswordChanged(invalidConfirmedPasswordString),
         expect: const <SignUpState>[
           SignUpState(
             confirmedPassword: invalidConfirmedPassword,

@@ -4,8 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_firebase_login/app.dart';
-import 'package:flutter_firebase_login/simple_bloc_observer.dart';
+import 'package:major_system/app.dart';
+import 'package:major_system/simple_bloc_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

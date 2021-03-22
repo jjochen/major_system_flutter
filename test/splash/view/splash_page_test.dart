@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_login/splash/splash.dart';
+import 'package:major_system/splash/splash.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

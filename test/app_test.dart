@@ -1,11 +1,11 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_firebase_login/app.dart';
-import 'package:flutter_firebase_login/authentication/authentication.dart';
-import 'package:flutter_firebase_login/home/home.dart';
-import 'package:flutter_firebase_login/login/login.dart';
-import 'package:flutter_firebase_login/splash/splash.dart';
+import 'package:major_system/app.dart';
+import 'package:major_system/authentication/authentication.dart';
+import 'package:major_system/home/home.dart';
+import 'package:major_system/login/login.dart';
+import 'package:major_system/splash/splash.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -21,11 +21,9 @@ class MockUser extends Mock implements User {
   String get email => 'joe@gmail.com';
 }
 
-class MockAuthenticationRepository extends Mock
-    implements AuthenticationRepository {}
+class MockAuthenticationRepository extends Mock implements AuthenticationRepository {}
 
-class MockAuthenticationBloc extends MockBloc<AuthenticationState>
-    implements AuthenticationBloc {}
+class MockAuthenticationBloc extends MockBloc<AuthenticationState> implements AuthenticationBloc {}
 
 void main() {
   group('App', () {
@@ -67,8 +65,7 @@ void main() {
       expect(find.byType(SplashPage), findsOneWidget);
     });
 
-    testWidgets('navigates to LoginPage when status is unauthenticated',
-        (tester) async {
+    testWidgets('navigates to LoginPage when status is unauthenticated', (tester) async {
       whenListen(
         authenticationBloc,
         Stream.value(const AuthenticationState.unauthenticated()),
@@ -86,8 +83,7 @@ void main() {
       expect(find.byType(LoginPage), findsOneWidget);
     });
 
-    testWidgets('navigates to HomePage when status is authenticated',
-        (tester) async {
+    testWidgets('navigates to HomePage when status is authenticated', (tester) async {
       whenListen(
         authenticationBloc,
         Stream.value(AuthenticationState.authenticated(MockUser())),
