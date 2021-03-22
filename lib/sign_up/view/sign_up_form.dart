@@ -109,7 +109,6 @@ class _SignUpButton extends StatelessWidget {
             ? const CircularProgressIndicator()
             : ElevatedButton(
                 key: const Key('signUpForm_continue_raisedButton'),
-                child: const Text('SIGN UP'),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
@@ -117,6 +116,7 @@ class _SignUpButton extends StatelessWidget {
                   primary: Colors.orangeAccent,
                 ),
                 onPressed: state.status.isValidated ? () => context.read<SignUpCubit>().signUpFormSubmitted() : null,
+                child: const Text('SIGN UP'),
               );
       },
     );
