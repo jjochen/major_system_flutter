@@ -81,11 +81,11 @@ void main() {
 
     test('calls delete', () async {
       final mockDocumentReference = MockDocumentReference();
-      when(() => mockDocumentReference.delete()).thenAnswer((_) async => null);
+      when(mockDocumentReference.delete).thenAnswer((_) async => null);
       when(() => mockNumberCollection.doc(id))
           .thenReturn(mockDocumentReference);
       await firebaseNumbersRepository.deleteNumber(number);
-      verify(() => mockDocumentReference.delete()).called(1);
+      verify(mockDocumentReference.delete).called(1);
     });
 
     test('fetches stream of numbers', () async {

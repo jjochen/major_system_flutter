@@ -5,15 +5,23 @@ import '../entities/entities.dart';
 
 @immutable
 class Number extends Equatable {
-  final String id;
-  final int numberOfDigits;
-  final int value;
-
   Number({
     required this.id,
     required this.numberOfDigits,
     required this.value,
   });
+
+  factory Number.fromEntity(NumberEntity entity) {
+    return Number(
+      id: entity.id,
+      numberOfDigits: entity.numberOfDigits,
+      value: entity.value,
+    );
+  }
+
+  final String id;
+  final int numberOfDigits;
+  final int value;
 
   @override
   List<Object?> get props => [id, numberOfDigits, value];
@@ -26,14 +34,6 @@ class Number extends Equatable {
       id: id ?? this.id,
       numberOfDigits: numberOfDigits ?? this.numberOfDigits,
       value: value ?? this.value,
-    );
-  }
-
-  factory Number.fromEntity(NumberEntity entity) {
-    return Number(
-      id: entity.id,
-      numberOfDigits: entity.numberOfDigits,
-      value: entity.value,
     );
   }
 

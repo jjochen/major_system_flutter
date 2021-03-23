@@ -74,7 +74,7 @@ void main() {
       };
       final snap = MockDocumentSnapshot();
       when(() => snap.id).thenReturn(id);
-      when(() => snap.data()).thenReturn(snapshotData);
+      when(snap.data).thenReturn(snapshotData);
       expect(
           NumberEntity.fromSnapshot(snap),
           NumberEntity(
@@ -87,7 +87,7 @@ void main() {
     test('from document without data', () {
       final snap = MockDocumentSnapshot();
       when(() => snap.id).thenReturn(id);
-      when(() => snap.data()).thenReturn(null);
+      when(snap.data).thenReturn(null);
       expect(
           NumberEntity.fromSnapshot(snap),
           NumberEntity(
