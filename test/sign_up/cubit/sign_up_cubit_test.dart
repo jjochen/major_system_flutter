@@ -35,14 +35,10 @@ void main() {
   );
 
   group('SignUpCubit', () {
-    AuthenticationRepository authenticationRepository;
+    AuthenticationRepository authenticationRepository = MockAuthenticationRepository();
 
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();
-    });
-
-    test('throws AssertionError when authenticationRepository is null', () {
-      expect(() => SignUpCubit(null), throwsA(isA<AssertionError>()));
     });
 
     test('initial state is SignUpState', () {

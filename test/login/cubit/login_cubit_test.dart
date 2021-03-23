@@ -23,7 +23,7 @@ void main() {
   const validPassword = Password.dirty(validPasswordString);
 
   group('LoginCubit', () {
-    AuthenticationRepository authenticationRepository;
+    AuthenticationRepository authenticationRepository = MockAuthenticationRepository();
 
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();

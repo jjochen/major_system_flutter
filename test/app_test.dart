@@ -9,6 +9,8 @@ import 'package:major_system/splash/splash.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
+import '../lib/authentication/bloc/authentication_bloc.dart';
+
 // ignore: must_be_immutable
 class MockUser extends Mock implements User {
   @override
@@ -27,17 +29,13 @@ class MockAuthenticationBloc extends MockBloc<AuthenticationState> implements Au
 
 void main() {
   group('App', () {
-    AuthenticationRepository authenticationRepository;
+    AuthenticationRepository authenticationRepository = MockAuthenticationRepository();
 
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();
       when(authenticationRepository.user).thenAnswer(
         (_) => const Stream.empty(),
       );
-    });
-
-    test('throws AssertionError when authenticationRepository is null', () {
-      expect(() => App(authenticationRepository: null), throwsAssertionError);
     });
 
     testWidgets('renders AppView', (tester) async {
@@ -49,8 +47,8 @@ void main() {
   });
 
   group('AppView', () {
-    AuthenticationBloc authenticationBloc;
-    AuthenticationRepository authenticationRepository;
+    AuthenticationBloc authenticationBloc = MockAuthenticationBloc();
+    AuthenticationRepository authenticationRepository = MockAuthenticationRepository();
 
     setUp(() {
       authenticationBloc = MockAuthenticationBloc();

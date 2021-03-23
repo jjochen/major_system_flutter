@@ -11,7 +11,7 @@ class MockUser extends Mock implements User {}
 
 void main() {
   final user = MockUser();
-  AuthenticationRepository authenticationRepository;
+  AuthenticationRepository authenticationRepository = MockAuthenticationRepository();
 
   setUp(() {
     authenticationRepository = MockAuthenticationRepository();
