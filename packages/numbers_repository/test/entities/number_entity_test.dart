@@ -1,13 +1,8 @@
 import 'package:numbers_repository/src/entities/entities.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:mockito/annotations.dart';
-import 'number_entity_test.mocks.dart';
+import 'package:mocktail/mocktail.dart';
 
-@GenerateMocks([
-  DocumentSnapshot,
-])
 void main() {
   group('NumberEntity', () {
     const id = 'mock-id';
@@ -78,8 +73,8 @@ void main() {
         'value': value,
       };
       final snap = MockDocumentSnapshot();
-      when(snap.id).thenReturn(id);
-      when(snap.data()).thenReturn(snapshotData);
+      when(() => snap.id).thenReturn(id);
+      when(() => snap.data()).thenReturn(snapshotData);
       expect(
           NumberEntity.fromSnapshot(snap),
           NumberEntity(
@@ -91,8 +86,8 @@ void main() {
 
     test('from document without data', () {
       final snap = MockDocumentSnapshot();
-      when(snap.id).thenReturn(id);
-      when(snap.data()).thenReturn(null);
+      when(() => snap.id).thenReturn(id);
+      when(() => snap.data()).thenReturn(null);
       expect(
           NumberEntity.fromSnapshot(snap),
           NumberEntity(
@@ -118,3 +113,5 @@ void main() {
     });
   });
 }
+
+class MockDocumentSnapshot extends Mock implements DocumentSnapshot {}
