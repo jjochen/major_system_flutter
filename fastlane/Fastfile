@@ -41,7 +41,7 @@ end
 
 def format_analyze_and_test(subdir)
   UI.message(subdir)
-  run_flutter_command('format --line-length 120 .', subdir)
+  run_flutter_command('format .', subdir)
   run_flutter_command('analyze', subdir)
   run_flutter_command('test', subdir)
 end

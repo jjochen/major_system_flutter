@@ -11,7 +11,8 @@ import 'authentication_repository_test.mocks.dart';
 const _mockFirebaseUserUid = 'mock-uid';
 const _mockFirebaseUserEmail = 'mock-email';
 
-class _FakeUserCredential extends Fake implements firebase_auth.UserCredential {}
+class _FakeUserCredential extends Fake implements firebase_auth.UserCredential {
+}
 
 @GenerateMocks([
   firebase_auth.FirebaseAuth,
@@ -95,7 +96,9 @@ void main() {
 
       test('calls createUserWithEmailAndPassword', () async {
         await authenticationRepository.signUp(email: email, password: password);
-        verify(mockFirebaseAuth.createUserWithEmailAndPassword(email: email, password: password)).called(1);
+        verify(mockFirebaseAuth.createUserWithEmailAndPassword(
+                email: email, password: password))
+            .called(1);
       });
 
       test('succeeds when createUserWithEmailAndPassword succeeds', () async {
@@ -105,7 +108,8 @@ void main() {
         );
       });
 
-      test('throws SignUpFailure when createUserWithEmailAndPassword throws', () async {
+      test('throws SignUpFailure when createUserWithEmailAndPassword throws',
+          () async {
         when(mockFirebaseAuth.createUserWithEmailAndPassword(
           email: anyNamed('email'),
           password: anyNamed('password'),
@@ -131,7 +135,8 @@ void main() {
         when(
           mockGoogleSignIn.signIn(),
         ).thenAnswer((_) async => googleSignInAccount);
-        when(mockFirebaseAuth.signInWithCredential(any)).thenAnswer((_) async => _FakeUserCredential());
+        when(mockFirebaseAuth.signInWithCredential(any))
+            .thenAnswer((_) async => _FakeUserCredential());
       });
 
       test('calls signIn authentication, and signInWithCredential', () async {
