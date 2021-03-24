@@ -2,15 +2,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class NumberEntity extends Equatable {
-  final String id;
-  final int numberOfDigits;
-  final int value;
-
   NumberEntity({
     required this.id,
     required this.numberOfDigits,
     required this.value,
   });
+
+  factory NumberEntity.fromJson(Map<String, Object> json) {
+    return NumberEntity(
+      id: json[_Key.id] as String,
+      numberOfDigits: json[_Key.numberOfDigits] as int,
+      value: json[_Key.value] as int,
+    );
+  }
+
+  factory NumberEntity.fromSnapshot(DocumentSnapshot snap) {
+    return NumberEntity(
+      id: snap.id,
+      numberOfDigits: snap.data()?[_Key.numberOfDigits] ?? 0,
+      value: snap.data()?[_Key.value] ?? 0,
+    );
+  }
+
+  final String id;
+  final int numberOfDigits;
+  final int value;
 
   @override
   List<Object?> get props => [id, numberOfDigits, value];
@@ -18,40 +34,24 @@ class NumberEntity extends Equatable {
   @override
   bool? get stringify => true;
 
-  factory NumberEntity.fromJson(Map<String, Object> json) {
-    return NumberEntity(
-      id: json[_Key.ID] as String,
-      numberOfDigits: json[_Key.NUMBER_OF_DIGITS] as int,
-      value: json[_Key.VALUE] as int,
-    );
-  }
-
   Map<String, Object> toJson() {
     return {
-      _Key.ID: id,
-      _Key.NUMBER_OF_DIGITS: numberOfDigits,
-      _Key.VALUE: value,
+      _Key.id: id,
+      _Key.numberOfDigits: numberOfDigits,
+      _Key.value: value,
     };
-  }
-
-  factory NumberEntity.fromSnapshot(DocumentSnapshot snap) {
-    return NumberEntity(
-      id: snap.id,
-      numberOfDigits: snap.data()?[_Key.NUMBER_OF_DIGITS] ?? 0,
-      value: snap.data()?[_Key.VALUE] ?? 0,
-    );
   }
 
   Map<String, Object> toDocument() {
     return {
-      _Key.NUMBER_OF_DIGITS: numberOfDigits,
-      _Key.VALUE: value,
+      _Key.numberOfDigits: numberOfDigits,
+      _Key.value: value,
     };
   }
 }
 
 class _Key {
-  static const String ID = 'id';
-  static const String NUMBER_OF_DIGITS = 'number_of_digits';
-  static const String VALUE = 'value';
+  static const String id = 'id';
+  static const String numberOfDigits = 'number_of_digits';
+  static const String value = 'value';
 }

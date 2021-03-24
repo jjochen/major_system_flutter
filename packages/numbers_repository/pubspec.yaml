@@ -1,5 +1,5 @@
 name: numbers_repository
-version: 0.0.1
+version: 0.0.1+1
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -15,6 +15,5 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pedantic: ^1.11.0
-  mockito:
-  build_runner:
+  very_good_analysis: ^2.0.0
+  mocktail: ^0.1.1
