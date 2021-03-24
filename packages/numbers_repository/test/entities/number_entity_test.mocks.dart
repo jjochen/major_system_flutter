@@ -8,7 +8,8 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: comment_references
 // ignore_for_file: unnecessary_parenthesis
 
-class _FakeDocumentReference extends _i1.Fake implements _i2.DocumentReference {}
+class _FakeDocumentReference extends _i1.Fake implements _i2.DocumentReference {
+}
 
 class _FakeSnapshotMetadata extends _i1.Fake implements _i2.SnapshotMetadata {}
 
@@ -21,14 +22,18 @@ class MockDocumentSnapshot extends _i1.Mock implements _i2.DocumentSnapshot {
   }
 
   @override
-  String get id => (super.noSuchMethod(Invocation.getter(#id), returnValue: '') as String);
+  String get id =>
+      (super.noSuchMethod(Invocation.getter(#id), returnValue: '') as String);
   @override
   _i2.DocumentReference get reference =>
-      (super.noSuchMethod(Invocation.getter(#reference), returnValue: _FakeDocumentReference())
-          as _i2.DocumentReference);
+      (super.noSuchMethod(Invocation.getter(#reference),
+          returnValue: _FakeDocumentReference()) as _i2.DocumentReference);
   @override
   _i2.SnapshotMetadata get metadata =>
-      (super.noSuchMethod(Invocation.getter(#metadata), returnValue: _FakeSnapshotMetadata()) as _i2.SnapshotMetadata);
+      (super.noSuchMethod(Invocation.getter(#metadata),
+          returnValue: _FakeSnapshotMetadata()) as _i2.SnapshotMetadata);
   @override
-  bool get exists => (super.noSuchMethod(Invocation.getter(#exists), returnValue: false) as bool);
+  bool get exists =>
+      (super.noSuchMethod(Invocation.getter(#exists), returnValue: false)
+          as bool);
 }

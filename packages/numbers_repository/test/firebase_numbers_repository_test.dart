@@ -70,7 +70,8 @@ void main() {
       firebaseNumbersRepository = FirebaseNumbersRepository(
         firestore: mockFirebaseFirestore,
       );
-      when(mockFirebaseFirestore.collection('numbers')).thenReturn(mockNumberCollection);
+      when(mockFirebaseFirestore.collection('numbers'))
+          .thenReturn(mockNumberCollection);
     });
 
     test('creates FirebaseFirestore instance internally when not injected', () {
@@ -78,7 +79,8 @@ void main() {
     });
 
     test('calls add', () async {
-      when(mockNumberCollection.add(any)).thenAnswer((_) async => MockDocumentReference());
+      when(mockNumberCollection.add(any))
+          .thenAnswer((_) async => MockDocumentReference());
       await firebaseNumbersRepository.addNewNumber(number);
       verify(mockNumberCollection.add({
         'number_of_digits': numberOfDigits,
