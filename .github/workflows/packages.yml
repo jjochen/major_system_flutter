@@ -43,7 +43,7 @@ jobs:
 
       - name: Verify formatting
         working-directory: ${{ matrix.directory }}
-        run: flutter format --dry-run --line-length 120 --set-exit-if-changed .
+        run: flutter format --dry-run --set-exit-if-changed .
 
       - name: Analyze project source
         working-directory: ${{ matrix.directory }}
