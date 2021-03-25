@@ -6,9 +6,11 @@ import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/home/home.dart';
 import 'package:major_system/home/widgets/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
-class MockAuthenticationBloc extends MockBloc<AuthenticationState> implements AuthenticationBloc {}
+class MockAuthenticationBloc
+    extends MockBloc<AuthenticationEvent, AuthenticationState>
+    implements AuthenticationBloc {}
 
 // ignore: must_be_immutable
 class MockUser extends Mock implements User {
@@ -19,19 +21,23 @@ class MockUser extends Mock implements User {
 void main() {
   const logoutButtonKey = Key('homePage_logout_iconButton');
   group('HomePage', () {
-    AuthenticationBloc authenticationBloc;
-    User user;
+    registerFallbackValue<AuthenticationState>(
+        const AuthenticationState.unknown());
+    registerFallbackValue<AuthenticationEvent>(AuthenticationLogoutRequested());
+    AuthenticationBloc authenticationBloc = MockAuthenticationBloc();
+    User user = MockUser();
 
     setUp(() {
       authenticationBloc = MockAuthenticationBloc();
       user = MockUser();
-      when(authenticationBloc.state).thenReturn(
+      when(() => authenticationBloc.state).thenReturn(
         AuthenticationState.authenticated(user),
       );
     });
 
     group('calls', () {
-      testWidgets('AuthenticationLogoutRequested when logout is pressed', (tester) async {
+      testWidgets('AuthenticationLogoutRequested when logout is pressed',
+          (tester) async {
         await tester.pumpWidget(
           BlocProvider.value(
             value: authenticationBloc,
@@ -42,7 +48,7 @@ void main() {
         );
         await tester.tap(find.byKey(logoutButtonKey));
         verify(
-          authenticationBloc.add(AuthenticationLogoutRequested()),
+          () => authenticationBloc.add(AuthenticationLogoutRequested()),
         ).called(1);
       });
     });
@@ -73,7 +79,7 @@ void main() {
       });
 
       testWidgets('name', (tester) async {
-        when(user.name).thenReturn('Joe');
+        when(() => user.name).thenReturn('Joe');
         await tester.pumpWidget(
           BlocProvider.value(
             value: authenticationBloc,

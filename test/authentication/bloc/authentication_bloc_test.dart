@@ -2,30 +2,26 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:major_system/authentication/authentication.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
-class MockAuthenticationRepository extends Mock implements AuthenticationRepository {}
+class MockAuthenticationRepository extends Mock
+    implements AuthenticationRepository {}
 
 // ignore: must_be_immutable
 class MockUser extends Mock implements User {}
 
 void main() {
   final user = MockUser();
-  AuthenticationRepository authenticationRepository = MockAuthenticationRepository();
+  AuthenticationRepository authenticationRepository =
+      MockAuthenticationRepository();
 
   setUp(() {
     authenticationRepository = MockAuthenticationRepository();
-    when(authenticationRepository.user).thenAnswer((_) => const Stream.empty());
+    when(() => authenticationRepository.user)
+        .thenAnswer((_) => const Stream.empty());
   });
 
   group('AuthenticationBloc', () {
-    test('throws when authenticationRepository is null', () {
-      expect(
-        () => AuthenticationBloc(authenticationRepository: null),
-        throwsAssertionError,
-      );
-    });
-
     test('initial state is AuthenticationState.unknown', () {
       final authenticationBloc = AuthenticationBloc(
         authenticationRepository: authenticationRepository,
@@ -37,14 +33,14 @@ void main() {
     blocTest<AuthenticationBloc, AuthenticationState>(
       'subscribes to user stream',
       build: () {
-        when(authenticationRepository.user).thenAnswer(
+        when(() => authenticationRepository.user).thenAnswer(
           (_) => Stream.value(user),
         );
         return AuthenticationBloc(
           authenticationRepository: authenticationRepository,
         );
       },
-      expect: <AuthenticationState>[
+      expect: () => <AuthenticationState>[
         AuthenticationState.authenticated(user),
       ],
     );
@@ -56,7 +52,7 @@ void main() {
           authenticationRepository: authenticationRepository,
         ),
         act: (bloc) => bloc.add(AuthenticationUserChanged(user)),
-        expect: <AuthenticationState>[
+        expect: () => <AuthenticationState>[
           AuthenticationState.authenticated(user),
         ],
       );
@@ -67,7 +63,7 @@ void main() {
           authenticationRepository: authenticationRepository,
         ),
         act: (bloc) => bloc.add(const AuthenticationUserChanged(User.empty)),
-        expect: const <AuthenticationState>[
+        expect: () => const <AuthenticationState>[
           AuthenticationState.unauthenticated(),
         ],
       );
@@ -82,7 +78,7 @@ void main() {
         ),
         act: (bloc) => bloc.add(AuthenticationLogoutRequested()),
         verify: (_) {
-          verify(authenticationRepository.logOut()).called(1);
+          verify(() => authenticationRepository.logOut()).called(1);
         },
       );
     });

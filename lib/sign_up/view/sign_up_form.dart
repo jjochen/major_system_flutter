@@ -64,7 +64,8 @@ class _PasswordInput extends StatelessWidget {
       builder: (context, state) {
         return TextField(
           key: const Key('signUpForm_passwordInput_textField'),
-          onChanged: (password) => context.read<SignUpCubit>().passwordChanged(password),
+          onChanged: (password) =>
+              context.read<SignUpCubit>().passwordChanged(password),
           obscureText: true,
           decoration: InputDecoration(
             labelText: 'password',
@@ -82,16 +83,21 @@ class _ConfirmPasswordInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) =>
-          previous.password != current.password || previous.confirmedPassword != current.confirmedPassword,
+          previous.password != current.password ||
+          previous.confirmedPassword != current.confirmedPassword,
       builder: (context, state) {
         return TextField(
           key: const Key('signUpForm_confirmedPasswordInput_textField'),
-          onChanged: (confirmPassword) => context.read<SignUpCubit>().confirmedPasswordChanged(confirmPassword),
+          onChanged: (confirmPassword) => context
+              .read<SignUpCubit>()
+              .confirmedPasswordChanged(confirmPassword),
           obscureText: true,
           decoration: InputDecoration(
             labelText: 'confirm password',
             helperText: '',
-            errorText: state.confirmedPassword.invalid ? 'passwords do not match' : null,
+            errorText: state.confirmedPassword.invalid
+                ? 'passwords do not match'
+                : null,
           ),
         );
       },
@@ -115,7 +121,9 @@ class _SignUpButton extends StatelessWidget {
                   ),
                   primary: Colors.orangeAccent,
                 ),
-                onPressed: state.status.isValidated ? () => context.read<SignUpCubit>().signUpFormSubmitted() : null,
+                onPressed: state.status.isValidated
+                    ? () => context.read<SignUpCubit>().signUpFormSubmitted()
+                    : null,
                 child: const Text('SIGN UP'),
               );
       },

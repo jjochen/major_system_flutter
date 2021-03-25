@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/sign_up/sign_up.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
+import 'package:mocktail/mocktail.dart';
 
-class MockAuthenticationRepository extends Mock implements AuthenticationRepository {}
+class MockAuthenticationRepository extends Mock
+    implements AuthenticationRepository {}
 
 void main() {
   group('SignUpPage', () {

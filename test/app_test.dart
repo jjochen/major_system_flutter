@@ -7,9 +7,8 @@ import 'package:major_system/home/home.dart';
 import 'package:major_system/login/login.dart';
 import 'package:major_system/splash/splash.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-
-import '../lib/authentication/bloc/authentication_bloc.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:major_system/authentication/bloc/authentication_bloc.dart';
 
 // ignore: must_be_immutable
 class MockUser extends Mock implements User {
@@ -23,17 +22,27 @@ class MockUser extends Mock implements User {
   String get email => 'joe@gmail.com';
 }
 
-class MockAuthenticationRepository extends Mock implements AuthenticationRepository {}
+class MockAuthenticationRepository extends Mock
+    implements AuthenticationRepository {}
 
-class MockAuthenticationBloc extends MockBloc<AuthenticationState> implements AuthenticationBloc {}
+class MockAuthenticationBloc
+    extends MockBloc<AuthenticationEvent, AuthenticationState>
+    implements AuthenticationBloc {}
 
 void main() {
   group('App', () {
-    AuthenticationRepository authenticationRepository = MockAuthenticationRepository();
+    User mockUser = MockUser();
+    registerFallbackValue<AuthenticationState>(
+        AuthenticationState.authenticated(mockUser));
+    registerFallbackValue<AuthenticationEvent>(
+        AuthenticationUserChanged(mockUser));
+
+    AuthenticationRepository authenticationRepository =
+        MockAuthenticationRepository();
 
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();
-      when(authenticationRepository.user).thenAnswer(
+      when(() => authenticationRepository.user).thenAnswer(
         (_) => const Stream.empty(),
       );
     });
@@ -48,7 +57,8 @@ void main() {
 
   group('AppView', () {
     AuthenticationBloc authenticationBloc = MockAuthenticationBloc();
-    AuthenticationRepository authenticationRepository = MockAuthenticationRepository();
+    AuthenticationRepository authenticationRepository =
+        MockAuthenticationRepository();
 
     setUp(() {
       authenticationBloc = MockAuthenticationBloc();
@@ -56,6 +66,8 @@ void main() {
     });
 
     testWidgets('renders SplashPage by default', (tester) async {
+      when(() => authenticationBloc.state)
+          .thenReturn(const AuthenticationState.unknown());
       await tester.pumpWidget(
         BlocProvider.value(value: authenticationBloc, child: AppView()),
       );
@@ -63,10 +75,12 @@ void main() {
       expect(find.byType(SplashPage), findsOneWidget);
     });
 
-    testWidgets('navigates to LoginPage when status is unauthenticated', (tester) async {
+    testWidgets('navigates to LoginPage when status is unauthenticated',
+        (tester) async {
       whenListen(
         authenticationBloc,
         Stream.value(const AuthenticationState.unauthenticated()),
+        initialState: const AuthenticationState.unknown(),
       );
       await tester.pumpWidget(
         RepositoryProvider.value(
@@ -81,10 +95,12 @@ void main() {
       expect(find.byType(LoginPage), findsOneWidget);
     });
 
-    testWidgets('navigates to HomePage when status is authenticated', (tester) async {
+    testWidgets('navigates to HomePage when status is authenticated',
+        (tester) async {
       whenListen(
         authenticationBloc,
         Stream.value(AuthenticationState.authenticated(MockUser())),
+        initialState: const AuthenticationState.unknown(),
       );
       await tester.pumpWidget(
         RepositoryProvider.value(

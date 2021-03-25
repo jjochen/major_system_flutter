@@ -19,7 +19,9 @@ class HomePage extends StatelessWidget {
           IconButton(
             key: const Key('homePage_logout_iconButton'),
             icon: const Icon(Icons.exit_to_app),
-            onPressed: () => context.read<AuthenticationBloc>().add(AuthenticationLogoutRequested()),
+            onPressed: () => context
+                .read<AuthenticationBloc>()
+                .add(AuthenticationLogoutRequested()),
           )
         ],
       ),
