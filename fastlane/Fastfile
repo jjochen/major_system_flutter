@@ -1,10 +1,36 @@
+fastlane_require 'yaml'
+fastlane_require 'semantic'
 
-desc "Format, analyze and test all packages"
-lane :format_analyze_and_test do |options|
-  format_analyze_and_test('.')
-  format_analyze_and_test('packages/authentication_repository')
-  format_analyze_and_test('packages/numbers_repository')
+
+desc "Format"
+lane :format do
+  format
 end
+
+desc "Analyze and test all packages"
+lane :test do |options|
+  packages = [
+    '.',
+    'packages/authentication_repository',
+    'packages/numbers_repository',
+  ]
+  packages.each do |package|
+    analyze package
+    test package
+  end
+end
+
+desc "Bump version"
+lane :bump_version do |options|
+  term = options[:term] || 'patch'
+  increment_version! term
+end
+
+desc "Bump build number"
+lane :bump_build_number do
+  increment_build_number!
+end
+
 
 platform :ios do
   desc 'Push a new beta build to TestFlight'
@@ -12,6 +38,8 @@ platform :ios do
     xcversion(version: '~> 12.4')
 
     match(type: 'appstore')
+
+    increment_build_number
 
     UI.message('Build flutter library')
     run_flutter_command('clean')
@@ -25,9 +53,12 @@ platform :ios do
   end
 end
 
+
 platform :android do
   desc "Submit a new version to the Google Play with given track"
   lane :submit do |options|
+    increment_build_number
+
     UI.message('Build flutter library')
     run_flutter_command('clean')
     run_flutter_command('doctor')
@@ -39,10 +70,19 @@ platform :android do
   end
 end
 
-def format_analyze_and_test(subdir)
-  UI.message(subdir)
-  run_flutter_command('format .', subdir)
+
+def format()
+  UI.message("format .")
+  run_flutter_command('format .')
+end
+
+def analyze(subdir)
+  UI.message("analyze #{ subdir }")
   run_flutter_command('analyze', subdir)
+end
+
+def test(subdir)
+  UI.message("test #{ subdir }")
   run_flutter_command('test', subdir)
 end
 
@@ -50,5 +90,41 @@ def run_flutter_command(command, subdir = '.')
   path = File.join('..', subdir)
   Dir.chdir(path) do
     sh "fvm flutter #{ command }"
+  end
+end
+
+def increment_version! term
+  pubspec = PubSpec.new '../pubspec.yaml'
+  version = Semantic::Version.new pubspec.version
+  new_version = version.increment!(term)
+  new_version.build = version.build
+  pubspec.version = new_version.to_s
+  pubspec.write!
+end
+
+def increment_build_number!
+  pubspec = PubSpec.new '../pubspec.yaml'
+  version = Semantic::Version.new pubspec.version
+  version.build = (version.build.to_i + 1).to_s
+  pubspec.version = version.to_s
+  pubspec.write!
+end
+
+class PubSpec
+  def initialize path
+    @path = path
+    @content = YAML.load_file(@path)
+  end
+
+  def write!
+    File.open(@path, "w") { |file| file.write(@content.to_yaml) }
+  end
+
+  def version
+    return @content['version']
+  end
+
+  def version=(v)
+    @content['version'] = v
   end
 end
