@@ -33,7 +33,7 @@ void main() {
   group('SignUpForm', () {
     registerFallbackValue<SignUpState>(const SignUpState());
 
-    SignUpCubit signUpCubit = MockSignUpCubit();
+    late SignUpCubit signUpCubit;
 
     setUp(() {
       signUpCubit = MockSignUpCubit();

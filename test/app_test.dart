@@ -31,14 +31,13 @@ class MockAuthenticationBloc
 
 void main() {
   group('App', () {
-    User mockUser = MockUser();
+    final User mockUser = MockUser();
     registerFallbackValue<AuthenticationState>(
         AuthenticationState.authenticated(mockUser));
     registerFallbackValue<AuthenticationEvent>(
         AuthenticationUserChanged(mockUser));
 
-    AuthenticationRepository authenticationRepository =
-        MockAuthenticationRepository();
+    late AuthenticationRepository authenticationRepository;
 
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();
@@ -56,9 +55,8 @@ void main() {
   });
 
   group('AppView', () {
-    AuthenticationBloc authenticationBloc = MockAuthenticationBloc();
-    AuthenticationRepository authenticationRepository =
-        MockAuthenticationRepository();
+    late AuthenticationBloc authenticationBloc;
+    late AuthenticationRepository authenticationRepository;
 
     setUp(() {
       authenticationBloc = MockAuthenticationBloc();

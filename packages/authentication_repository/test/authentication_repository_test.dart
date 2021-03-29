@@ -53,12 +53,9 @@ void main() {
 
   group('AuthenticationRepository', () {
     // variables need initial value (null safety)
-    var mockFirebaseAuth = MockFirebaseAuth();
-    var mockGoogleSignIn = MockGoogleSignIn();
-    var authenticationRepository = AuthenticationRepository(
-      firebaseAuth: mockFirebaseAuth,
-      googleSignIn: mockGoogleSignIn,
-    );
+    late firebase_auth.FirebaseAuth mockFirebaseAuth;
+    late GoogleSignIn mockGoogleSignIn;
+    late AuthenticationRepository authenticationRepository;
 
     setUp(() {
       mockFirebaseAuth = MockFirebaseAuth();
