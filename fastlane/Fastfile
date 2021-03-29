@@ -1,4 +1,3 @@
-fastlane_require 'yaml'
 fastlane_require 'semantic'
 
 
@@ -111,20 +110,23 @@ def increment_build_number!
 end
 
 class PubSpec
+  VERSION_REGEX = %r{^\w*version\:\w*(?<version>.*)\w*$}
+
   def initialize path
     @path = path
-    @content = YAML.load_file(@path)
+    @content = File.read(@path)
   end
 
   def write!
-    File.open(@path, "w") { |file| file.write(@content.to_yaml) }
+    File.open(@path, "w") { |file| file.write(@content) }
   end
 
   def version
-    return @content['version']
+    match = @content.match(VERSION_REGEX)
+    return match[:version].strip!
   end
 
   def version=(v)
-    @content['version'] = v
+    @content = @content.gsub(VERSION_REGEX, "version: #{ v }")
   end
 end

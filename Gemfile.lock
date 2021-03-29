@@ -259,7 +259,6 @@ GEM
       rouge (~> 2.0.7)
     xcpretty-travis-formatter (1.0.1)
       xcpretty (~> 0.2, >= 0.0.7)
-    yaml (0.1.1)
 
 PLATFORMS
   x86_64-darwin-20
@@ -269,7 +268,6 @@ DEPENDENCIES
   fastlane
   semantic
   xcode-install
-  yaml
 
 BUNDLED WITH
    2.2.12
