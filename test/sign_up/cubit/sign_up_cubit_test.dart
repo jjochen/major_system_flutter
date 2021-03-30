@@ -36,8 +36,7 @@ void main() {
   );
 
   group('SignUpCubit', () {
-    AuthenticationRepository authenticationRepository =
-        MockAuthenticationRepository();
+    late AuthenticationRepository authenticationRepository;
 
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();

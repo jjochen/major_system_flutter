@@ -49,11 +49,9 @@ void main() {
 
   group('FirebaseNumbersRepository', () {
     // variables need initial value (null safety)
-    var mockFirebaseFirestore = MockFirebaseFirestore();
-    var mockNumberCollection = MockCollectionReference();
-    var firebaseNumbersRepository = FirebaseNumbersRepository(
-      firestore: mockFirebaseFirestore,
-    );
+    late FirebaseFirestore mockFirebaseFirestore;
+    late CollectionReference mockNumberCollection;
+    late NumbersRepository firebaseNumbersRepository;
 
     setUp(() {
       mockFirebaseFirestore = MockFirebaseFirestore();

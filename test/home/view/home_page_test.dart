@@ -24,8 +24,8 @@ void main() {
     registerFallbackValue<AuthenticationState>(
         const AuthenticationState.unknown());
     registerFallbackValue<AuthenticationEvent>(AuthenticationLogoutRequested());
-    AuthenticationBloc authenticationBloc = MockAuthenticationBloc();
-    User user = MockUser();
+    late AuthenticationBloc authenticationBloc;
+    late User user;
 
     setUp(() {
       authenticationBloc = MockAuthenticationBloc();

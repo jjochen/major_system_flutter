@@ -31,7 +31,7 @@ void main() {
   group('LoginForm', () {
     registerFallbackValue<LoginState>(const LoginState());
 
-    LoginCubit loginCubit = MockLoginCubit();
+    late LoginCubit loginCubit;
 
     setUp(() {
       loginCubit = MockLoginCubit();
