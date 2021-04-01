@@ -1,12 +1,19 @@
 fastlane_require 'semantic'
 
+desc 'Update dependencies'
+lane :update_dependencies do
+  run_command 'bundle update'
+  run_flutter_command 'clean'
+  run_flutter_command 'pub upgrade'
+  run_flutter_command 'pub outdated'
+end
 
-desc "Format"
+desc 'Format'
 lane :format do
   format
 end
 
-desc "Analyze and test all packages"
+desc 'Analyze and test all packages'
 lane :test do |options|
   packages = [
     '.',
@@ -19,13 +26,13 @@ lane :test do |options|
   end
 end
 
-desc "Bump version"
+desc 'Bump version'
 lane :bump_version do |options|
   term = options[:term] || 'patch'
   increment_version! term
 end
 
-desc "Bump build number"
+desc 'Bump build number'
 lane :bump_build_number do
   increment_build_number!
 end
@@ -40,11 +47,11 @@ platform :ios do
 
     increment_build_number
 
-    UI.message('Build flutter library')
-    run_flutter_command('clean')
-    run_flutter_command('doctor')
-    run_flutter_command('pub get')
-    run_flutter_command('build ios --release --no-codesign')
+    UI.message 'Build flutter library'
+    run_flutter_command 'clean'
+    run_flutter_command 'doctor'
+    run_flutter_command 'pub get'
+    run_flutter_command 'build ios --release --no-codesign'
 
     build_app(workspace: 'ios/Runner.xcworkspace', scheme: 'Runner')
 
@@ -54,15 +61,15 @@ end
 
 
 platform :android do
-  desc "Submit a new version to the Google Play with given track"
+  desc 'Submit a new version to the Google Play with given track'
   lane :submit do |options|
     increment_build_number
 
     UI.message('Build flutter library')
-    run_flutter_command('clean')
-    run_flutter_command('doctor')
-    run_flutter_command('pub get')
-    run_flutter_command('build appbundle')
+    run_flutter_command 'clean'
+    run_flutter_command 'doctor'
+    run_flutter_command 'pub get'
+    run_flutter_command 'build appbundle'
 
     track = options['track'] || 'internal'
     upload_to_play_store(track: track, aab: 'build/app/outputs/bundle/release/app-release.aab')
@@ -71,12 +78,12 @@ end
 
 
 def format()
-  UI.message("format .")
-  run_flutter_command('format .')
+  UI.message 'format .'
+  run_flutter_command 'format .'
 end
 
 def analyze(subdir)
-  UI.message("analyze #{ subdir }")
+  UI.message "analyze #{ subdir }"
   run_flutter_command('analyze', subdir)
 end
 
@@ -86,9 +93,13 @@ def test(subdir)
 end
 
 def run_flutter_command(command, subdir = '.')
+  run_command("fvm flutter #{ command }", subdir)
+end
+
+def run_command(command, subdir = '.')
   path = File.join('..', subdir)
   Dir.chdir(path) do
-    sh "fvm flutter #{ command }"
+    sh command
   end
 end
 
@@ -118,7 +129,7 @@ class PubSpec
   end
 
   def write!
-    File.open(@path, "w") { |file| file.write(@content) }
+    File.open(@path, 'w') { |file| file.write(@content) }
   end
 
   def version
