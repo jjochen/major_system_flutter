@@ -19,13 +19,13 @@ class HomePage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             key: const Key('homePage_licenses_iconButton'),
-            icon: const Icon(Icons.info),
+            icon: const Icon(Icons.info_outline),
             onPressed: () =>
                 Navigator.of(context).push<void>(AttributionsPage.route()),
           ),
           IconButton(
             key: const Key('homePage_logout_iconButton'),
-            icon: const Icon(Icons.exit_to_app),
+            icon: const Icon(Icons.exit_to_app_outlined),
             onPressed: () => context
                 .read<AuthenticationBloc>()
                 .add(AuthenticationLogoutRequested()),
