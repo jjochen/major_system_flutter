@@ -1,5 +1,12 @@
 fastlane_require 'semantic'
 
+desc 'Update dependencies'
+lane :update_dependencies do
+  run_command 'bundle update'
+  run_flutter_command 'clean'
+  run_flutter_command 'pub upgrade'
+  run_flutter_command 'pub outdated'
+end
 
 desc "Format"
 lane :format do
@@ -86,9 +93,13 @@ def test(subdir)
 end
 
 def run_flutter_command(command, subdir = '.')
+  run_command("fvm flutter #{ command }", subdir)
+end
+
+def run_command(command, subdir = '.')
   path = File.join('..', subdir)
   Dir.chdir(path) do
-    sh "fvm flutter #{ command }"
+    sh command
   end
 end
 
