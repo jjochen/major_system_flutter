@@ -15,6 +15,7 @@ end
 
 desc 'Analyze and test all packages'
 lane :test do |options|
+  check_formatting
   packages = [
     '.',
     'packages/authentication_repository',
@@ -80,6 +81,11 @@ end
 def format()
   UI.message 'format .'
   run_flutter_command 'format .'
+end
+
+def check_formatting()
+  UI.message 'check formatting'
+  run_flutter_command 'format --dry-run --set-exit-if-changed .'
 end
 
 def analyze(subdir)
