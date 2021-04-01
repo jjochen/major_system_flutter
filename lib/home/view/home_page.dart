@@ -18,7 +18,7 @@ class HomePage extends StatelessWidget {
         title: const Text('Home'),
         actions: <Widget>[
           IconButton(
-            key: const Key('homePage_licenses_iconButton'),
+            key: const Key('homePage_attributions_iconButton'),
             icon: const Icon(Icons.info_outline),
             onPressed: () =>
                 Navigator.of(context).push<void>(AttributionsPage.route()),
