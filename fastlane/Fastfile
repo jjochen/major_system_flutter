@@ -97,19 +97,19 @@ end
 
 def analyze(subdir)
   UI.message "analyze #{ subdir }"
-  run_flutter_command('analyze', subdir)
+  run_flutter_command 'analyze', subdir: subdir
 end
 
 def test(subdir)
   UI.message("test #{ subdir }")
-  run_flutter_command('test', subdir)
+  run_flutter_command'test', subdir: subdir
 end
 
-def run_flutter_command(command, subdir = '.')
-  run_command("fvm flutter #{ command }", subdir)
+def run_flutter_command(command, subdir: '.')
+  run_command "fvm flutter #{ command }", subdir: subdir
 end
 
-def run_command(command, subdir = '.')
+def run_command(command, subdir: '.')
   path = File.join('..', subdir)
   Dir.chdir(path) do
     sh command
