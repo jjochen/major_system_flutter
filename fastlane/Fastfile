@@ -1,20 +1,9 @@
 fastlane_require 'semantic'
 
-desc 'Update dependencies'
-lane :update_dependencies do
-  run_command 'bundle update'
-  run_flutter_command 'clean'
-  run_flutter_command 'pub upgrade'
-  run_flutter_command 'pub outdated'
-end
-
-desc 'Format'
-lane :format do
-  format
-end
 
 desc 'Analyze and test all packages'
 lane :test do |options|
+  check_formatting
   packages = [
     '.',
     'packages/authentication_repository',
@@ -24,6 +13,25 @@ lane :test do |options|
     analyze package
     test package
   end
+end
+
+desc 'Format'
+lane :format do
+  format
+end
+
+desc 'Install dependencies'
+lane :install_dependencies do
+  run_command 'bundle'
+  run_flutter_command 'pub get'
+end
+
+desc 'Update dependencies'
+lane :update_dependencies do
+  run_command 'bundle update'
+  run_flutter_command 'clean'
+  run_flutter_command 'pub upgrade'
+  run_flutter_command 'pub outdated'
 end
 
 desc 'Bump version'
@@ -82,21 +90,26 @@ def format()
   run_flutter_command 'format .'
 end
 
+def check_formatting()
+  UI.message 'check formatting'
+  run_flutter_command 'format --dry-run --set-exit-if-changed .'
+end
+
 def analyze(subdir)
   UI.message "analyze #{ subdir }"
-  run_flutter_command('analyze', subdir)
+  run_flutter_command 'analyze', subdir: subdir
 end
 
 def test(subdir)
   UI.message("test #{ subdir }")
-  run_flutter_command('test', subdir)
+  run_flutter_command'test', subdir: subdir
 end
 
-def run_flutter_command(command, subdir = '.')
-  run_command("fvm flutter #{ command }", subdir)
+def run_flutter_command(command, subdir: '.')
+  run_command "fvm flutter #{ command }", subdir: subdir
 end
 
-def run_command(command, subdir = '.')
+def run_command(command, subdir: '.')
   path = File.join('..', subdir)
   Dir.chdir(path) do
     sh command
