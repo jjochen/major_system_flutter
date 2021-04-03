@@ -18,6 +18,8 @@ dependencies:
   meta: ^1.3.0
   authentication_repository:
     path: packages/authentication_repository
+  numbers_repository:
+    path: packages/numbers_repository
 
 dev_dependencies:
   flutter_test:
