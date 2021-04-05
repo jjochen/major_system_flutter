@@ -20,20 +20,12 @@ class NumberItem extends StatelessWidget {
       key: Key('__number_item_${number.id}'),
       onDismissed: onDismissed,
       child: ListTile(
-          onTap: onTap,
-          leading: Container(), // TODO
-          title: Hero(
-            tag: '${number.id}__heroTag',
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              child: Text(
-                number.toString(), // TODO
-                style: Theme.of(context).textTheme.headline6,
-              ),
-            ),
-          ),
-          subtitle: Container() // TODO
-          ),
+        onTap: onTap,
+        title: Text(
+          number.toString(), // TODO
+          style: Theme.of(context).textTheme.headline6,
+        ),
+      ),
     );
   }
 }
