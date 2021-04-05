@@ -22,7 +22,7 @@ class NumberItem extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         title: Text(
-          number.toString(), // TODO
+          number.toString(),
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
