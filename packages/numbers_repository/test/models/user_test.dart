@@ -10,12 +10,12 @@ void main() {
 
     test('uses name equality', () {
       expect(
-        User(
+        const User(
           id: id,
           email: email,
           name: name,
         ),
-        User(
+        const User(
           id: id,
           email: email,
           name: name,
@@ -25,7 +25,7 @@ void main() {
 
     test('uses stringify', () {
       expect(
-        User(
+        const User(
           id: id,
           email: email,
           name: name,
@@ -37,7 +37,7 @@ void main() {
     test('copies with new id', () {
       final newId = 'new-id';
       expect(
-        User(
+        const User(
           id: id,
           email: email,
           name: name,
@@ -53,7 +53,7 @@ void main() {
     test('copies with new email', () {
       final newEmail = 'yo@yo.yo';
       expect(
-        User(
+        const User(
           id: id,
           email: email,
           name: name,
@@ -69,7 +69,7 @@ void main() {
     test('copies with null email', () {
       final newEmail = null;
       expect(
-        User(
+        const User(
           id: id,
           email: email,
           name: name,
@@ -85,7 +85,7 @@ void main() {
     test('copies with new name', () {
       final newName = 'Name That';
       expect(
-        User(
+        const User(
           id: id,
           email: email,
           name: name,
@@ -101,7 +101,7 @@ void main() {
     test('copies with null name', () {
       final newName = null;
       expect(
-        User(
+        const User(
           id: id,
           email: email,
           name: name,
@@ -116,7 +116,7 @@ void main() {
 
     test('model to entity', () {
       expect(
-        User(
+        const User(
           id: id,
           email: email,
           name: name,
@@ -136,7 +136,7 @@ void main() {
           email: email,
           name: name,
         )),
-        User(
+        const User(
           id: id,
           email: email,
           name: name,

@@ -12,7 +12,11 @@ class FirebaseNumbersRepository implements NumbersRepository {
 
   final FirebaseFirestore _firestore;
   String? _userId;
+
+  @override
   String? get userId => _userId;
+
+  @override
   set userId(String? userId) {
     if (userId != _userId) {
       _userId = userId;
