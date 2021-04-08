@@ -23,7 +23,7 @@ class FirebaseNumbersRepository implements NumbersRepository {
   DocumentReference? _userDocument;
   CollectionReference? _numberCollection;
   void configureFirestoreReferences() {
-    _userDocument = _firestore.doc(path.join('users', userId));
+    _userDocument = _firestore.doc(path.join('/', 'users', userId));
     _numberCollection = _userDocument?.collection('numbers');
   }
 

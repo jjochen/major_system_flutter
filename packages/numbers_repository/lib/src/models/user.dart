@@ -24,10 +24,23 @@ class User extends Equatable {
   final String? name;
 
   @override
-  List<Object?> get props => [email, id, name];
+  List<Object?> get props => [id, email, name];
 
   @override
   bool? get stringify => true;
+
+  static const _doNotUse = '###_DO_NOT_USE_###';
+  User copyWith({
+    String? id,
+    String? email = _doNotUse,
+    String? name = _doNotUse,
+  }) {
+    return User(
+      id: id ?? this.id,
+      email: email == _doNotUse ? this.email : email,
+      name: name == _doNotUse ? this.name : name,
+    );
+  }
 
   UserEntity toEntity() {
     return UserEntity(
