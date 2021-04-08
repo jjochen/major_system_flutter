@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:numbers_repository/numbers_repository.dart';
 
 abstract class NumbersRepository {
