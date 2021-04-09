@@ -27,8 +27,10 @@ class FirebaseNumbersRepository implements NumbersRepository {
   DocumentReference? _userDocument;
   CollectionReference? _numberCollection;
   void configureFirestoreReferences() {
-    _userDocument = _firestore.doc(path.join('/', 'users', userId));
-    _numberCollection = _userDocument?.collection('numbers');
+    _userDocument =
+        userId == null ? null : _firestore.doc(path.join('/', 'users', userId));
+    _numberCollection =
+        userId == null ? null : _userDocument?.collection('numbers');
   }
 
   @override
@@ -67,7 +69,7 @@ class FirebaseNumbersRepository implements NumbersRepository {
   Stream<List<Number>> numbers() {
     final numberCollection = _numberCollection;
     if (numberCollection == null) {
-      return Stream.fromIterable([]);
+      return Stream.fromIterable([[]]);
     }
 
     return numberCollection.snapshots().map((snapshot) {
