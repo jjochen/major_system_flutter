@@ -69,7 +69,7 @@ class FirebaseNumbersRepository implements NumbersRepository {
   Stream<List<Number>> numbers() {
     final numberCollection = _numberCollection;
     if (numberCollection == null) {
-      return Stream.empty();
+      return const Stream.empty();
     }
 
     return numberCollection.snapshots().map((snapshot) {
