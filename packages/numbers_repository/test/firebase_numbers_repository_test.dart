@@ -118,8 +118,7 @@ void main() {
         when(() => mockNumberCollection.snapshots()).thenAnswer(
             (_) => Stream<QuerySnapshot>.fromIterable([mockQuerySnapshot]));
 
-        await expectLater(
-            firebaseNumbersRepository.numbers(), emitsInOrder([[]]));
+        await expectLater(firebaseNumbersRepository.numbers(), emitsDone);
       });
     });
 
