@@ -44,7 +44,7 @@ void main() {
 
   const email = 'test@major_system.com';
   const password = 't0ps3cret42';
-  const user = User(
+  const userInfo = UserInfo(
     id: _mockFirebaseUserUid,
     email: _mockFirebaseUserEmail,
     name: null,
@@ -210,17 +210,17 @@ void main() {
     });
 
     group('user', () {
-      test('emits User.empty when firebase user is null', () async {
+      test('emits UserInfo.empty when firebase user is null', () async {
         when(() => mockFirebaseAuth.authStateChanges()).thenAnswer(
           (_) => Stream.value(null),
         );
         await expectLater(
-          authenticationRepository.user,
-          emitsInOrder(const <User>[User.empty]),
+          authenticationRepository.userInfo,
+          emitsInOrder(const <UserInfo>[UserInfo.empty]),
         );
       });
 
-      test('emits User when firebase user is not null', () async {
+      test('emits UserInfo when firebase user is not null', () async {
         final mockFirebaseUser = MockFirebaseUser();
         when(() => mockFirebaseUser.uid).thenReturn(_mockFirebaseUserUid);
         when(() => mockFirebaseUser.email).thenReturn(_mockFirebaseUserEmail);
@@ -230,8 +230,8 @@ void main() {
           (_) => Stream.value(mockFirebaseUser),
         );
         await expectLater(
-          authenticationRepository.user,
-          emitsInOrder(const <User>[user]),
+          authenticationRepository.userInfo,
+          emitsInOrder(const <UserInfo>[userInfo]),
         );
       });
     });
