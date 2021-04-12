@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/attributions/attributions.dart';
 import 'package:major_system/authentication/authentication.dart';
-import 'package:major_system/home/home.dart';
-import 'package:major_system/home/widgets/widgets.dart';
+import 'package:major_system/numbers/numbers.dart';
+import 'package:major_system/numbers/widgets/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -14,7 +14,7 @@ class MockAuthenticationBloc
     implements AuthenticationBloc {}
 
 // ignore: must_be_immutable
-class MockUser extends Mock implements User {
+class MockUser extends Mock implements UserInfo {
   @override
   String get email => 'test@gmail.com';
 }
@@ -22,12 +22,12 @@ class MockUser extends Mock implements User {
 void main() {
   const logoutButtonKey = Key('homePage_logout_iconButton');
   const attributionsButtonKey = Key('homePage_attributions_iconButton');
-  group('HomePage', () {
+  group('NumbersPage', () {
     registerFallbackValue<AuthenticationState>(
         const AuthenticationState.unknown());
     registerFallbackValue<AuthenticationEvent>(AuthenticationLogoutRequested());
     late AuthenticationBloc authenticationBloc;
-    late User user;
+    late UserInfo user;
 
     setUp(() {
       authenticationBloc = MockAuthenticationBloc();
@@ -44,7 +44,7 @@ void main() {
           BlocProvider.value(
             value: authenticationBloc,
             child: MaterialApp(
-              home: HomePage(),
+              home: NumbersPage(),
             ),
           ),
         );
@@ -61,7 +61,7 @@ void main() {
           BlocProvider.value(
             value: authenticationBloc,
             child: MaterialApp(
-              home: HomePage(),
+              home: NumbersPage(),
             ),
           ),
         );
@@ -73,7 +73,7 @@ void main() {
           BlocProvider.value(
             value: authenticationBloc,
             child: MaterialApp(
-              home: HomePage(),
+              home: NumbersPage(),
             ),
           ),
         );
@@ -86,7 +86,7 @@ void main() {
           BlocProvider.value(
             value: authenticationBloc,
             child: MaterialApp(
-              home: HomePage(),
+              home: NumbersPage(),
             ),
           ),
         );
@@ -95,13 +95,13 @@ void main() {
     });
 
     group('navigates', () {
-      testWidgets('to Attributions when attributions icconns is pressed',
+      testWidgets('to Attributions when attributions icon is pressed',
           (tester) async {
         await tester.pumpWidget(
           BlocProvider.value(
             value: authenticationBloc,
             child: MaterialApp(
-              home: HomePage(),
+              home: NumbersPage(),
             ),
           ),
         );

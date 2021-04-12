@@ -8,15 +8,15 @@ class MockAuthenticationRepository extends Mock
     implements AuthenticationRepository {}
 
 // ignore: must_be_immutable
-class MockUser extends Mock implements User {}
+class MockUserInfo extends Mock implements UserInfo {}
 
 void main() {
-  final User user = MockUser();
+  final UserInfo userInfo = MockUserInfo();
   late AuthenticationRepository authenticationRepository;
 
   setUp(() {
     authenticationRepository = MockAuthenticationRepository();
-    when(() => authenticationRepository.user)
+    when(() => authenticationRepository.userInfo)
         .thenAnswer((_) => const Stream.empty());
   });
 
@@ -32,15 +32,15 @@ void main() {
     blocTest<AuthenticationBloc, AuthenticationState>(
       'subscribes to user stream',
       build: () {
-        when(() => authenticationRepository.user).thenAnswer(
-          (_) => Stream.value(user),
+        when(() => authenticationRepository.userInfo).thenAnswer(
+          (_) => Stream.value(userInfo),
         );
         return AuthenticationBloc(
           authenticationRepository: authenticationRepository,
         );
       },
       expect: () => <AuthenticationState>[
-        AuthenticationState.authenticated(user),
+        AuthenticationState.authenticated(userInfo),
       ],
     );
 
@@ -50,9 +50,9 @@ void main() {
         build: () => AuthenticationBloc(
           authenticationRepository: authenticationRepository,
         ),
-        act: (bloc) => bloc.add(AuthenticationUserChanged(user)),
+        act: (bloc) => bloc.add(AuthenticationUserInfoChanged(userInfo)),
         expect: () => <AuthenticationState>[
-          AuthenticationState.authenticated(user),
+          AuthenticationState.authenticated(userInfo),
         ],
       );
 
@@ -61,7 +61,8 @@ void main() {
         build: () => AuthenticationBloc(
           authenticationRepository: authenticationRepository,
         ),
-        act: (bloc) => bloc.add(const AuthenticationUserChanged(User.empty)),
+        act: (bloc) =>
+            bloc.add(const AuthenticationUserInfoChanged(UserInfo.empty)),
         expect: () => const <AuthenticationState>[
           AuthenticationState.unauthenticated(),
         ],

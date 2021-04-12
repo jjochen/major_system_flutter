@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 // ignore: must_be_immutable
-class MockUser extends Mock implements User {}
+class MockUser extends Mock implements UserInfo {}
 
 void main() {
   group('AuthenticationState', () {

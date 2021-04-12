@@ -1,9 +1,11 @@
 import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:numbers_repository/numbers_repository.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:pedantic/pedantic.dart';
+
+import '../../authentication/authentication.dart';
 
 part 'numbers_event.dart';
 part 'numbers_state.dart';
@@ -11,11 +13,18 @@ part 'numbers_state.dart';
 class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
   NumbersBloc({
     required NumbersRepository numbersRepository,
+    required AuthenticationBloc authenticationBloc,
   })   : _numbersRepository = numbersRepository,
-        super(NumbersLoading());
-
+        _authenticationBloc = authenticationBloc,
+        super(NumbersLoading()) {
+    _authenticationBlocSubscription =
+        authenticationBloc.stream.listen((state) {});
+  }
   final NumbersRepository _numbersRepository;
   StreamSubscription? _numbersSubscription;
+
+  final AuthenticationBloc _authenticationBloc;
+  StreamSubscription? _authenticationBlocSubscription;
 
   @override
   Stream<NumbersState> mapEventToState(NumbersEvent event) async* {
@@ -58,6 +67,7 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
   @override
   Future<void> close() {
     _numbersSubscription?.cancel();
+    _authenticationBlocSubscription?.cancel();
     return super.close();
   }
 }

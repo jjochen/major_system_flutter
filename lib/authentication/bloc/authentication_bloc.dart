@@ -14,19 +14,19 @@ class AuthenticationBloc
     required AuthenticationRepository authenticationRepository,
   })   : _authenticationRepository = authenticationRepository,
         super(const AuthenticationState.unknown()) {
-    _userSubscription = _authenticationRepository.user.listen(
-      (user) => add(AuthenticationUserChanged(user)),
+    _userSubscription = _authenticationRepository.userInfo.listen(
+      (user) => add(AuthenticationUserInfoChanged(user)),
     );
   }
 
   final AuthenticationRepository _authenticationRepository;
-  StreamSubscription<User>? _userSubscription;
+  StreamSubscription<UserInfo>? _userSubscription;
 
   @override
   Stream<AuthenticationState> mapEventToState(
     AuthenticationEvent event,
   ) async* {
-    if (event is AuthenticationUserChanged) {
+    if (event is AuthenticationUserInfoChanged) {
       yield _mapAuthenticationUserChangedToState(event);
     } else if (event is AuthenticationLogoutRequested) {
       unawaited(_authenticationRepository.logOut());
@@ -40,10 +40,10 @@ class AuthenticationBloc
   }
 
   AuthenticationState _mapAuthenticationUserChangedToState(
-    AuthenticationUserChanged event,
+    AuthenticationUserInfoChanged event,
   ) {
-    return event.user != User.empty
-        ? AuthenticationState.authenticated(event.user)
+    return event.userInfo != UserInfo.empty
+        ? AuthenticationState.authenticated(event.userInfo)
         : const AuthenticationState.unauthenticated();
   }
 }

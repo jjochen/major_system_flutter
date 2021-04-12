@@ -2,9 +2,8 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/authentication/authentication.dart';
-import 'package:major_system/home/home.dart';
-import 'package:major_system/login/login.dart';
 import 'package:major_system/numbers/numbers.dart';
+import 'package:major_system/login/login.dart';
 import 'package:major_system/splash/splash.dart';
 import 'package:major_system/theme.dart';
 import 'package:numbers_repository/numbers_repository.dart';
@@ -33,13 +32,6 @@ class App extends StatelessWidget {
             BlocProvider<AuthenticationBloc>(
                 create: (context) => AuthenticationBloc(
                     authenticationRepository: authenticationRepository)),
-            BlocProvider<NumbersBloc>(
-              create: (context) {
-                return NumbersBloc(
-                  numbersRepository: numbersRepository,
-                )..add(LoadNumbers());
-              },
-            ),
           ],
           child: AppView(),
         ));
@@ -67,7 +59,7 @@ class _AppViewState extends State<AppView> {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
                 _navigator?.pushAndRemoveUntil<void>(
-                  HomePage.route(),
+                  NumbersPage.route(),
                   (route) => false,
                 );
                 break;
