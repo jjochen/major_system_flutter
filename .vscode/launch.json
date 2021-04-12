@@ -1,14 +1,41 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "major_system",
-            "request": "launch",
-            "type": "dart",
+            "name": "major_system (Flutter)",
             "program": "lib/main.dart",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "major_system (Flutter Tests)",
+            "program": "test",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "authentication_repository (Flutter Tests)",
+            "program": "test",
+            "cwd": "packages/authentication_repository",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "numbers_repository (Flutter Tests)",
+            "program": "test",
+            "cwd": "packages/numbers_repository",
+            "request": "launch",
+            "type": "dart"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "All Tests",
+            "configurations": [
+                "major_system (Flutter Tests)",
+                "authentication_repository (Flutter Tests)",
+                "numbers_repository (Flutter Tests)"
+            ]
         }
     ]
 }
