@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:numbers_repository/numbers_repository.dart';
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:pedantic/pedantic.dart';
 
 import '../../authentication/authentication.dart';
@@ -15,15 +14,15 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
     required NumbersRepository numbersRepository,
     required AuthenticationBloc authenticationBloc,
   })   : _numbersRepository = numbersRepository,
-        _authenticationBloc = authenticationBloc,
         super(NumbersLoading()) {
-    _authenticationBlocSubscription =
-        authenticationBloc.stream.listen((state) {});
+    _authenticationBlocSubscription = authenticationBloc.stream.listen((state) {
+      if (state.status == AuthenticationStatus.authenticated) {
+        numbersRepository.userId = state.userInfo.id;
+      }
+    });
   }
   final NumbersRepository _numbersRepository;
   StreamSubscription? _numbersSubscription;
-
-  final AuthenticationBloc _authenticationBloc;
   StreamSubscription? _authenticationBlocSubscription;
 
   @override
