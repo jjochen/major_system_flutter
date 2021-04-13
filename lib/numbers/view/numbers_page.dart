@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/attributions/attributions.dart';
 import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/numbers/numbers.dart';
-import 'package:numbers_repository/numbers_repository.dart';
 
 class NumbersPage extends StatelessWidget {
   static Route route() {
@@ -34,15 +33,7 @@ class NumbersPage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocProvider<NumbersBloc>(
-        create: (_) {
-          return NumbersBloc(
-              numbersRepository: context.read<NumbersRepository>(),
-              authenticationBloc: context.read<AuthenticationBloc>())
-            ..add(LoadNumbers()); // TODO add LoadNumbers when authenticated
-        },
-        child: Numbers(),
-      ),
+      body: Numbers(),
     );
   }
 }

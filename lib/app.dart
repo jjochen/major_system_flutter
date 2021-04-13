@@ -20,6 +20,11 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authenticationBloc =
+        AuthenticationBloc(authenticationRepository: authenticationRepository);
+    final numbersBloc = NumbersBloc(
+        numbersRepository: numbersRepository,
+        authenticationBloc: authenticationBloc);
     return MultiRepositoryProvider(
         providers: [
           RepositoryProvider<AuthenticationRepository>(
@@ -30,8 +35,8 @@ class App extends StatelessWidget {
         child: MultiBlocProvider(
           providers: [
             BlocProvider<AuthenticationBloc>(
-                create: (context) => AuthenticationBloc(
-                    authenticationRepository: authenticationRepository)),
+                create: (context) => authenticationBloc),
+            BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
           ],
           child: AppView(),
         ));
