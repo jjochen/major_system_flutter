@@ -93,7 +93,7 @@ class AuthenticationRepository {
   }
 
   /// Signs out the current user which will emit
-  /// [UserInfo.empty] from the [user] Stream.
+  /// [UserInfo.empty] from the [userInfo] Stream.
   ///
   /// Throws a [LogOutFailure] if an exception occurs.
   Future<void> logOut() async {
