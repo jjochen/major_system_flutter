@@ -13,27 +13,42 @@ class MockAuthenticationBloc
     extends MockBloc<AuthenticationEvent, AuthenticationState>
     implements AuthenticationBloc {}
 
-// ignore: must_be_immutable
-class MockUser extends Mock implements UserInfo {
+class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
+    implements NumbersBloc {}
+
+class MockUserInfo extends Mock implements UserInfo {
   @override
   String get email => 'test@gmail.com';
+
+  @override
+  String get id => '1234';
 }
 
 void main() {
   const logoutButtonKey = Key('homePage_logout_iconButton');
   const attributionsButtonKey = Key('homePage_attributions_iconButton');
+
   group('NumbersPage', () {
     registerFallbackValue<AuthenticationState>(
         const AuthenticationState.unknown());
     registerFallbackValue<AuthenticationEvent>(AuthenticationLogoutRequested());
+
+    registerFallbackValue<NumbersState>(NumbersLoading());
+    registerFallbackValue<NumbersEvent>(LoadNumbers());
+
     late AuthenticationBloc authenticationBloc;
+    late NumbersBloc numbersBloc;
     late UserInfo user;
 
     setUp(() {
       authenticationBloc = MockAuthenticationBloc();
-      user = MockUser();
+      numbersBloc = MockNumbersBloc();
+      user = MockUserInfo();
       when(() => authenticationBloc.state).thenReturn(
         AuthenticationState.authenticated(user),
+      );
+      when(() => numbersBloc.state).thenReturn(
+        const NumbersLoaded(),
       );
     });
 
@@ -41,8 +56,12 @@ void main() {
       testWidgets('AuthenticationLogoutRequested when logout is pressed',
           (tester) async {
         await tester.pumpWidget(
-          BlocProvider.value(
-            value: authenticationBloc,
+          MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthenticationBloc>(
+                  create: (context) => authenticationBloc),
+              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
+            ],
             child: MaterialApp(
               home: NumbersPage(),
             ),
@@ -56,41 +75,20 @@ void main() {
     });
 
     group('renders', () {
-      testWidgets('avatar widget', (tester) async {
+      testWidgets('numbers widget', (tester) async {
         await tester.pumpWidget(
-          BlocProvider.value(
-            value: authenticationBloc,
+          MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthenticationBloc>(
+                  create: (context) => authenticationBloc),
+              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
+            ],
             child: MaterialApp(
               home: NumbersPage(),
             ),
           ),
         );
-        expect(find.byType(Avatar), findsOneWidget);
-      });
-
-      testWidgets('email address', (tester) async {
-        await tester.pumpWidget(
-          BlocProvider.value(
-            value: authenticationBloc,
-            child: MaterialApp(
-              home: NumbersPage(),
-            ),
-          ),
-        );
-        expect(find.text('test@gmail.com'), findsOneWidget);
-      });
-
-      testWidgets('name', (tester) async {
-        when(() => user.name).thenReturn('Joe');
-        await tester.pumpWidget(
-          BlocProvider.value(
-            value: authenticationBloc,
-            child: MaterialApp(
-              home: NumbersPage(),
-            ),
-          ),
-        );
-        expect(find.text('Joe'), findsOneWidget);
+        expect(find.byType(Numbers), findsOneWidget);
       });
     });
 
@@ -98,8 +96,12 @@ void main() {
       testWidgets('to Attributions when attributions icon is pressed',
           (tester) async {
         await tester.pumpWidget(
-          BlocProvider.value(
-            value: authenticationBloc,
+          MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthenticationBloc>(
+                  create: (context) => authenticationBloc),
+              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
+            ],
             child: MaterialApp(
               home: NumbersPage(),
             ),
