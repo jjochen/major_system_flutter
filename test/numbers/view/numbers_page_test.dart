@@ -67,6 +67,7 @@ void main() {
             ),
           ),
         );
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(logoutButtonKey));
         verify(
           () => authenticationBloc.add(AuthenticationLogoutRequested()),
@@ -88,6 +89,7 @@ void main() {
             ),
           ),
         );
+        await tester.pumpAndSettle();
         expect(find.byType(Numbers), findsOneWidget);
       });
     });
@@ -107,6 +109,7 @@ void main() {
             ),
           ),
         );
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(attributionsButtonKey));
         await tester.pumpAndSettle();
         expect(find.byType(AttributionsPage), findsOneWidget);

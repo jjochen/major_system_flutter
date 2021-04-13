@@ -76,13 +76,11 @@ void main() {
     late AuthenticationBloc authenticationBloc;
     late AuthenticationRepository authenticationRepository;
     late NumbersBloc numbersBloc;
-    late NumbersRepository numbersRepository;
 
     setUp(() {
       authenticationBloc = MockAuthenticationBloc();
       authenticationRepository = MockAuthenticationRepository();
       numbersBloc = MockNumbersBloc();
-      numbersRepository = MockNumbersRepository();
     });
 
     testWidgets('renders SplashPage by default', (tester) async {
@@ -128,21 +126,14 @@ void main() {
         initialState: NumbersLoading(),
       );
       await tester.pumpWidget(
-        MultiRepositoryProvider(
-            providers: [
-              RepositoryProvider<AuthenticationRepository>(
-                  create: (context) => authenticationRepository),
-              RepositoryProvider<NumbersRepository>(
-                  create: (context) => numbersRepository),
-            ],
-            child: MultiBlocProvider(
-              providers: [
-                BlocProvider<AuthenticationBloc>(
-                    create: (context) => authenticationBloc),
-                BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
-              ],
-              child: AppView(),
-            )),
+        MultiBlocProvider(
+          providers: [
+            BlocProvider<AuthenticationBloc>(
+                create: (context) => authenticationBloc),
+            BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
+          ],
+          child: AppView(),
+        ),
       );
       await tester.pumpAndSettle();
       expect(find.byType(NumbersPage), findsOneWidget);
