@@ -18,6 +18,7 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
     _authenticationBlocSubscription = authenticationBloc.stream.listen((state) {
       if (state.status == AuthenticationStatus.authenticated) {
         numbersRepository.userId = state.userInfo.id;
+        add(LoadNumbers());
       }
     });
   }

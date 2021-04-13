@@ -11,9 +11,6 @@ class NumbersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-// final textTheme = Theme.of(context).textTheme;
-    //final userInfo =
-    context.select((AuthenticationBloc bloc) => bloc.state.userInfo);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
