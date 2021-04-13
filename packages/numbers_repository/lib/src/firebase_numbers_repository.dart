@@ -21,6 +21,7 @@ class FirebaseNumbersRepository implements NumbersRepository {
     if (userId != _userId) {
       _userId = userId;
       configureFirestoreReferences();
+      // TODO; create user if doesn't exist
     }
   }
 
