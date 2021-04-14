@@ -2,30 +2,44 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/authentication/authentication.dart';
-import 'package:major_system/home/home.dart';
+import 'package:major_system/numbers/numbers.dart';
 import 'package:major_system/login/login.dart';
 import 'package:major_system/splash/splash.dart';
 import 'package:major_system/theme.dart';
+import 'package:numbers_repository/numbers_repository.dart';
 
 class App extends StatelessWidget {
   const App({
     Key? key,
     required this.authenticationRepository,
+    required this.numbersRepository,
   }) : super(key: key);
 
   final AuthenticationRepository authenticationRepository;
+  final NumbersRepository numbersRepository;
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: authenticationRepository,
-      child: BlocProvider(
-        create: (_) => AuthenticationBloc(
-          authenticationRepository: authenticationRepository,
-        ),
-        child: AppView(),
-      ),
-    );
+    final authenticationBloc =
+        AuthenticationBloc(authenticationRepository: authenticationRepository);
+    final numbersBloc = NumbersBloc(
+        numbersRepository: numbersRepository,
+        authenticationBloc: authenticationBloc);
+    return MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider<AuthenticationRepository>(
+              create: (context) => authenticationRepository),
+          RepositoryProvider<NumbersRepository>(
+              create: (context) => numbersRepository),
+        ],
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<AuthenticationBloc>(
+                create: (context) => authenticationBloc),
+            BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
+          ],
+          child: AppView(),
+        ));
   }
 }
 
@@ -50,7 +64,7 @@ class _AppViewState extends State<AppView> {
             switch (state.status) {
               case AuthenticationStatus.authenticated:
                 _navigator?.pushAndRemoveUntil<void>(
-                  HomePage.route(),
+                  NumbersPage.route(),
                   (route) => false,
                 );
                 break;

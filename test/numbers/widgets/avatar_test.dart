@@ -2,7 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:major_system/home/home.dart';
+import 'package:major_system/numbers/numbers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

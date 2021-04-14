@@ -17,8 +17,8 @@ void main() {
     group('AuthenticationUserChanged', () {
       test('supports value comparisons', () {
         expect(
-          AuthenticationUserChanged(User(id: 'some-id')),
-          AuthenticationUserChanged(User(id: 'some-id')),
+          AuthenticationUserInfoChanged(UserInfo(id: 'some-id')),
+          AuthenticationUserInfoChanged(UserInfo(id: 'some-id')),
         );
       });
     });

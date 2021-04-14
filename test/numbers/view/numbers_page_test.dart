@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/attributions/attributions.dart';
 import 'package:major_system/authentication/authentication.dart';
-import 'package:major_system/home/home.dart';
-import 'package:major_system/home/widgets/widgets.dart';
+import 'package:major_system/numbers/numbers.dart';
+import 'package:major_system/numbers/widgets/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -13,27 +13,42 @@ class MockAuthenticationBloc
     extends MockBloc<AuthenticationEvent, AuthenticationState>
     implements AuthenticationBloc {}
 
-// ignore: must_be_immutable
-class MockUser extends Mock implements User {
+class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
+    implements NumbersBloc {}
+
+class MockUserInfo extends Mock implements UserInfo {
   @override
   String get email => 'test@gmail.com';
+
+  @override
+  String get id => '1234';
 }
 
 void main() {
   const logoutButtonKey = Key('homePage_logout_iconButton');
   const attributionsButtonKey = Key('homePage_attributions_iconButton');
-  group('HomePage', () {
+
+  group('NumbersPage', () {
     registerFallbackValue<AuthenticationState>(
         const AuthenticationState.unknown());
     registerFallbackValue<AuthenticationEvent>(AuthenticationLogoutRequested());
+
+    registerFallbackValue<NumbersState>(NumbersLoading());
+    registerFallbackValue<NumbersEvent>(LoadNumbers());
+
     late AuthenticationBloc authenticationBloc;
-    late User user;
+    late NumbersBloc numbersBloc;
+    late UserInfo user;
 
     setUp(() {
       authenticationBloc = MockAuthenticationBloc();
-      user = MockUser();
+      numbersBloc = MockNumbersBloc();
+      user = MockUserInfo();
       when(() => authenticationBloc.state).thenReturn(
         AuthenticationState.authenticated(user),
+      );
+      when(() => numbersBloc.state).thenReturn(
+        const NumbersLoaded(),
       );
     });
 
@@ -41,13 +56,18 @@ void main() {
       testWidgets('AuthenticationLogoutRequested when logout is pressed',
           (tester) async {
         await tester.pumpWidget(
-          BlocProvider.value(
-            value: authenticationBloc,
+          MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthenticationBloc>(
+                  create: (context) => authenticationBloc),
+              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
+            ],
             child: MaterialApp(
-              home: HomePage(),
+              home: NumbersPage(),
             ),
           ),
         );
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(logoutButtonKey));
         verify(
           () => authenticationBloc.add(AuthenticationLogoutRequested()),
@@ -56,55 +76,40 @@ void main() {
     });
 
     group('renders', () {
-      testWidgets('avatar widget', (tester) async {
+      testWidgets('numbers widget', (tester) async {
         await tester.pumpWidget(
-          BlocProvider.value(
-            value: authenticationBloc,
+          MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthenticationBloc>(
+                  create: (context) => authenticationBloc),
+              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
+            ],
             child: MaterialApp(
-              home: HomePage(),
+              home: NumbersPage(),
             ),
           ),
         );
-        expect(find.byType(Avatar), findsOneWidget);
-      });
-
-      testWidgets('email address', (tester) async {
-        await tester.pumpWidget(
-          BlocProvider.value(
-            value: authenticationBloc,
-            child: MaterialApp(
-              home: HomePage(),
-            ),
-          ),
-        );
-        expect(find.text('test@gmail.com'), findsOneWidget);
-      });
-
-      testWidgets('name', (tester) async {
-        when(() => user.name).thenReturn('Joe');
-        await tester.pumpWidget(
-          BlocProvider.value(
-            value: authenticationBloc,
-            child: MaterialApp(
-              home: HomePage(),
-            ),
-          ),
-        );
-        expect(find.text('Joe'), findsOneWidget);
+        await tester.pumpAndSettle();
+        expect(find.byType(Numbers), findsOneWidget);
       });
     });
 
     group('navigates', () {
-      testWidgets('to Attributions when attributions icconns is pressed',
+      testWidgets('to Attributions when attributions icon is pressed',
           (tester) async {
         await tester.pumpWidget(
-          BlocProvider.value(
-            value: authenticationBloc,
+          MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthenticationBloc>(
+                  create: (context) => authenticationBloc),
+              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
+            ],
             child: MaterialApp(
-              home: HomePage(),
+              home: NumbersPage(),
             ),
           ),
         );
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(attributionsButtonKey));
         await tester.pumpAndSettle();
         expect(find.byType(AttributionsPage), findsOneWidget);
