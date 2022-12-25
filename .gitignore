@@ -146,7 +146,7 @@ fastlane/FastlaneRunner
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
-.fvm/
+.fvm/flutter_sdk
 .packages
 .pub-cache/
 .pub/
