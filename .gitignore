@@ -306,7 +306,7 @@ fabric.properties
 .idea/codestream.xml
 
 ### VisualStudioCode ###
-.vscode/*
+# .vscode/*
 !.vscode/tasks.json
 !.vscode/launch.json
 *.code-workspace
