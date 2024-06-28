@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:major_system/authentication/authentication.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:major_system/authentication/authentication.dart';
 
 void main() {
   const passwordString = 'T0pS3cr3t123';
@@ -9,20 +9,20 @@ void main() {
       test('pure creates correct instance', () {
         final password = Password.pure();
         expect(password.value, '');
-        expect(password.pure, true);
+        expect(password.isPure, true);
       });
 
       test('dirty creates correct instance', () {
         final password = Password.dirty(passwordString);
         expect(password.value, passwordString);
-        expect(password.pure, false);
+        expect(password.isPure, false);
       });
     });
 
     group('validator', () {
       test('returns invalid error when password is empty', () {
         expect(
-          Password.dirty('').error,
+          Password.dirty().error,
           PasswordValidationError.invalid,
         );
       });

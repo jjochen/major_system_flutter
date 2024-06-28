@@ -5,8 +5,10 @@ import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/home/home.dart';
 
 class HomePage extends StatelessWidget {
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => HomePage());
+  const HomePage({super.key});
+
+  static Route<dynamic> route() {
+    return MaterialPageRoute<void>(builder: (_) => const HomePage());
   }
 
   @override
@@ -38,10 +40,10 @@ class HomePage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Avatar(photo: user.photo),
-            const SizedBox(height: 4.0),
-            Text(user.email ?? '', style: textTheme.headline6),
-            const SizedBox(height: 4.0),
-            Text(user.name ?? '', style: textTheme.headline5),
+            const SizedBox(height: 4),
+            Text(user.email ?? '', style: textTheme.titleLarge),
+            const SizedBox(height: 4),
+            Text(user.name ?? '', style: textTheme.headlineSmall),
           ],
         ),
       ),

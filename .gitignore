@@ -12,7 +12,6 @@ fastlane/Matchfile
 **/ios/Runner/GoogleService-Info.plist
 **/android/app/google-services.json
 
-
 # Created by https://www.toptal.com/developers/gitignore/api/xcode,android,flutter,fastlane,intellij,androidstudio,visualstudiocode,firebase
 # Edit at https://www.toptal.com/developers/gitignore?templates=xcode,android,flutter,fastlane,intellij,androidstudio,visualstudiocode,firebase
 
@@ -146,7 +145,6 @@ fastlane/FastlaneRunner
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
-.fvm/flutter_sdk
 .packages
 .pub-cache/
 .pub/
@@ -459,3 +457,6 @@ hs_err_pid*
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/xcode,android,flutter,fastlane,intellij,androidstudio,visualstudiocode,firebase
+
+# FVM Version Cache
+.fvm/

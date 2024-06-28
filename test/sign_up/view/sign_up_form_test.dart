@@ -1,11 +1,13 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:major_system/authentication/authentication.dart';
-import 'package:major_system/sign_up/sign_up.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formz/formz.dart';
+import 'package:major_system/authentication/authentication.dart';
+import 'package:major_system/sign_up/sign_up.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAuthenticationRepository extends Mock
@@ -31,7 +33,7 @@ void main() {
   const testConfirmedPassword = 'testP@ssw0rd1';
 
   group('SignUpForm', () {
-    registerFallbackValue<SignUpState>(const SignUpState());
+    registerFallbackValue(const SignUpState());
 
     late SignUpCubit signUpCubit;
 
@@ -84,19 +86,21 @@ void main() {
           ),
         );
         await tester.enterText(
-            find.byKey(confirmedPasswordInputKey), testConfirmedPassword);
-        verify(() =>
-                signUpCubit.confirmedPasswordChanged(testConfirmedPassword))
-            .called(1);
+          find.byKey(confirmedPasswordInputKey),
+          testConfirmedPassword,
+        );
+        verify(
+          () => signUpCubit.confirmedPasswordChanged(testConfirmedPassword),
+        ).called(1);
       });
 
       testWidgets('signUpFormSubmitted when sign up button is pressed',
           (tester) async {
         when(() => signUpCubit.state).thenReturn(
-          const SignUpState(status: FormzStatus.valid),
+          const SignUpState(),
         );
         when(() => signUpCubit.signUpFormSubmitted())
-            .thenAnswer((_) async => null);
+            .thenAnswer((_) => Future.value());
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
@@ -118,8 +122,8 @@ void main() {
         whenListen(
           signUpCubit,
           Stream.fromIterable(const <SignUpState>[
-            SignUpState(status: FormzStatus.submissionInProgress),
-            SignUpState(status: FormzStatus.submissionFailure),
+            SignUpState(submissionStatus: FormzSubmissionStatus.inProgress),
+            SignUpState(submissionStatus: FormzSubmissionStatus.failure),
           ]),
         );
         await tester.pumpWidget(
@@ -139,7 +143,7 @@ void main() {
       testWidgets('invalid email error text when email is invalid',
           (tester) async {
         final email = MockEmail();
-        when(() => email.invalid).thenReturn(true);
+        when(() => email.isNotValid).thenReturn(true);
         when(() => signUpCubit.state).thenReturn(SignUpState(email: email));
         await tester.pumpWidget(
           MaterialApp(
@@ -157,7 +161,7 @@ void main() {
       testWidgets('invalid password error text when password is invalid',
           (tester) async {
         final password = MockPassword();
-        when(() => password.invalid).thenReturn(true);
+        when(() => password.isNotValid).thenReturn(true);
         when(() => signUpCubit.state)
             .thenReturn(SignUpState(password: password));
         await tester.pumpWidget(
@@ -177,7 +181,7 @@ void main() {
           'invalid confirmedPassword error text'
           ' when confirmedPassword is invalid', (tester) async {
         final confirmedPassword = MockConfirmedPassword();
-        when(() => confirmedPassword.invalid).thenReturn(true);
+        when(() => confirmedPassword.isNotValid).thenReturn(true);
         when(() => signUpCubit.state)
             .thenReturn(SignUpState(confirmedPassword: confirmedPassword));
         await tester.pumpWidget(
@@ -196,7 +200,7 @@ void main() {
       testWidgets('disabled sign up button when status is not validated',
           (tester) async {
         when(() => signUpCubit.state).thenReturn(
-          const SignUpState(status: FormzStatus.invalid),
+          const SignUpState(isValid: false),
         );
         await tester.pumpWidget(
           MaterialApp(
@@ -217,7 +221,7 @@ void main() {
       testWidgets('enabled sign up button when status is validated',
           (tester) async {
         when(() => signUpCubit.state).thenReturn(
-          const SignUpState(status: FormzStatus.valid),
+          const SignUpState(),
         );
         await tester.pumpWidget(
           MaterialApp(

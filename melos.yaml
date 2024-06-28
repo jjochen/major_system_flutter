@@ -1,0 +1,122 @@
+name: major_system
+repository: https://github.com/jjochen/major_system
+sdkPath: .fvm/flutter_sdk
+
+packages:
+  - '.'
+  - 'apps/**'
+  - 'packages/**'
+
+
+scripts:
+  format:
+    description: Format files in all packages.
+    run: flutter format . --line-length 120
+
+  test:
+    description: Run tests in selected package.
+    exec: |
+      set -euo pipefail 
+      flutter format . --line-length 120 
+      flutter analyze . 
+      flutter test --test-randomize-ordering-seed=random 
+    packageFilters:
+      dirExists:
+        - test
+
+  coverage:
+    description: Create coverage report for selected package.
+    exec: |
+      set -euo pipefail 
+      flutter test --coverage 
+      lcov --remove 'coverage/lcov.info' '*.g.dart' '*.chopper.dart' --output-file 'coverage/lcov.info' 
+      genhtml coverage/lcov.info -o coverage/ 
+      open coverage/index.html 
+    packageFilters:
+      dirExists:
+        - test
+
+  generate:
+    description: Generate files for selected package.
+    run: |
+      set -euo pipefail 
+      flutter clean 
+      flutter pub get 
+      mkdir -p .dart_tool/flutter_gen/ 
+      cp pubspec.yaml .dart_tool/flutter_gen/ 
+      flutter pub run build_runner build --delete-conflicting-outputs --build-filter 'lib/*.dart' --build-filter 'lib/**/*.dart' 
+      flutter format . --line-length 120 
+    exec:
+      concurrency: 1
+    packageFilters:
+      dependsOn:
+        - build_runner
+
+  install:
+    description: Install all dependencies.
+    run: |
+      set -euo pipefail 
+      melos run fvm:install
+      melos run gems:install 
+      melos run flutter:clean 
+      melos run pub:get 
+
+  fvm:install:
+    description: Install flutter sdk.
+    run: fvm install
+
+  gems:install:
+    description: Install gems.
+    run: bundle install
+
+  gems:update:
+    description: Install gems.
+    run: |
+      set -euo pipefail 
+      gem install bundler 
+      bundle update 
+
+  flutter:clean:
+    description: Run `flutter clean` in all packages.
+    exec: flutter clean
+
+  dart:fix:
+    description: Run `dart fix` in all packages.
+    exec: dart fix --apply
+
+  pub:get:
+    description: Install flutter packages in all packages.
+    run: flutter pub get
+    exec:
+      concurrency: 1
+
+  pub:upgrade:
+    description: Upgrade flutter packages to the latest minor version in all packages.
+    run: flutter pub upgrade
+    exec:
+      concurrency: 1
+
+  pub:upgrade:major:
+    description: Upgrade flutter packages to the latest major version in all packages.
+    run: flutter pub upgrade --major-versions
+    exec:
+      concurrency: 1
+
+  pub:repair:
+    description: Repair flutter package cache.
+    run: flutter pub cache repair
+
+  pod:repo-update:
+    description: Updates the local CocoaPods repository.
+    run: bundle exec pod repo update
+
+  pod:update:
+    description: Update pods in packages with a Podfile.lock
+    exec: |
+      set -euo pipefail
+      flutter precache --ios
+      cd ios
+      bundle exec pod update --repo-update    
+    packageFilters:
+      fileExists:
+        - ./ios/Podfile.lock

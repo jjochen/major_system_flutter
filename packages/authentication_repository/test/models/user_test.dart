@@ -9,7 +9,7 @@ void main() {
 
     test('uses value equality', () {
       expect(
-        User(email: email, id: id, name: null, photo: null),
+        User(email: email, id: id),
         User(email: email, id: id),
       );
     });

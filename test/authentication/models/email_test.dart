@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:major_system/authentication/authentication.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:major_system/authentication/authentication.dart';
 
 void main() {
   const emailString = 'test@gmail.com';
@@ -9,20 +9,20 @@ void main() {
       test('pure creates correct instance', () {
         final email = Email.pure();
         expect(email.value, '');
-        expect(email.pure, true);
+        expect(email.isPure, true);
       });
 
       test('dirty creates correct instance', () {
         final email = Email.dirty(emailString);
         expect(email.value, emailString);
-        expect(email.pure, false);
+        expect(email.isPure, false);
       });
     });
 
     group('validator', () {
       test('returns invalid error when email is empty', () {
         expect(
-          Email.dirty('').error,
+          Email.dirty().error,
           EmailValidationError.invalid,
         );
       });

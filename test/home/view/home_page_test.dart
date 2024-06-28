@@ -1,12 +1,13 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:major_system/attributions/attributions.dart';
 import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/home/home.dart';
-import 'package:major_system/home/widgets/widgets.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAuthenticationBloc
@@ -23,9 +24,8 @@ void main() {
   const logoutButtonKey = Key('homePage_logout_iconButton');
   const attributionsButtonKey = Key('homePage_attributions_iconButton');
   group('HomePage', () {
-    registerFallbackValue<AuthenticationState>(
-        const AuthenticationState.unknown());
-    registerFallbackValue<AuthenticationEvent>(AuthenticationLogoutRequested());
+    registerFallbackValue(const AuthenticationState.unknown());
+    registerFallbackValue(AuthenticationLogoutRequested());
     late AuthenticationBloc authenticationBloc;
     late User user;
 
@@ -60,7 +60,7 @@ void main() {
         await tester.pumpWidget(
           BlocProvider.value(
             value: authenticationBloc,
-            child: MaterialApp(
+            child: const MaterialApp(
               home: HomePage(),
             ),
           ),
@@ -72,7 +72,7 @@ void main() {
         await tester.pumpWidget(
           BlocProvider.value(
             value: authenticationBloc,
-            child: MaterialApp(
+            child: const MaterialApp(
               home: HomePage(),
             ),
           ),
@@ -85,7 +85,7 @@ void main() {
         await tester.pumpWidget(
           BlocProvider.value(
             value: authenticationBloc,
-            child: MaterialApp(
+            child: const MaterialApp(
               home: HomePage(),
             ),
           ),
@@ -100,7 +100,7 @@ void main() {
         await tester.pumpWidget(
           BlocProvider.value(
             value: authenticationBloc,
-            child: MaterialApp(
+            child: const MaterialApp(
               home: HomePage(),
             ),
           ),

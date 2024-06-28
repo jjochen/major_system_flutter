@@ -1,7 +1,8 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:numbers_repository/numbers_repository.dart';
-import 'entities/entities.dart';
+import 'package:numbers_repository/src/entities/entities.dart';
 
 class FirebaseNumbersRepository implements NumbersRepository {
   FirebaseNumbersRepository({FirebaseFirestore? firestore})
@@ -9,8 +10,8 @@ class FirebaseNumbersRepository implements NumbersRepository {
 
   final FirebaseFirestore _firestore;
 
-  CollectionReference? _numberCollection;
-  CollectionReference get numberCollection =>
+  CollectionReference<Map<String, dynamic>>? _numberCollection;
+  CollectionReference<Map<String, dynamic>> get numberCollection =>
       _numberCollection ??= _firestore.collection('numbers');
 
   @override

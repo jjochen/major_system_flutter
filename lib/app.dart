@@ -9,9 +9,8 @@ import 'package:major_system/theme.dart';
 
 class App extends StatelessWidget {
   const App({
-    Key? key,
-    required this.authenticationRepository,
-  }) : super(key: key);
+    required this.authenticationRepository, super.key,
+  });
 
   final AuthenticationRepository authenticationRepository;
 
@@ -23,18 +22,20 @@ class App extends StatelessWidget {
         create: (_) => AuthenticationBloc(
           authenticationRepository: authenticationRepository,
         ),
-        child: AppView(),
+        child: const AppView(),
       ),
     );
   }
 }
 
 class AppView extends StatefulWidget {
+  const AppView({super.key});
+
   @override
-  _AppViewState createState() => _AppViewState();
+  AppViewState createState() => AppViewState();
 }
 
-class _AppViewState extends State<AppView> {
+class AppViewState extends State<AppView> {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   NavigatorState? get _navigator => _navigatorKey.currentState;
@@ -53,14 +54,13 @@ class _AppViewState extends State<AppView> {
                   HomePage.route(),
                   (route) => false,
                 );
-                break;
               case AuthenticationStatus.unauthenticated:
                 _navigator?.pushAndRemoveUntil<void>(
                   LoginPage.route(),
                   (route) => false,
                 );
-                break;
-              default:
+              case AuthenticationStatus.unknown:
+                // TODO(jjochen): Handle this case.
                 break;
             }
           },
