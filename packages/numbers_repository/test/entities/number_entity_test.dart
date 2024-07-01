@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:numbers_repository/src/entities/entities.dart';
 
 void main() {
@@ -8,14 +6,19 @@ void main() {
     const id = 'mock-id';
     const numberOfDigits = 2;
     const value = 23;
+    const data = {
+      'number_of_digits': numberOfDigits,
+      'value': value,
+    };
+    const numberEntity = NumberEntity(
+      id: id,
+      numberOfDigits: numberOfDigits,
+      value: value,
+    );
 
     test('uses value equality', () {
       expect(
-        const NumberEntity(
-          id: id,
-          numberOfDigits: numberOfDigits,
-          value: value,
-        ),
+        numberEntity,
         const NumberEntity(
           id: id,
           numberOfDigits: numberOfDigits,
@@ -26,11 +29,7 @@ void main() {
 
     test('uses stringify', () {
       expect(
-        const NumberEntity(
-          id: id,
-          numberOfDigits: numberOfDigits,
-          value: value,
-        ).toString(),
+        numberEntity.toString(),
         'NumberEntity(mock-id, 2, 23)',
       );
     });
@@ -51,6 +50,16 @@ void main() {
       );
     });
 
+    test('from snapshot', () {
+      expect(
+        NumberEntity.fromSnapshot(
+          id: id,
+          data: data,
+        ),
+        numberEntity,
+      );
+    });
+
     test('to json', () {
       final json = {
         'id': id,
@@ -58,44 +67,8 @@ void main() {
         'value': value,
       };
       expect(
-        const NumberEntity(
-          id: id,
-          numberOfDigits: numberOfDigits,
-          value: value,
-        ).toJson(),
+        numberEntity.toJson(),
         json,
-      );
-    });
-
-    test('from document', () {
-      final snapshotData = {
-        'number_of_digits': numberOfDigits,
-        'value': value,
-      };
-      final snap = MockDocumentSnapshot();
-      when(() => snap.id).thenReturn(id);
-      when(snap.data).thenReturn(snapshotData);
-      expect(
-        NumberEntity.fromSnapshot(snap),
-        const NumberEntity(
-          id: id,
-          numberOfDigits: numberOfDigits,
-          value: value,
-        ),
-      );
-    });
-
-    test('from document without data', () {
-      final snap = MockDocumentSnapshot();
-      when(() => snap.id).thenReturn(id);
-      when(snap.data).thenReturn(null);
-      expect(
-        NumberEntity.fromSnapshot(snap),
-        const NumberEntity(
-          id: id,
-          numberOfDigits: 0,
-          value: 0,
-        ),
       );
     });
 
@@ -115,6 +88,3 @@ void main() {
     });
   });
 }
-
-class MockDocumentSnapshot extends Mock
-    implements DocumentSnapshot<Map<String, dynamic>> {}
