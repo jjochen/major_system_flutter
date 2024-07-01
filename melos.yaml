@@ -29,7 +29,7 @@ scripts:
     exec: |
       set -euo pipefail 
       flutter test --coverage 
-      lcov --remove 'coverage/lcov.info' '*.g.dart' '*.chopper.dart' --output-file 'coverage/lcov.info' 
+      # lcov --remove 'coverage/lcov.info' '*.g.dart' '*.chopper.dart' --output-file 'coverage/lcov.info' 
       genhtml coverage/lcov.info -o coverage/ 
       open coverage/index.html 
     packageFilters:
