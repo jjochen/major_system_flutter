@@ -28,8 +28,13 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Configure fvm
+        uses: kuhnroyal/flutter-fvm-config-action@v2
+
       - name: Install flutter
         uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
 
       - name: Print Flutter/Dart version
         working-directory: ${{ matrix.directory }}
@@ -41,20 +46,19 @@ jobs:
 
       - name: Verify formatting
         working-directory: ${{ matrix.directory }}
-        run: flutter format --dry-run --set-exit-if-changed .
+        run: dart format --output=none --set-exit-if-changed .
 
       - name: Analyze project source
         working-directory: ${{ matrix.directory }}
-        run: flutter analyze
+        run: dart analyze --fatal-infos
 
       - name: Run tests
         working-directory: ${{ matrix.directory }}
-        run: flutter test --coverage
+        run: flutter test --test-randomize-ordering-seed=random --coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          path_to_write_report: '${{ matrix.directory }}/coverage/codecov_report.txt'
           verbose: true
