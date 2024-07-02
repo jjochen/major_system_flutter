@@ -112,5 +112,24 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(HomePage), findsOneWidget);
     });
+
+    testWidgets('navigates to HomePage when status is unknown', (tester) async {
+      whenListen(
+        authenticationBloc,
+        Stream.value(const AuthenticationState.unknown()),
+        initialState: AuthenticationState.unauthenticated(),
+      );
+      await tester.pumpWidget(
+        RepositoryProvider.value(
+          value: authenticationRepository,
+          child: BlocProvider.value(
+            value: authenticationBloc,
+            child: const AppView(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      // TODO(jjochen): Handle this case.
+    });
   });
 }
