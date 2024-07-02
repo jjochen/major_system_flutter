@@ -11,13 +11,13 @@ packages:
 scripts:
   format:
     description: Format files in all packages.
-    run: flutter format . --line-length 120
+    run: dart format .
 
   test:
     description: Run tests in selected package.
     exec: |
       set -euo pipefail 
-      flutter format . --line-length 120 
+      dart format . 
       flutter analyze . 
       flutter test --test-randomize-ordering-seed=random 
     packageFilters:
@@ -45,7 +45,7 @@ scripts:
       mkdir -p .dart_tool/flutter_gen/ 
       cp pubspec.yaml .dart_tool/flutter_gen/ 
       flutter pub run build_runner build --delete-conflicting-outputs --build-filter 'lib/*.dart' --build-filter 'lib/**/*.dart' 
-      flutter format . --line-length 120 
+      flutter format . 
     exec:
       concurrency: 1
     packageFilters:
