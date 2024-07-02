@@ -5,13 +5,15 @@ import 'package:numbers_repository/numbers_repository.dart';
 import 'package:numbers_repository/src/entities/entities.dart';
 
 class FirebaseNumbersRepository implements NumbersRepository {
-  FirebaseNumbersRepository({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+  const FirebaseNumbersRepository({
+    FirebaseFirestore? firestore,
+  }) : _firestore = firestore;
 
-  final FirebaseFirestore _firestore;
+  final FirebaseFirestore? _firestore;
+  FirebaseFirestore _getFirestore() => _firestore ?? FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _numbersCollection =>
-      _firestore.collection('numbers');
+      _getFirestore().collection('numbers');
 
   @override
   Future<Number?> getNumber(String id) async {

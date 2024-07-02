@@ -9,5 +9,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Bloc.observer = SimpleBlocObserver();
-  runApp(App(authenticationRepository: AuthenticationRepository()));
+  runApp(
+    const App(
+      authenticationRepository: AuthenticationRepository(),
+    ),
+  );
 }

@@ -15,23 +15,27 @@ scripts:
 
   test:
     description: Run tests in selected package.
-    exec: |
+    run: |
       set -euo pipefail 
       dart format . 
       flutter analyze . 
       flutter test --test-randomize-ordering-seed=random 
+    exec:
+      concurrency: 1
     packageFilters:
       dirExists:
         - test
 
   coverage:
     description: Create coverage report for selected package.
-    exec: |
+    run: |
       set -euo pipefail 
       flutter test --coverage 
       # lcov --remove 'coverage/lcov.info' '*.g.dart' '*.chopper.dart' --output-file 'coverage/lcov.info' 
       genhtml coverage/lcov.info -o coverage/ 
-      open coverage/index.html 
+      open coverage/index.html
+    exec:
+      concurrency: 1
     packageFilters:
       dirExists:
         - test
@@ -59,7 +63,7 @@ scripts:
       melos run fvm:install
       melos run gems:install 
       melos run flutter:clean 
-      melos run pub:get 
+      melos run pub:get
 
   fvm:install:
     description: Install flutter sdk.
