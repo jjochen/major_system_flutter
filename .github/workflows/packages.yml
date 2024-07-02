@@ -50,7 +50,7 @@ jobs:
 
       - name: Analyze project source
         working-directory: ${{ matrix.directory }}
-        run: dart analyze --fatal-infos
+        run: flutter analyze --fatal-infos .
 
       - name: Run tests
         working-directory: ${{ matrix.directory }}
