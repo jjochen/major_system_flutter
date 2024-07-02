@@ -23,6 +23,7 @@ dependencies:
 
 dev_dependencies:
   bloc_test: ^9.1.0
+  fake_cloud_firestore: any # TODO: romove once app has been moved to apps/ subdirectory
   flutter_test:
     sdk: flutter
   melos: ^6.1.0
