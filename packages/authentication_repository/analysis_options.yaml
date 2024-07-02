@@ -4,8 +4,4 @@ linter:
   rules:
     public_member_api_docs: false
 
-analyzer:
-  exclude:
-    - 'test/authentication_repository_test.dart' # invalid_implementation_override 
-
     

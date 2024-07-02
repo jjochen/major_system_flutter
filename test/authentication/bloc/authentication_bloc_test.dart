@@ -1,7 +1,7 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:major_system/authentication/authentication.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:major_system/authentication/authentication.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAuthenticationRepository extends Mock
@@ -72,6 +72,11 @@ void main() {
       blocTest<AuthenticationBloc, AuthenticationState>(
         'calls logOut on authenticationRepository '
         'when AuthenticationLogoutRequested is added',
+        setUp: () {
+          when(() => authenticationRepository.logOut()).thenAnswer(
+            (_) => Future<void>.value(),
+          );
+        },
         build: () => AuthenticationBloc(
           authenticationRepository: authenticationRepository,
         ),

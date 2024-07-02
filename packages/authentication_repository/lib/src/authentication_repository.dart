@@ -1,9 +1,8 @@
 import 'dart:async';
 
+import 'package:authentication_repository/src/models/models.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:google_sign_in/google_sign_in.dart';
-
-import 'models/models.dart';
 
 /// Thrown if during the sign up process if a failure occurs.
 class SignUpFailure implements Exception {}

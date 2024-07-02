@@ -1,16 +1,18 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:major_system/login/login.dart';
-import 'package:major_system/sign_up/sign_up.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formz/formz.dart';
+import 'package:major_system/login/login.dart';
+import 'package:major_system/sign_up/sign_up.dart';
 
 class LoginForm extends StatelessWidget {
+  const LoginForm({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
       listener: (context, state) {
-        if (state.status.isSubmissionFailure) {
+        if (state.submissionStatus.isFailure) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
@@ -28,15 +30,15 @@ class LoginForm extends StatelessWidget {
                 'assets/icon_transparent.png',
                 height: 120,
               ),
-              const SizedBox(height: 16.0),
+              const SizedBox(height: 16),
               _EmailInput(),
-              const SizedBox(height: 8.0),
+              const SizedBox(height: 8),
               _PasswordInput(),
-              const SizedBox(height: 8.0),
+              const SizedBox(height: 8),
               _LoginButton(),
-              const SizedBox(height: 8.0),
+              const SizedBox(height: 8),
               _GoogleLoginButton(),
-              const SizedBox(height: 4.0),
+              const SizedBox(height: 4),
               _SignUpButton(),
             ],
           ),
@@ -59,7 +61,7 @@ class _EmailInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'email',
             helperText: '',
-            errorText: state.email.invalid ? 'invalid email' : null,
+            errorText: state.email.isNotValid ? 'invalid email' : null,
           ),
         );
       },
@@ -81,7 +83,7 @@ class _PasswordInput extends StatelessWidget {
           decoration: InputDecoration(
             labelText: 'password',
             helperText: '',
-            errorText: state.password.invalid ? 'invalid password' : null,
+            errorText: state.password.isNotValid ? 'invalid password' : null,
           ),
         );
       },
@@ -93,20 +95,21 @@ class _LoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
-      buildWhen: (previous, current) => previous.status != current.status,
+      buildWhen: (previous, current) =>
+          previous.submissionStatus != current.submissionStatus,
       builder: (context, state) {
-        return state.status.isSubmissionInProgress
+        return state.submissionStatus.isInProgress
             ? const CircularProgressIndicator()
             : ElevatedButton(
                 key: const Key('loginForm_continue_raisedButton'),
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(30),
                   ),
-                  primary: const Color(0xFFFFD600),
+                  backgroundColor: const Color(0xFFFFD600),
                 ),
-                onPressed: state.status.isValidated
-                    ? () => context.read<LoginCubit>().logInWithCredentials()
+                onPressed: state.isValid
+                    ? context.read<LoginCubit>().logInWithCredentials
                     : null,
                 child: const Text('LOGIN'),
               );
@@ -127,9 +130,9 @@ class _GoogleLoginButton extends StatelessWidget {
       ),
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
+          borderRadius: BorderRadius.circular(30),
         ),
-        primary: theme.accentColor,
+        backgroundColor: theme.colorScheme.secondary,
       ),
       icon: const Icon(FontAwesomeIcons.google, color: Colors.white),
       onPressed: () => context.read<LoginCubit>().logInWithGoogle(),

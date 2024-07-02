@@ -1,6 +1,8 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
-import 'package:major_system/attributions/attributions.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:major_system/attributions/attributions.dart';
 
 void main() {
   group('AttributionsPage', () {

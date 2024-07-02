@@ -1,0 +1,63 @@
+{
+  "editor.tabSize": 2,
+  "dart.lineLength": 80,
+  "dart.flutterSdkPath": ".fvm/versions/3.22.2",
+  "search.exclude": {
+    "**/.fvm": true
+  },
+  "files.watcherExclude": {
+    "**/.fvm": true
+  },
+  "[dart]": {
+    "editor.rulers": [
+      80
+    ],
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[shellscript]": {
+    "editor.rulers": [
+      80
+    ],
+    "editor.formatOnSave": true
+  },
+  "dart.debugExternalPackageLibraries": true,
+  "dart.flutterTestAdditionalArgs": [
+    "--test-randomize-ordering-seed=random"
+  ],
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.patterns": {
+    "*.dart": "${capture}.g.dart",
+    "pubspec.yaml": "pubspec.lock",
+    "Gemfile": "Gemfile.lock",
+    "Podfile": "Podfile.lock",
+    "Brewfile": "Brewfile.lock.json"
+  },
+  "explorer.fileNesting.expand": false,
+  "flutterStylizer": {
+    "groupAndSortGetterMethods": false,
+    "memberOrdering": [
+      "public-constructor",
+      "named-constructors",
+      "public-static-variables",
+      "public-instance-variables",
+      "public-override-variables",
+      "private-static-variables",
+      "private-instance-variables",
+      "public-override-methods",
+      "public-other-methods",
+      "private-other-methods",
+      "build-method"
+    ],
+    "sortOtherMethods": false
+  },
+  "yaml.schemas": {
+    "https://json.schemastore.org/dart-build.json": [
+      "build.yaml"
+    ]
+  }
+}

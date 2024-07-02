@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AttributionsPage extends LicensePage {
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => AttributionsPage());
+  const AttributionsPage({super.key});
+
+  static Route<dynamic> route() {
+    return MaterialPageRoute<void>(builder: (_) => const AttributionsPage());
   }
 
   @override

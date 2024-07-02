@@ -1,14 +1,16 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:major_system/app.dart';
 import 'package:major_system/authentication/authentication.dart';
+import 'package:major_system/authentication/bloc/authentication_bloc.dart';
 import 'package:major_system/home/home.dart';
 import 'package:major_system/login/login.dart';
 import 'package:major_system/splash/splash.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:major_system/authentication/bloc/authentication_bloc.dart';
 
 // ignore: must_be_immutable
 class MockUser extends Mock implements User {
@@ -32,10 +34,8 @@ class MockAuthenticationBloc
 void main() {
   group('App', () {
     final User mockUser = MockUser();
-    registerFallbackValue<AuthenticationState>(
-        AuthenticationState.authenticated(mockUser));
-    registerFallbackValue<AuthenticationEvent>(
-        AuthenticationUserChanged(mockUser));
+    registerFallbackValue(AuthenticationState.authenticated(mockUser));
+    registerFallbackValue(AuthenticationUserChanged(mockUser));
 
     late AuthenticationRepository authenticationRepository;
 
@@ -67,7 +67,7 @@ void main() {
       when(() => authenticationBloc.state)
           .thenReturn(const AuthenticationState.unknown());
       await tester.pumpWidget(
-        BlocProvider.value(value: authenticationBloc, child: AppView()),
+        BlocProvider.value(value: authenticationBloc, child: const AppView()),
       );
       await tester.pumpAndSettle();
       expect(find.byType(SplashPage), findsOneWidget);
@@ -85,7 +85,7 @@ void main() {
           value: authenticationRepository,
           child: BlocProvider.value(
             value: authenticationBloc,
-            child: AppView(),
+            child: const AppView(),
           ),
         ),
       );
@@ -105,7 +105,7 @@ void main() {
           value: authenticationRepository,
           child: BlocProvider.value(
             value: authenticationBloc,
-            child: AppView(),
+            child: const AppView(),
           ),
         ),
       );

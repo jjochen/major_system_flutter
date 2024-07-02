@@ -1,8 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class NumberEntity extends Equatable {
-  NumberEntity({
+  const NumberEntity({
     required this.id,
     required this.numberOfDigits,
     required this.value,
@@ -10,17 +9,20 @@ class NumberEntity extends Equatable {
 
   factory NumberEntity.fromJson(Map<String, Object> json) {
     return NumberEntity(
-      id: json[_Key.id] as String,
-      numberOfDigits: json[_Key.numberOfDigits] as int,
-      value: json[_Key.value] as int,
+      id: json[_Key.id]! as String,
+      numberOfDigits: json[_Key.numberOfDigits]! as int,
+      value: json[_Key.value]! as int,
     );
   }
 
-  factory NumberEntity.fromSnapshot(DocumentSnapshot snap) {
+  factory NumberEntity.fromSnapshot({
+    required String id,
+    required Map<String, dynamic>? data,
+  }) {
     return NumberEntity(
-      id: snap.id,
-      numberOfDigits: snap.data()?[_Key.numberOfDigits] ?? 0,
-      value: snap.data()?[_Key.value] ?? 0,
+      id: id,
+      numberOfDigits: data?[_Key.numberOfDigits] as int? ?? 0,
+      value: data?[_Key.value] as int? ?? 0,
     );
   }
 

@@ -1,11 +1,10 @@
-import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-
-import '../entities/entities.dart';
+import 'package:flutter/foundation.dart';
+import 'package:numbers_repository/src/entities/entities.dart';
 
 @immutable
 class Number extends Equatable {
-  Number({
+  const Number({
     required this.id,
     required this.numberOfDigits,
     required this.value,

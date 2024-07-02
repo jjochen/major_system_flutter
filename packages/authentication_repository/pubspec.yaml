@@ -3,19 +3,21 @@ description: Dart package which manages the authentication domain.
 version: 1.0.0
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=3.4.3 <4.0.0"
+  flutter: ">=3.22.2"
 
 dependencies:
+  equatable: any
+  firebase_auth: any
+  firebase_core: any
   flutter:
     sdk: flutter
-  equatable:
-  firebase_auth:
-  firebase_core:
-  google_sign_in:
-  meta:
+  google_sign_in: any
+  meta: any
 
 dev_dependencies:
+  firebase_core_platform_interface: any
   flutter_test:
     sdk: flutter
-  very_good_analysis: ^2.0.0
-  mocktail: ^0.1.1
+  mocktail: any
+  very_good_analysis: any
