@@ -99,11 +99,13 @@ void main() {
 
     test('model from entity', () {
       expect(
-        Number.fromEntity(const NumberEntity(
-          id: id,
-          numberOfDigits: numberOfDigits,
-          value: value,
-        ),),
+        Number.fromEntity(
+          const NumberEntity(
+            id: id,
+            numberOfDigits: numberOfDigits,
+            value: value,
+          ),
+        ),
         const Number(
           id: id,
           numberOfDigits: numberOfDigits,

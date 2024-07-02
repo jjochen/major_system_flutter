@@ -9,7 +9,8 @@ import 'package:major_system/theme.dart';
 
 class App extends StatelessWidget {
   const App({
-    required this.authenticationRepository, super.key,
+    required this.authenticationRepository,
+    super.key,
   });
 
   final AuthenticationRepository authenticationRepository;
