@@ -48,15 +48,9 @@ void main() {
     registerFallbackValue(const NumbersLoaded());
     registerFallbackValue(const NumbersUpdated([]));
 
-    late NumbersRepository numbersRepository;
-
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();
-      numbersRepository = MockNumbersRepository();
       when(() => authenticationRepository.userInfo).thenAnswer(
-        (_) => const Stream.empty(),
-      );
-      when(() => numbersRepository.numbers()).thenAnswer(
         (_) => const Stream.empty(),
       );
     });
@@ -65,7 +59,6 @@ void main() {
       await tester.pumpWidget(
         App(
           authenticationRepository: authenticationRepository,
-          numbersRepository: numbersRepository,
         ),
       );
       expect(find.byType(AppView), findsOneWidget);

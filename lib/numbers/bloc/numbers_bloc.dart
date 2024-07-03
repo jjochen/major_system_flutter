@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:major_system/authentication/authentication.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
 part 'numbers_event.dart';
@@ -11,7 +10,6 @@ part 'numbers_state.dart';
 class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
   NumbersBloc({
     required NumbersRepository numbersRepository,
-    required AuthenticationBloc authenticationBloc,
   })  : _numbersRepository = numbersRepository,
         super(NumbersLoading()) {
     on<LoadNumbers>(_onLoadNumbers);
@@ -19,17 +17,9 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
     on<UpdateNumber>(_onUpdateNumber);
     on<DeleteNumber>(_onDeleteNumber);
     on<NumbersUpdated>(_onNumbersUpdate);
-
-    _authenticationBlocSubscription = authenticationBloc.stream.listen((state) {
-      if (state.status == AuthenticationStatus.authenticated) {
-        numbersRepository.userId = state.userInfo.id;
-        add(LoadNumbers());
-      }
-    });
   }
   final NumbersRepository _numbersRepository;
   StreamSubscription<List<Number>>? _numbersSubscription;
-  StreamSubscription<AuthenticationState>? _authenticationBlocSubscription;
 
   Future<void> _onLoadNumbers(
     LoadNumbers event,
@@ -72,7 +62,6 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
   @override
   Future<void> close() {
     _numbersSubscription?.cancel();
-    _authenticationBlocSubscription?.cancel();
     return super.close();
   }
 }

@@ -72,7 +72,7 @@ void main() {
           id: id,
           email: email,
           name: name,
-        ).copyWith(),
+        ).copyWith(email: () => null),
         const User(
           id: id,
           name: name,
@@ -102,7 +102,7 @@ void main() {
           id: id,
           email: email,
           name: name,
-        ).copyWith(),
+        ).copyWith(name: () => null),
         const User(
           id: id,
           email: email,

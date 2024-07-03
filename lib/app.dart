@@ -6,42 +6,24 @@ import 'package:major_system/login/login.dart';
 import 'package:major_system/numbers/numbers.dart';
 import 'package:major_system/splash/splash.dart';
 import 'package:major_system/theme.dart';
-import 'package:numbers_repository/numbers_repository.dart';
 
 class App extends StatelessWidget {
   const App({
     required this.authenticationRepository,
-    required this.numbersRepository,
     super.key,
   });
 
   final AuthenticationRepository authenticationRepository;
-  final NumbersRepository numbersRepository;
 
   @override
   Widget build(BuildContext context) {
     final authenticationBloc =
         AuthenticationBloc(authenticationRepository: authenticationRepository);
-    final numbersBloc = NumbersBloc(
-      numbersRepository: numbersRepository,
-      authenticationBloc: authenticationBloc,
-    );
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider<AuthenticationRepository>(
-          create: (context) => authenticationRepository,
-        ),
-        RepositoryProvider<NumbersRepository>(
-          create: (context) => numbersRepository,
-        ),
-      ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<AuthenticationBloc>(
-            create: (context) => authenticationBloc,
-          ),
-          BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
-        ],
+
+    return RepositoryProvider<AuthenticationRepository>(
+      create: (context) => authenticationRepository,
+      child: BlocProvider<AuthenticationBloc>(
+        create: (context) => authenticationBloc,
         child: const AppView(),
       ),
     );
@@ -68,20 +50,16 @@ class AppViewState extends State<AppView> {
       builder: (context, child) {
         return BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
-            switch (state.status) {
-              case AuthenticationStatus.authenticated:
-                _navigator?.pushAndRemoveUntil<void>(
-                  NumbersPage.route(),
-                  (route) => false,
-                );
-              case AuthenticationStatus.unauthenticated:
-                _navigator?.pushAndRemoveUntil<void>(
-                  LoginPage.route(),
-                  (route) => false,
-                );
-              case AuthenticationStatus.unknown:
-                // TODO(jjochen): Handle this case.
-                break;
+            if (state is AuthenticationAuthenticated) {
+              _navigator?.pushAndRemoveUntil<void>(
+                NumbersPage.route(user: state.user),
+                (route) => false,
+              );
+            } else {
+              _navigator?.pushAndRemoveUntil<void>(
+                LoginPage.route(),
+                (route) => false,
+              );
             }
           },
           child: child,

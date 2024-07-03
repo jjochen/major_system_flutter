@@ -1,21 +1,34 @@
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/attributions/attributions.dart';
 import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/numbers/numbers.dart';
+import 'package:numbers_repository/numbers_repository.dart';
 
 class NumbersPage extends StatelessWidget {
-  const NumbersPage({super.key});
+  const NumbersPage({
+    required this.user,
+    super.key,
+  });
 
-  static Route<dynamic> route() {
-    return MaterialPageRoute<void>(builder: (_) => const NumbersPage());
+  static Route<dynamic> route({
+    required UserInfo user,
+  }) {
+    return MaterialPageRoute<void>(
+      builder: (_) => NumbersPage(
+        user: user,
+      ),
+    );
   }
+
+  final UserInfo user;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Major System'),
         actions: <Widget>[
           IconButton(
             key: const Key('homePage_attributions_iconButton'),
@@ -32,7 +45,12 @@ class NumbersPage extends StatelessWidget {
           ),
         ],
       ),
-      body: const Numbers(),
+      body: BlocProvider(
+        create: (context) => NumbersBloc(
+          numbersRepository: FirebaseNumbersRepository(userId: user.id),
+        ),
+        child: const Numbers(),
+      ),
     );
   }
 }

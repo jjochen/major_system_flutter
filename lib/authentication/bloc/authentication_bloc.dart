@@ -12,7 +12,7 @@ class AuthenticationBloc
   AuthenticationBloc({
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
-        super(const AuthenticationState.unknown()) {
+        super(const AuthenticationUnauthenticated()) {
     on<AuthenticationUserInfoChanged>(_onAuthenticationUserChanged);
     on<AuthenticationLogoutRequested>(_onAuthenticationLogoutRequested);
     _userSubscription = _authenticationRepository.userInfo.listen(
@@ -28,9 +28,9 @@ class AuthenticationBloc
     Emitter<AuthenticationState> emit,
   ) async {
     emit(
-      event.userInfo != UserInfo.empty
-          ? AuthenticationState.authenticated(event.userInfo)
-          : const AuthenticationState.unauthenticated(),
+      event.userInfo == UserInfo.empty
+          ? const AuthenticationUnauthenticated()
+          : AuthenticationAuthenticated(event.userInfo),
     );
   }
 
