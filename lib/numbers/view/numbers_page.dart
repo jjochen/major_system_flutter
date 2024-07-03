@@ -5,8 +5,10 @@ import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/numbers/numbers.dart';
 
 class NumbersPage extends StatelessWidget {
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => NumbersPage());
+  const NumbersPage({super.key});
+
+  static Route<dynamic> route() {
+    return MaterialPageRoute<void>(builder: (_) => const NumbersPage());
   }
 
   @override

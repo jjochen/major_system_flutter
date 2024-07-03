@@ -1,6 +1,6 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 import 'package:numbers_repository/src/entities/entities.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Number', () {
@@ -10,12 +10,12 @@ void main() {
 
     test('uses value equality', () {
       expect(
-        Number(
+        const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
         ),
-        Number(
+        const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
@@ -25,7 +25,7 @@ void main() {
 
     test('uses stringify', () {
       expect(
-        Number(
+        const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
@@ -35,14 +35,14 @@ void main() {
     });
 
     test('copies with new id', () {
-      final newId = 'new-id';
+      const newId = 'new-id';
       expect(
-        Number(
+        const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
         ).copyWith(id: newId),
-        Number(
+        const Number(
           id: newId,
           numberOfDigits: numberOfDigits,
           value: value,
@@ -51,14 +51,14 @@ void main() {
     });
 
     test('copies with new number of digits', () {
-      final newNumberOfDigits = 2;
+      const newNumberOfDigits = 2;
       expect(
-        Number(
+        const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
         ).copyWith(numberOfDigits: newNumberOfDigits),
-        Number(
+        const Number(
           id: id,
           numberOfDigits: newNumberOfDigits,
           value: value,
@@ -67,14 +67,14 @@ void main() {
     });
 
     test('copies with new value', () {
-      final newValue = 99;
+      const newValue = 99;
       expect(
-        Number(
+        const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
         ).copyWith(value: newValue),
-        Number(
+        const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: newValue,
@@ -84,12 +84,12 @@ void main() {
 
     test('model to entity', () {
       expect(
-        Number(
+        const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
         ).toEntity(),
-        NumberEntity(
+        const NumberEntity(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
@@ -99,12 +99,14 @@ void main() {
 
     test('model from entity', () {
       expect(
-        Number.fromEntity(NumberEntity(
-          id: id,
-          numberOfDigits: numberOfDigits,
-          value: value,
-        )),
-        Number(
+        Number.fromEntity(
+          const NumberEntity(
+            id: id,
+            numberOfDigits: numberOfDigits,
+            value: value,
+          ),
+        ),
+        const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,

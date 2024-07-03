@@ -1,10 +1,9 @@
 import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:major_system/authentication/authentication.dart';
 import 'package:numbers_repository/numbers_repository.dart';
-import 'package:pedantic/pedantic.dart';
-
-import '../../authentication/authentication.dart';
 
 part 'numbers_event.dart';
 part 'numbers_state.dart';
@@ -13,7 +12,7 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
   NumbersBloc({
     required NumbersRepository numbersRepository,
     required AuthenticationBloc authenticationBloc,
-  })   : _numbersRepository = numbersRepository,
+  })  : _numbersRepository = numbersRepository,
         super(NumbersLoading()) {
     _authenticationBlocSubscription = authenticationBloc.stream.listen((state) {
       if (state.status == AuthenticationStatus.authenticated) {
@@ -57,7 +56,7 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
   }
 
   Stream<NumbersState> _mapDeleteNumberToState(DeleteNumber event) async* {
-    unawaited(_numbersRepository.deleteNumber(event.number));
+    unawaited(_numbersRepository.deleteNumber(event.number.id));
   }
 
   Stream<NumbersState> _mapNumbersUpdateToState(NumbersUpdated event) async* {

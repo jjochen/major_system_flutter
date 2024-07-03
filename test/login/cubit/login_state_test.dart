@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:major_system/authentication/authentication.dart';
-import 'package:major_system/login/login.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:formz/formz.dart';
+import 'package:major_system/authentication/authentication.dart';
+import 'package:major_system/login/login.dart';
 
 void main() {
   const email = Email.dirty('email');
@@ -18,8 +18,12 @@ void main() {
 
     test('returns object with updated status when status is passed', () {
       expect(
-        LoginState().copyWith(status: FormzStatus.pure),
-        LoginState(status: FormzStatus.pure),
+        LoginState().copyWith(
+          submissionStatus: FormzSubmissionStatus.inProgress,
+        ),
+        LoginState(
+          submissionStatus: FormzSubmissionStatus.inProgress,
+        ),
       );
     });
 

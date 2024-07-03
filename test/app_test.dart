@@ -1,14 +1,16 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:major_system/app.dart';
 import 'package:major_system/authentication/authentication.dart';
+import 'package:major_system/authentication/bloc/authentication_bloc.dart';
 import 'package:major_system/login/login.dart';
 import 'package:major_system/numbers/numbers.dart';
 import 'package:major_system/splash/splash.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:major_system/authentication/bloc/authentication_bloc.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
 // ignore: must_be_immutable
@@ -38,15 +40,13 @@ class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
 void main() {
   group('App', () {
     final UserInfo mockUser = MockAuthUser();
-    registerFallbackValue<AuthenticationState>(
-        AuthenticationState.authenticated(mockUser));
-    registerFallbackValue<AuthenticationEvent>(
-        AuthenticationUserInfoChanged(mockUser));
+    registerFallbackValue(AuthenticationState.authenticated(mockUser));
+    registerFallbackValue(AuthenticationUserInfoChanged(mockUser));
 
     late AuthenticationRepository authenticationRepository;
 
-    registerFallbackValue<NumbersState>(const NumbersLoaded());
-    registerFallbackValue<NumbersEvent>(const NumbersUpdated([]));
+    registerFallbackValue(const NumbersLoaded());
+    registerFallbackValue(const NumbersUpdated([]));
 
     late NumbersRepository numbersRepository;
 
@@ -87,7 +87,7 @@ void main() {
       when(() => authenticationBloc.state)
           .thenReturn(const AuthenticationState.unknown());
       await tester.pumpWidget(
-        BlocProvider.value(value: authenticationBloc, child: AppView()),
+        BlocProvider.value(value: authenticationBloc, child: const AppView()),
       );
       await tester.pumpAndSettle();
       expect(find.byType(SplashPage), findsOneWidget);
@@ -105,7 +105,7 @@ void main() {
           value: authenticationRepository,
           child: BlocProvider.value(
             value: authenticationBloc,
-            child: AppView(),
+            child: const AppView(),
           ),
         ),
       );
@@ -126,17 +126,40 @@ void main() {
         initialState: NumbersLoading(),
       );
       await tester.pumpWidget(
-        MultiBlocProvider(
-          providers: [
-            BlocProvider<AuthenticationBloc>(
-                create: (context) => authenticationBloc),
-            BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
-          ],
-          child: AppView(),
+        RepositoryProvider.value(
+          value: authenticationRepository,
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<AuthenticationBloc>(
+                create: (context) => authenticationBloc,
+              ),
+              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
+            ],
+            child: AppView(),
+          ),
         ),
       );
       await tester.pumpAndSettle();
       expect(find.byType(NumbersPage), findsOneWidget);
+    });
+
+    testWidgets('navigates to HomePage when status is unknown', (tester) async {
+      whenListen(
+        authenticationBloc,
+        Stream.value(const AuthenticationState.unknown()),
+        initialState: AuthenticationState.unauthenticated(),
+      );
+      await tester.pumpWidget(
+        RepositoryProvider.value(
+          value: authenticationRepository,
+          child: BlocProvider.value(
+            value: authenticationBloc,
+            child: const AppView(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      // TODO(jjochen): Handle this case.
     });
   });
 }

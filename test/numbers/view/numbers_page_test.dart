@@ -1,12 +1,13 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:major_system/attributions/attributions.dart';
 import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/numbers/numbers.dart';
-import 'package:major_system/numbers/widgets/widgets.dart';
-import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAuthenticationBloc
@@ -29,12 +30,11 @@ void main() {
   const attributionsButtonKey = Key('homePage_attributions_iconButton');
 
   group('NumbersPage', () {
-    registerFallbackValue<AuthenticationState>(
-        const AuthenticationState.unknown());
-    registerFallbackValue<AuthenticationEvent>(AuthenticationLogoutRequested());
+    registerFallbackValue(const AuthenticationState.unknown());
+    registerFallbackValue(AuthenticationLogoutRequested());
 
-    registerFallbackValue<NumbersState>(NumbersLoading());
-    registerFallbackValue<NumbersEvent>(LoadNumbers());
+    registerFallbackValue(NumbersLoading());
+    registerFallbackValue(LoadNumbers());
 
     late AuthenticationBloc authenticationBloc;
     late NumbersBloc numbersBloc;
@@ -59,7 +59,8 @@ void main() {
           MultiBlocProvider(
             providers: [
               BlocProvider<AuthenticationBloc>(
-                  create: (context) => authenticationBloc),
+                create: (context) => authenticationBloc,
+              ),
               BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
             ],
             child: MaterialApp(
@@ -81,7 +82,8 @@ void main() {
           MultiBlocProvider(
             providers: [
               BlocProvider<AuthenticationBloc>(
-                  create: (context) => authenticationBloc),
+                create: (context) => authenticationBloc,
+              ),
               BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
             ],
             child: MaterialApp(
@@ -101,7 +103,8 @@ void main() {
           MultiBlocProvider(
             providers: [
               BlocProvider<AuthenticationBloc>(
-                  create: (context) => authenticationBloc),
+                create: (context) => authenticationBloc,
+              ),
               BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
             ],
             child: MaterialApp(

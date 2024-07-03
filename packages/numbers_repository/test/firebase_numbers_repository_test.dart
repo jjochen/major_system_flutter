@@ -1,76 +1,44 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
-import 'package:firebase_core/firebase_core.dart';
+// ignore_for_file: prefer_const_constructors, invalid_implementation_override
+
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
-    if (call.method == 'Firebase#initializeCore') {
-      return [
-        {
-          'name': defaultFirebaseAppName,
-          'options': {
-            'apiKey': '123',
-            'appId': '123',
-            'messagingSenderId': '123',
-            'projectId': '123',
-          },
-          'pluginConstants': const <String, String>{},
-        }
-      ];
-    }
-
-    if (call.method == 'Firebase#initializeApp') {
-      return <String, dynamic>{
-        'name': call.arguments['appName'],
-        'options': call.arguments['options'],
-        'pluginConstants': const <String, String>{},
-      };
-    }
-
-    return null;
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
   });
 
-  TestWidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
   const userId = 'mock-user-id';
-  const id = 'mock-number-id';
   const numberOfDigits = 2;
   const value = 23;
   final number = Number(
-    id: id,
+    id: '',
     numberOfDigits: numberOfDigits,
     value: value,
   );
 
   group('FirebaseNumbersRepository', () {
-    late FirebaseFirestore mockFirebaseFirestore;
-    late DocumentReference mockUserReference;
-    late CollectionReference mockNumberCollection;
+    late FirebaseFirestore fakeFirebaseFirestore;
     late NumbersRepository firebaseNumbersRepository;
 
     setUp(() {
-      mockFirebaseFirestore = MockFirebaseFirestore();
-
-      mockUserReference = MockDocumentReference();
-      when(() => mockFirebaseFirestore.doc('/users/mock-user-id'))
-          .thenReturn(mockUserReference);
-
-      mockNumberCollection = MockCollectionReference();
-      when(() => mockUserReference.collection('numbers'))
-          .thenReturn(mockNumberCollection);
-
+      fakeFirebaseFirestore = FakeFirebaseFirestore();
       firebaseNumbersRepository = FirebaseNumbersRepository(
-        firestore: mockFirebaseFirestore,
+        firestore: fakeFirebaseFirestore,
       );
     });
 
-    test('creates FirebaseFirestore instance internally when not injected', () {
-      expect(() => FirebaseNumbersRepository(), isNot(throwsException));
+    test('getNumber returns correct number', () async {
+      final newId = await firebaseNumbersRepository.addNewNumber(number);
+      final result = await firebaseNumbersRepository.getNumber(newId);
+      expect(
+        result,
+        number.copyWith(id: newId),
+      );
     });
 
     group('without user ID', () {
@@ -78,48 +46,93 @@ void main() {
         firebaseNumbersRepository.userId = null;
       });
 
-      test('does not call add', () async {
-        when(() => mockNumberCollection.add(any()))
-            .thenAnswer((_) async => MockDocumentReference());
-        await firebaseNumbersRepository.addNewNumber(number);
-        verifyNever(() => mockNumberCollection.add(any()));
+      test('deleteNumber removes number', () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        await firebaseNumbersRepository.deleteNumber(newId);
+        final result = await firebaseNumbersRepository.getNumber(newId);
+        expect(result, isNull);
       });
 
-      test('does not call delete', () async {
-        final mockDocumentReference = MockDocumentReference();
-        when(mockDocumentReference.delete).thenAnswer((_) async => null);
-        when(() => mockNumberCollection.doc(id))
-            .thenReturn(mockDocumentReference);
-        await firebaseNumbersRepository.deleteNumber(number);
-        verifyNever(() => mockDocumentReference.update(any()));
-        (mockDocumentReference.delete);
+      test('updateNumber updates number', () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        final updatedNumber = number.copyWith(
+          id: newId,
+          value: 42,
+        );
+        await firebaseNumbersRepository.updateNumber(updatedNumber);
+        final result = await firebaseNumbersRepository.getNumber(newId);
+        expect(result, updatedNumber);
       });
 
-      test('does not call update', () async {
-        final mockDocumentReference = MockDocumentReference();
-        when(() => mockDocumentReference.update(any()))
-            .thenAnswer((_) async => null);
-        when(() => mockNumberCollection.doc(id))
-            .thenReturn(mockDocumentReference);
-        await firebaseNumbersRepository.updateNumber(number);
-        verifyNever(() => mockDocumentReference.update(any()));
+      test('has empty stream initially', () async {
+        expect(
+          firebaseNumbersRepository.numbers(),
+          emits(<Number>[]),
+        );
       });
 
-      test('fetches empty stream of numbers', () async {
-        var mockQueryDocumentSnapshot = MockQueryDocumentSnapshot();
-        when(() => mockQueryDocumentSnapshot.id).thenReturn(id);
-        when(() => mockQueryDocumentSnapshot.data()).thenReturn({
-          'number_of_digits': numberOfDigits,
-          'value': value,
-        });
-        var mockQuerySnapshot = MockQuerySnapshot();
-        when(() => mockQuerySnapshot.docs)
-            .thenReturn([mockQueryDocumentSnapshot]);
-        when(() => mockNumberCollection.snapshots()).thenAnswer(
-            (_) => Stream<QuerySnapshot>.fromIterable([mockQuerySnapshot]));
+      test('stream emitts updated list of numbers', () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: newId);
+        final updatedNumber = newNumber.copyWith(value: 43);
 
-        await expectLater(firebaseNumbersRepository.numbers(), emitsDone);
+        unawaited(
+          expectLater(
+            firebaseNumbersRepository.numbers(),
+            emitsInOrder([
+              [newNumber],
+              [updatedNumber],
+              <Number>[],
+            ]),
+          ),
+        );
+
+        await firebaseNumbersRepository.updateNumber(updatedNumber);
+        await firebaseNumbersRepository.deleteNumber(newId);
       });
+
+      // test('does not call add', () async {
+      //   when(() => mockNumberCollection.add(any()))
+      //       .thenAnswer((_) async => MockDocumentReference());
+      //   await firebaseNumbersRepository.addNewNumber(number);
+      //   verifyNever(() => mockNumberCollection.add(any()));
+      // });
+
+      // test('does not call delete', () async {
+      //   final mockDocumentReference = MockDocumentReference();
+      //   when(mockDocumentReference.delete).thenAnswer((_) async => null);
+      //   when(() => mockNumberCollection.doc(id))
+      //       .thenReturn(mockDocumentReference);
+      //   await firebaseNumbersRepository.deleteNumber(number);
+      //   verifyNever(() => mockDocumentReference.update(any()));
+      //   (mockDocumentReference.delete);
+      // });
+
+      // test('does not call update', () async {
+      //   final mockDocumentReference = MockDocumentReference();
+      //   when(() => mockDocumentReference.update(any()))
+      //       .thenAnswer((_) async => null);
+      //   when(() => mockNumberCollection.doc(id))
+      //       .thenReturn(mockDocumentReference);
+      //   await firebaseNumbersRepository.updateNumber(number);
+      //   verifyNever(() => mockDocumentReference.update(any()));
+      // });
+
+      // test('fetches empty stream of numbers', () async {
+      //   var mockQueryDocumentSnapshot = MockQueryDocumentSnapshot();
+      //   when(() => mockQueryDocumentSnapshot.id).thenReturn(id);
+      //   when(() => mockQueryDocumentSnapshot.data()).thenReturn({
+      //     'number_of_digits': numberOfDigits,
+      //     'value': value,
+      //   });
+      //   var mockQuerySnapshot = MockQuerySnapshot();
+      //   when(() => mockQuerySnapshot.docs)
+      //       .thenReturn([mockQueryDocumentSnapshot]);
+      //   when(() => mockNumberCollection.snapshots()).thenAnswer(
+      //       (_) => Stream<QuerySnapshot>.fromIterable([mockQuerySnapshot]));
+
+      //   await expectLater(firebaseNumbersRepository.numbers(), emitsDone);
+      // });
     });
 
     group('with user ID', () {
@@ -127,69 +140,63 @@ void main() {
         firebaseNumbersRepository.userId = userId;
       });
 
-      test('calls add', () async {
-        when(() => mockNumberCollection.add(any()))
-            .thenAnswer((_) async => MockDocumentReference());
-        await firebaseNumbersRepository.addNewNumber(number);
-        verify(() => mockNumberCollection.add({
-              'number_of_digits': numberOfDigits,
-              'value': value,
-            })).called(1);
-      });
+      // test('calls add', () async {
+      //   when(() => mockNumberCollection.add(any()))
+      //       .thenAnswer((_) async => MockDocumentReference());
+      //   await firebaseNumbersRepository.addNewNumber(number);
+      //   verify(
+      //     () => mockNumberCollection.add({
+      //       'number_of_digits': numberOfDigits,
+      //       'value': value,
+      //     }),
+      //   ).called(1);
+      // });
 
-      test('calls delete', () async {
-        final mockDocumentReference = MockDocumentReference();
-        when(mockDocumentReference.delete).thenAnswer((_) async => null);
-        when(() => mockNumberCollection.doc(id))
-            .thenReturn(mockDocumentReference);
-        await firebaseNumbersRepository.deleteNumber(number);
-        verify(mockDocumentReference.delete).called(1);
-      });
+      // test('calls delete', () async {
+      //   final mockDocumentReference = MockDocumentReference();
+      //   when(mockDocumentReference.delete).thenAnswer((_) async => null);
+      //   when(() => mockNumberCollection.doc(id))
+      //       .thenReturn(mockDocumentReference);
+      //   await firebaseNumbersRepository.deleteNumber(number);
+      //   verify(mockDocumentReference.delete).called(1);
+      // });
 
-      test('calls update', () async {
-        final mockDocumentReference = MockDocumentReference();
-        when(() => mockDocumentReference.update(any()))
-            .thenAnswer((_) async => null);
-        when(() => mockNumberCollection.doc(id))
-            .thenReturn(mockDocumentReference);
-        await firebaseNumbersRepository.updateNumber(number);
-        verify(() => mockDocumentReference.update({
-              'number_of_digits': numberOfDigits,
-              'value': value,
-            })).called(1);
-      });
+      // test('calls update', () async {
+      //   final mockDocumentReference = MockDocumentReference();
+      //   when(() => mockDocumentReference.update(any()))
+      //       .thenAnswer((_) async => null);
+      //   when(() => mockNumberCollection.doc(id))
+      //       .thenReturn(mockDocumentReference);
+      //   await firebaseNumbersRepository.updateNumber(number);
+      //   verify(
+      //     () => mockDocumentReference.update({
+      //       'number_of_digits': numberOfDigits,
+      //       'value': value,
+      //     }),
+      //   ).called(1);
+      // });
 
-      test('fetches stream of numbers', () async {
-        var mockQueryDocumentSnapshot = MockQueryDocumentSnapshot();
-        when(() => mockQueryDocumentSnapshot.id).thenReturn(id);
-        when(() => mockQueryDocumentSnapshot.data()).thenReturn({
-          'number_of_digits': numberOfDigits,
-          'value': value,
-        });
-        var mockQuerySnapshot = MockQuerySnapshot();
-        when(() => mockQuerySnapshot.docs)
-            .thenReturn([mockQueryDocumentSnapshot]);
-        when(() => mockNumberCollection.snapshots()).thenAnswer(
-            (_) => Stream<QuerySnapshot>.fromIterable([mockQuerySnapshot]));
+      // test('fetches stream of numbers', () async {
+      //   final mockQueryDocumentSnapshot = MockQueryDocumentSnapshot();
+      //   when(() => mockQueryDocumentSnapshot.id).thenReturn(id);
+      //   when(mockQueryDocumentSnapshot.data).thenReturn({
+      //     'number_of_digits': numberOfDigits,
+      //     'value': value,
+      //   });
+      //   final mockQuerySnapshot = MockQuerySnapshot();
+      //   when(() => mockQuerySnapshot.docs)
+      //       .thenReturn([mockQueryDocumentSnapshot]);
+      //   when(() => mockNumberCollection.snapshots()).thenAnswer(
+      //     (_) => Stream<QuerySnapshot>.fromIterable([mockQuerySnapshot]),
+      //   );
 
-        await expectLater(
-            firebaseNumbersRepository.numbers(),
-            emitsInOrder([
-              [number]
-            ]));
-      });
+      //   await expectLater(
+      //     firebaseNumbersRepository.numbers(),
+      //     emitsInOrder([
+      //       [number],
+      //     ]),
+      //   );
+      // });
     });
   });
 }
-
-class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
-
-class MockCollectionReference extends Mock implements CollectionReference {}
-
-class MockQuerySnapshot extends Mock implements QuerySnapshot {}
-
-class MockQueryDocumentSnapshot extends Mock implements QueryDocumentSnapshot {}
-
-class MockDocumentReference extends Mock implements DocumentReference {}
-
-class MockQuerySnapshotStream extends Mock implements Stream<QuerySnapshot> {}

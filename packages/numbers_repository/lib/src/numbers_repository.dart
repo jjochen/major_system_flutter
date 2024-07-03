@@ -1,12 +1,15 @@
 import 'dart:async';
+
 import 'package:numbers_repository/numbers_repository.dart';
 
 abstract class NumbersRepository {
   String? userId;
 
-  Future<void> addNewNumber(Number number);
+  Future<String> addNewNumber(Number number);
 
-  Future<void> deleteNumber(Number todo);
+  Future<Number?> getNumber(String id);
+
+  Future<void> deleteNumber(String id);
 
   Stream<List<Number>> numbers();
 

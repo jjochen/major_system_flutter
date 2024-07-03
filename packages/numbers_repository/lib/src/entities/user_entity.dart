@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class UserEntity extends Equatable {
-  UserEntity({
+  const UserEntity({
     required this.id,
     this.email,
     this.name,
@@ -10,17 +10,17 @@ class UserEntity extends Equatable {
 
   factory UserEntity.fromJson(Map<String, Object> json) {
     return UserEntity(
-      id: json[_Key.id] as String,
+      id: json[_Key.id]! as String,
       email: json[_Key.email] as String?,
       name: json[_Key.name] as String?,
     );
   }
 
-  factory UserEntity.fromSnapshot(DocumentSnapshot snap) {
+  factory UserEntity.fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snap) {
     return UserEntity(
       id: snap.id,
-      email: snap.data()?[_Key.email],
-      name: snap.data()?[_Key.name],
+      email: snap.data()?[_Key.email] as String?,
+      name: snap.data()?[_Key.name] as String?,
     );
   }
 

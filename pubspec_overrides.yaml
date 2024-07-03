@@ -1,0 +1,6 @@
+# melos_managed_dependency_overrides: authentication_repository
+dependency_overrides:
+  authentication_repository:
+    path: packages/authentication_repository
+  numbers_repository:
+    path: packages/numbers_repository

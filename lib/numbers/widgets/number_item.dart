@@ -1,14 +1,13 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
 class NumberItem extends StatelessWidget {
-  NumberItem({
-    Key? key,
+  const NumberItem({
     required this.onDismissed,
     required this.onTap,
     required this.number,
-  }) : super(key: key);
+    super.key,
+  });
 
   final DismissDirectionCallback onDismissed;
   final GestureTapCallback onTap;
@@ -23,7 +22,7 @@ class NumberItem extends StatelessWidget {
         onTap: onTap,
         title: Text(
           number.toString(),
-          style: Theme.of(context).textTheme.headline6,
+          style: Theme.of(context).textTheme.displayMedium,
         ),
       ),
     );

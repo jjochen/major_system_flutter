@@ -2,18 +2,18 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/authentication/authentication.dart';
-import 'package:major_system/numbers/numbers.dart';
 import 'package:major_system/login/login.dart';
+import 'package:major_system/numbers/numbers.dart';
 import 'package:major_system/splash/splash.dart';
 import 'package:major_system/theme.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
 class App extends StatelessWidget {
   const App({
-    Key? key,
     required this.authenticationRepository,
     required this.numbersRepository,
-  }) : super(key: key);
+    super.key,
+  });
 
   final AuthenticationRepository authenticationRepository;
   final NumbersRepository numbersRepository;
@@ -23,32 +23,39 @@ class App extends StatelessWidget {
     final authenticationBloc =
         AuthenticationBloc(authenticationRepository: authenticationRepository);
     final numbersBloc = NumbersBloc(
-        numbersRepository: numbersRepository,
-        authenticationBloc: authenticationBloc);
+      numbersRepository: numbersRepository,
+      authenticationBloc: authenticationBloc,
+    );
     return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<AuthenticationRepository>(
+          create: (context) => authenticationRepository,
+        ),
+        RepositoryProvider<NumbersRepository>(
+          create: (context) => numbersRepository,
+        ),
+      ],
+      child: MultiBlocProvider(
         providers: [
-          RepositoryProvider<AuthenticationRepository>(
-              create: (context) => authenticationRepository),
-          RepositoryProvider<NumbersRepository>(
-              create: (context) => numbersRepository),
+          BlocProvider<AuthenticationBloc>(
+            create: (context) => authenticationBloc,
+          ),
+          BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
         ],
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider<AuthenticationBloc>(
-                create: (context) => authenticationBloc),
-            BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
-          ],
-          child: AppView(),
-        ));
+        child: const AppView(),
+      ),
+    );
   }
 }
 
 class AppView extends StatefulWidget {
+  const AppView({super.key});
+
   @override
-  _AppViewState createState() => _AppViewState();
+  AppViewState createState() => AppViewState();
 }
 
-class _AppViewState extends State<AppView> {
+class AppViewState extends State<AppView> {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   NavigatorState? get _navigator => _navigatorKey.currentState;
@@ -67,14 +74,13 @@ class _AppViewState extends State<AppView> {
                   NumbersPage.route(),
                   (route) => false,
                 );
-                break;
               case AuthenticationStatus.unauthenticated:
                 _navigator?.pushAndRemoveUntil<void>(
                   LoginPage.route(),
                   (route) => false,
                 );
-                break;
-              default:
+              case AuthenticationStatus.unknown:
+                // TODO(jjochen): Handle this case.
                 break;
             }
           },
