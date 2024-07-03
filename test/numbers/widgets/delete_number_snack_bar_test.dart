@@ -17,20 +17,22 @@ void main() {
       final snackBar =
           DeleteNumberSnackBar(key: key, number: number, onUndo: () {});
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (BuildContext context) {
-              return GestureDetector(
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                },
-                child: const Text('X'),
-              );
-            },
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (BuildContext context) {
+                return GestureDetector(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  },
+                  child: const Text('X'),
+                );
+              },
+            ),
           ),
         ),
-      ),);
+      );
 
       await tester.tap(find.text('X'));
       expect(find.byKey(key), findsNothing);
@@ -41,26 +43,29 @@ void main() {
     testWidgets('calls action on undo', (tester) async {
       var actionPressed = false;
       final snackBar = DeleteNumberSnackBar(
-          key: key,
-          number: number,
-          onUndo: () {
-            actionPressed = true;
-          },);
+        key: key,
+        number: number,
+        onUndo: () {
+          actionPressed = true;
+        },
+      );
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (BuildContext context) {
-              return GestureDetector(
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                },
-                child: const Text('X'),
-              );
-            },
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (BuildContext context) {
+                return GestureDetector(
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  },
+                  child: const Text('X'),
+                );
+              },
+            ),
           ),
         ),
-      ),);
+      );
 
       await tester.tap(find.text('X'));
       await tester.pumpAndSettle();

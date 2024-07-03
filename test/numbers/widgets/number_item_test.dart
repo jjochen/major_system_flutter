@@ -12,11 +12,12 @@ void main() {
 
     testWidgets('renders ListTile', (tester) async {
       final widget = Material(
-          child: NumberItem(
-        number: number,
-        onDismissed: (direction) {},
-        onTap: () {},
-      ),);
+        child: NumberItem(
+          number: number,
+          onDismissed: (direction) {},
+          onTap: () {},
+        ),
+      );
       await tester.pumpWidget(MaterialApp(home: widget));
       expect(find.byType(ListTile), findsOneWidget);
     });
