@@ -1,6 +1,6 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 import 'package:numbers_repository/src/entities/entities.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('User', () {
@@ -35,14 +35,14 @@ void main() {
     });
 
     test('copies with new id', () {
-      final newId = 'new-id';
+      const newId = 'new-id';
       expect(
         const User(
           id: id,
           email: email,
           name: name,
-        ).copyWith(id: newId),
-        User(
+        ).copyWith(id: () => newId),
+        const User(
           id: newId,
           email: email,
           name: name,
@@ -51,14 +51,14 @@ void main() {
     });
 
     test('copies with new email', () {
-      final newEmail = 'yo@yo.yo';
+      const newEmail = 'yo@yo.yo';
       expect(
         const User(
           id: id,
           email: email,
           name: name,
-        ).copyWith(email: newEmail),
-        User(
+        ).copyWith(email: () => newEmail),
+        const User(
           id: id,
           email: newEmail,
           name: name,
@@ -67,30 +67,28 @@ void main() {
     });
 
     test('copies with null email', () {
-      final newEmail = null;
       expect(
         const User(
           id: id,
           email: email,
           name: name,
-        ).copyWith(email: newEmail),
-        User(
+        ).copyWith(),
+        const User(
           id: id,
-          email: newEmail,
           name: name,
         ),
       );
     });
 
     test('copies with new name', () {
-      final newName = 'Name That';
+      const newName = 'Name That';
       expect(
         const User(
           id: id,
           email: email,
           name: name,
-        ).copyWith(name: newName),
-        User(
+        ).copyWith(name: () => newName),
+        const User(
           id: id,
           email: email,
           name: newName,
@@ -99,17 +97,15 @@ void main() {
     });
 
     test('copies with null name', () {
-      final newName = null;
       expect(
         const User(
           id: id,
           email: email,
           name: name,
-        ).copyWith(name: newName),
-        User(
+        ).copyWith(),
+        const User(
           id: id,
           email: email,
-          name: newName,
         ),
       );
     });
@@ -121,7 +117,7 @@ void main() {
           email: email,
           name: name,
         ).toEntity(),
-        UserEntity(
+        const UserEntity(
           id: id,
           email: email,
           name: name,
@@ -131,11 +127,13 @@ void main() {
 
     test('model from entity', () {
       expect(
-        User.fromEntity(UserEntity(
-          id: id,
-          email: email,
-          name: name,
-        )),
+        User.fromEntity(
+          const UserEntity(
+            id: id,
+            email: email,
+            name: name,
+          ),
+        ),
         const User(
           id: id,
           email: email,

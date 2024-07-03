@@ -32,7 +32,7 @@ class NumbersPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Numbers(),
+      body: const Numbers(),
     );
   }
 }

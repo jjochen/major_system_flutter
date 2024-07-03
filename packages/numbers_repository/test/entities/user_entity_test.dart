@@ -1,22 +1,24 @@
-import 'package:numbers_repository/src/entities/entities.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:numbers_repository/src/entities/entities.dart';
 
 void main() {
   group('UserEntity', () {
     const id = 'mock-id';
     const email = 'yo@test.com';
     const name = 'Darth Vader';
+    const snapshotData = {
+      'email': email,
+      'name': name,
+    };
 
     test('uses name equality', () {
       expect(
-        UserEntity(
+        const UserEntity(
           id: id,
           email: email,
           name: name,
         ),
-        UserEntity(
+        const UserEntity(
           id: id,
           email: email,
           name: name,
@@ -26,7 +28,7 @@ void main() {
 
     test('uses stringify', () {
       expect(
-        UserEntity(
+        const UserEntity(
           id: id,
           email: email,
           name: name,
@@ -43,7 +45,7 @@ void main() {
       };
       expect(
         UserEntity.fromJson(json),
-        UserEntity(
+        const UserEntity(
           id: id,
           email: email,
           name: name,
@@ -58,7 +60,7 @@ void main() {
         'name': name,
       };
       expect(
-        UserEntity(
+        const UserEntity(
           id: id,
           email: email,
           name: name,
@@ -68,33 +70,29 @@ void main() {
     });
 
     test('from document', () {
-      final snapshotData = {
-        'email': email,
-        'name': name,
-      };
-      final snap = MockDocumentSnapshot();
-      when(() => snap.id).thenReturn(id);
-      when(snap.data).thenReturn(snapshotData);
       expect(
-          UserEntity.fromSnapshot(snap),
-          UserEntity(
-            id: id,
-            email: email,
-            name: name,
-          ));
+        UserEntity.fromSnapshot(
+          id: id,
+          data: snapshotData,
+        ),
+        const UserEntity(
+          id: id,
+          email: email,
+          name: name,
+        ),
+      );
     });
 
     test('from document without data', () {
-      final snap = MockDocumentSnapshot();
-      when(() => snap.id).thenReturn(id);
-      when(snap.data).thenReturn(null);
       expect(
-          UserEntity.fromSnapshot(snap),
-          UserEntity(
-            id: id,
-            email: null,
-            name: null,
-          ));
+        UserEntity.fromSnapshot(
+          id: id,
+          data: null,
+        ),
+        const UserEntity(
+          id: id,
+        ),
+      );
     });
 
     test('to document', () {
@@ -103,7 +101,7 @@ void main() {
         'name': name,
       };
       expect(
-        UserEntity(
+        const UserEntity(
           id: id,
           email: email,
           name: name,
@@ -113,5 +111,3 @@ void main() {
     });
   });
 }
-
-class MockDocumentSnapshot extends Mock implements DocumentSnapshot {}

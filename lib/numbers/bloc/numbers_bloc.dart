@@ -14,6 +14,12 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
     required AuthenticationBloc authenticationBloc,
   })  : _numbersRepository = numbersRepository,
         super(NumbersLoading()) {
+    on<LoadNumbers>(_onLoadNumbers);
+    on<AddNumber>(_onAddNumber);
+    on<UpdateNumber>(_onUpdateNumber);
+    on<DeleteNumber>(_onDeleteNumber);
+    on<NumbersUpdated>(_onNumbersUpdate);
+
     _authenticationBlocSubscription = authenticationBloc.stream.listen((state) {
       if (state.status == AuthenticationStatus.authenticated) {
         numbersRepository.userId = state.userInfo.id;
@@ -22,45 +28,45 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
     });
   }
   final NumbersRepository _numbersRepository;
-  StreamSubscription? _numbersSubscription;
-  StreamSubscription? _authenticationBlocSubscription;
+  StreamSubscription<List<Number>>? _numbersSubscription;
+  StreamSubscription<AuthenticationState>? _authenticationBlocSubscription;
 
-  @override
-  Stream<NumbersState> mapEventToState(NumbersEvent event) async* {
-    if (event is LoadNumbers) {
-      yield* _mapLoadNumbersToState();
-    } else if (event is AddNumber) {
-      yield* _mapAddNumberToState(event);
-    } else if (event is UpdateNumber) {
-      yield* _mapUpdateNumberToState(event);
-    } else if (event is DeleteNumber) {
-      yield* _mapDeleteNumberToState(event);
-    } else if (event is NumbersUpdated) {
-      yield* _mapNumbersUpdateToState(event);
-    }
-  }
-
-  Stream<NumbersState> _mapLoadNumbersToState() async* {
+  Future<void> _onLoadNumbers(
+    LoadNumbers event,
+    Emitter<NumbersState> emit,
+  ) async {
     unawaited(_numbersSubscription?.cancel());
     _numbersSubscription = _numbersRepository.numbers().listen(
           (numbers) => add(NumbersUpdated(numbers)),
         );
   }
 
-  Stream<NumbersState> _mapAddNumberToState(AddNumber event) async* {
-    unawaited(_numbersRepository.addNewNumber(event.number));
+  Future<void> _onAddNumber(
+    AddNumber event,
+    Emitter<NumbersState> emit,
+  ) async {
+    await _numbersRepository.addNewNumber(event.number);
   }
 
-  Stream<NumbersState> _mapUpdateNumberToState(UpdateNumber event) async* {
-    unawaited(_numbersRepository.updateNumber(event.updatedNumber));
+  Future<void> _onUpdateNumber(
+    UpdateNumber event,
+    Emitter<NumbersState> emit,
+  ) async {
+    await _numbersRepository.updateNumber(event.updatedNumber);
   }
 
-  Stream<NumbersState> _mapDeleteNumberToState(DeleteNumber event) async* {
-    unawaited(_numbersRepository.deleteNumber(event.number.id));
+  Future<void> _onDeleteNumber(
+    DeleteNumber event,
+    Emitter<NumbersState> emit,
+  ) async {
+    await _numbersRepository.deleteNumber(event.number.id);
   }
 
-  Stream<NumbersState> _mapNumbersUpdateToState(NumbersUpdated event) async* {
-    yield NumbersLoaded(event.numbers);
+  Future<void> _onNumbersUpdate(
+    NumbersUpdated event,
+    Emitter<NumbersState> emit,
+  ) async {
+    emit(NumbersLoaded(event.numbers));
   }
 
   @override

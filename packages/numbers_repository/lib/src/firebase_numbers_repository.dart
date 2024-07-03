@@ -6,11 +6,13 @@ import 'package:numbers_repository/src/entities/entities.dart';
 import 'package:path/path.dart' as path;
 
 class FirebaseNumbersRepository implements NumbersRepository {
-  const FirebaseNumbersRepository({
+  FirebaseNumbersRepository({
     FirebaseFirestore? firestore,
   }) : _firestore = firestore;
 
-  final FirebaseFirestore _firestore;
+  final FirebaseFirestore? _firestore;
+  FirebaseFirestore _getFirestore() => _firestore ?? FirebaseFirestore.instance;
+
   String? _userId;
 
   @override
@@ -21,21 +23,19 @@ class FirebaseNumbersRepository implements NumbersRepository {
     if (userId != _userId) {
       _userId = userId;
       configureFirestoreReferences();
-      // TODO; create user if doesn't exist
+      // TODO(jjochen): create user if doesn't exist
     }
   }
 
   DocumentReference? _userDocument;
   CollectionReference? _numberCollection;
   void configureFirestoreReferences() {
-    _userDocument =
-        userId == null ? null : _firestore.doc(path.join('/', 'users', userId));
+    _userDocument = userId == null
+        ? null
+        : _getFirestore().doc(path.join('/', 'users', userId));
     _numberCollection =
         userId == null ? null : _userDocument?.collection('numbers');
   }
-
-  final FirebaseFirestore? _firestore;
-  FirebaseFirestore _getFirestore() => _firestore ?? FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _numbersCollection =>
       _getFirestore().collection('numbers');

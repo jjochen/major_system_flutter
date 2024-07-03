@@ -1,7 +1,6 @@
-import 'package:meta/meta.dart';
 import 'package:equatable/equatable.dart';
-
-import '../entities/entities.dart';
+import 'package:meta/meta.dart';
+import 'package:numbers_repository/src/entities/entities.dart';
 
 @immutable
 class User extends Equatable {
@@ -29,16 +28,15 @@ class User extends Equatable {
   @override
   bool? get stringify => true;
 
-  static const _doNotUse = '###_DO_NOT_USE_###';
   User copyWith({
-    String? id,
-    String? email = _doNotUse,
-    String? name = _doNotUse,
+    String Function()? id,
+    String? Function()? email,
+    String? Function()? name,
   }) {
     return User(
-      id: id ?? this.id,
-      email: email == _doNotUse ? this.email : email,
-      name: name == _doNotUse ? this.name : name,
+      id: id != null ? id() : this.id,
+      email: email != null ? email() : this.email,
+      name: name != null ? name() : this.name,
     );
   }
 

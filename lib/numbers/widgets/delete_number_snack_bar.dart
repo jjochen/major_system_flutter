@@ -3,13 +3,12 @@ import 'package:numbers_repository/numbers_repository.dart';
 
 class DeleteNumberSnackBar extends SnackBar {
   DeleteNumberSnackBar({
-    Key? key,
     required Number number,
     required VoidCallback onUndo,
+    super.key,
   }) : super(
-          key: key,
           content: Text(
-            'Deleted ${number.value}', // TODO: use .displayText
+            'Deleted ${number.value}', // TODO(jjochen): use .displayText
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
