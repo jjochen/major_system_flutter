@@ -55,7 +55,7 @@ class AuthenticationRepository {
         email: email,
         password: password,
       );
-    } on Exception {
+    } on Exception catch (_) {
       throw SignUpFailure();
     }
   }

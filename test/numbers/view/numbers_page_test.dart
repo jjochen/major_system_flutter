@@ -2,9 +2,12 @@
 
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:major_system/attributions/attributions.dart';
 import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/numbers/numbers.dart';
@@ -30,39 +33,39 @@ void main() {
   const attributionsButtonKey = Key('homePage_attributions_iconButton');
 
   group('NumbersPage', () {
-    registerFallbackValue(const AuthenticationState.unknown());
+    registerFallbackValue(const AuthenticationUnauthenticated());
     registerFallbackValue(AuthenticationLogoutRequested());
 
     registerFallbackValue(NumbersLoading());
     registerFallbackValue(LoadNumbers());
 
     late AuthenticationBloc authenticationBloc;
-    late NumbersBloc numbersBloc;
     late UserInfo user;
 
     setUp(() {
+      GetIt.instance.registerLazySingleton<FirebaseFirestore>(
+        FakeFirebaseFirestore.new,
+      );
+
       authenticationBloc = MockAuthenticationBloc();
-      numbersBloc = MockNumbersBloc();
       user = MockUserInfo();
-      when(() => authenticationBloc.state).thenReturn(
-        AuthenticationState.authenticated(user),
+      whenListen<AuthenticationState>(
+        authenticationBloc,
+        Stream.fromIterable([AuthenticationAuthenticated(user)]),
+        initialState: AuthenticationUnauthenticated(),
       );
-      when(() => numbersBloc.state).thenReturn(
-        const NumbersLoaded(),
-      );
+    });
+
+    tearDown(() {
+      GetIt.instance.reset();
     });
 
     group('calls', () {
       testWidgets('AuthenticationLogoutRequested when logout is pressed',
           (tester) async {
         await tester.pumpWidget(
-          MultiBlocProvider(
-            providers: [
-              BlocProvider<AuthenticationBloc>(
-                create: (context) => authenticationBloc,
-              ),
-              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
-            ],
+          BlocProvider<AuthenticationBloc>(
+            create: (context) => authenticationBloc,
             child: MaterialApp(
               home: NumbersPage(),
             ),
@@ -79,13 +82,8 @@ void main() {
     group('renders', () {
       testWidgets('numbers widget', (tester) async {
         await tester.pumpWidget(
-          MultiBlocProvider(
-            providers: [
-              BlocProvider<AuthenticationBloc>(
-                create: (context) => authenticationBloc,
-              ),
-              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
-            ],
+          BlocProvider<AuthenticationBloc>(
+            create: (context) => authenticationBloc,
             child: MaterialApp(
               home: NumbersPage(),
             ),
@@ -100,13 +98,8 @@ void main() {
       testWidgets('to Attributions when attributions icon is pressed',
           (tester) async {
         await tester.pumpWidget(
-          MultiBlocProvider(
-            providers: [
-              BlocProvider<AuthenticationBloc>(
-                create: (context) => authenticationBloc,
-              ),
-              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
-            ],
+          BlocProvider<AuthenticationBloc>(
+            create: (context) => authenticationBloc,
             child: MaterialApp(
               home: NumbersPage(),
             ),

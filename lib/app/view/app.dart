@@ -17,13 +17,12 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authenticationBloc =
-        AuthenticationBloc(authenticationRepository: authenticationRepository);
-
     return RepositoryProvider<AuthenticationRepository>(
       create: (context) => authenticationRepository,
       child: BlocProvider<AuthenticationBloc>(
-        create: (context) => authenticationBloc,
+        create: (context) => AuthenticationBloc(
+          authenticationRepository: authenticationRepository,
+        ),
         child: const AppView(),
       ),
     );
@@ -52,7 +51,7 @@ class AppViewState extends State<AppView> {
           listener: (context, state) {
             if (state is AuthenticationAuthenticated) {
               _navigator?.pushAndRemoveUntil<void>(
-                NumbersPage.route(user: state.user),
+                NumbersPage.route(),
                 (route) => false,
               );
             } else {

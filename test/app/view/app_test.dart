@@ -2,9 +2,12 @@
 
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:major_system/app.dart';
+import 'package:get_it/get_it.dart';
+import 'package:major_system/app/view/app.dart';
 import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/authentication/bloc/authentication_bloc.dart';
 import 'package:major_system/login/login.dart';
@@ -40,7 +43,7 @@ class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
 void main() {
   group('App', () {
     final UserInfo mockUser = MockAuthUser();
-    registerFallbackValue(AuthenticationState.authenticated(mockUser));
+    registerFallbackValue(AuthenticationAuthenticated(mockUser));
     registerFallbackValue(AuthenticationUserInfoChanged(mockUser));
 
     late AuthenticationRepository authenticationRepository;
@@ -71,14 +74,21 @@ void main() {
     late NumbersBloc numbersBloc;
 
     setUp(() {
+      GetIt.instance.registerLazySingleton<FirebaseFirestore>(
+        FakeFirebaseFirestore.new,
+      );
       authenticationBloc = MockAuthenticationBloc();
       authenticationRepository = MockAuthenticationRepository();
       numbersBloc = MockNumbersBloc();
     });
 
+    tearDown(() {
+      GetIt.instance.reset();
+    });
+
     testWidgets('renders SplashPage by default', (tester) async {
       when(() => authenticationBloc.state)
-          .thenReturn(const AuthenticationState.unknown());
+          .thenReturn(const AuthenticationUnauthenticated());
       await tester.pumpWidget(
         BlocProvider.value(value: authenticationBloc, child: const AppView()),
       );
@@ -90,8 +100,8 @@ void main() {
         (tester) async {
       whenListen(
         authenticationBloc,
-        Stream.value(const AuthenticationState.unauthenticated()),
-        initialState: const AuthenticationState.unknown(),
+        Stream.value(const AuthenticationUnauthenticated()),
+        initialState: const AuthenticationUnauthenticated(),
       );
       await tester.pumpWidget(
         RepositoryProvider.value(
@@ -110,8 +120,8 @@ void main() {
         (tester) async {
       whenListen(
         authenticationBloc,
-        Stream.value(AuthenticationState.authenticated(MockAuthUser())),
-        initialState: const AuthenticationState.unknown(),
+        Stream.value(AuthenticationAuthenticated(MockAuthUser())),
+        initialState: const AuthenticationUnauthenticated(),
       );
       whenListen(
         numbersBloc,
@@ -139,8 +149,8 @@ void main() {
     testWidgets('navigates to HomePage when status is unknown', (tester) async {
       whenListen(
         authenticationBloc,
-        Stream.value(const AuthenticationState.unknown()),
-        initialState: AuthenticationState.unauthenticated(),
+        Stream.value(const AuthenticationUnauthenticated()),
+        initialState: AuthenticationUnauthenticated(),
       );
       await tester.pumpWidget(
         RepositoryProvider.value(

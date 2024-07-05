@@ -1,28 +1,19 @@
-import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:major_system/app/service_locator.dart';
 import 'package:major_system/attributions/attributions.dart';
 import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/numbers/numbers.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
 class NumbersPage extends StatelessWidget {
-  const NumbersPage({
-    required this.user,
-    super.key,
-  });
+  const NumbersPage({super.key});
 
-  static Route<dynamic> route({
-    required UserInfo user,
-  }) {
+  static Route<dynamic> route() {
     return MaterialPageRoute<void>(
-      builder: (_) => NumbersPage(
-        user: user,
-      ),
+      builder: (_) => const NumbersPage(),
     );
   }
-
-  final UserInfo user;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +29,7 @@ class NumbersPage extends StatelessWidget {
           ),
           IconButton(
             key: const Key('homePage_logout_iconButton'),
-            icon: const Icon(Icons.exit_to_app_outlined),
+            icon: const Icon(Icons.logout_outlined),
             onPressed: () => context
                 .read<AuthenticationBloc>()
                 .add(AuthenticationLogoutRequested()),
@@ -47,8 +38,11 @@ class NumbersPage extends StatelessWidget {
       ),
       body: BlocProvider(
         create: (context) => NumbersBloc(
-          numbersRepository: FirebaseNumbersRepository(userId: user.id),
-        ),
+          numbersRepository: FirebaseNumbersRepository(
+            userId: 'tBjzblRguJhTPSlLo8L8GAuIqdD3',
+            firestore: getIt(),
+          ),
+        )..add(const LoadNumbers()),
         child: const Numbers(),
       ),
     );

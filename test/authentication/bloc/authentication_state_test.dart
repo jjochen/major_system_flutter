@@ -9,30 +9,21 @@ class MockUser extends Mock implements UserInfo {}
 
 void main() {
   group('AuthenticationState', () {
-    group('AuthenticationState.unknown', () {
-      test('supports value comparisons', () {
-        expect(
-          AuthenticationState.unknown(),
-          AuthenticationState.unknown(),
-        );
-      });
-    });
-
-    group('AuthenticationState.authenticated', () {
+    group('AuthenticationAuthenticated', () {
       test('supports value comparisons', () {
         final user = MockUser();
         expect(
-          AuthenticationState.authenticated(user),
-          AuthenticationState.authenticated(user),
+          AuthenticationAuthenticated(user),
+          AuthenticationAuthenticated(user),
         );
       });
     });
 
-    group('AuthenticationState.unauthenticated', () {
+    group('AuthenticationUnauthenticated', () {
       test('supports value comparisons', () {
         expect(
-          AuthenticationState.unauthenticated(),
-          AuthenticationState.unauthenticated(),
+          AuthenticationUnauthenticated(),
+          AuthenticationUnauthenticated(),
         );
       });
     });

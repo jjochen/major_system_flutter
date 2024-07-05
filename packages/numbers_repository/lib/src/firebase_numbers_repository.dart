@@ -3,23 +3,18 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 import 'package:numbers_repository/src/entities/entities.dart';
-import 'package:path/path.dart' as path;
 
 class FirebaseNumbersRepository implements NumbersRepository {
   const FirebaseNumbersRepository({
     required this.userId,
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore;
+    required this.firestore,
+  });
 
   final String userId;
+  final FirebaseFirestore firestore;
 
-  final FirebaseFirestore? _firestore;
-
-  FirebaseFirestore _getFirestore() => _firestore ?? FirebaseFirestore.instance;
-  DocumentReference<Map<String, dynamic>> get _userDocument =>
-      _getFirestore().doc(path.join('/', 'users', userId));
   CollectionReference<Map<String, dynamic>> get _numbersCollection =>
-      _userDocument.collection('numbers');
+      firestore.collection('users').doc(userId).collection('numbers');
 
   @override
   Future<Number?> getNumber(String id) async {

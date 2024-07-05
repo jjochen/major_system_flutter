@@ -7,7 +7,9 @@ abstract class NumbersEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadNumbers extends NumbersEvent {}
+class LoadNumbers extends NumbersEvent {
+  const LoadNumbers();
+}
 
 class AddNumber extends NumbersEvent {
   const AddNumber(this.number);

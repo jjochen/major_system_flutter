@@ -21,11 +21,11 @@ void main() {
   });
 
   group('AuthenticationBloc', () {
-    test('initial state is AuthenticationState.unknown', () {
+    test('initial state is AuthenticationUnauthenticated', () {
       final authenticationBloc = AuthenticationBloc(
         authenticationRepository: authenticationRepository,
       );
-      expect(authenticationBloc.state, const AuthenticationState.unknown());
+      expect(authenticationBloc.state, const AuthenticationUnauthenticated());
       authenticationBloc.close();
     });
 
@@ -40,7 +40,7 @@ void main() {
         );
       },
       expect: () => <AuthenticationState>[
-        AuthenticationState.authenticated(userInfo),
+        AuthenticationAuthenticated(userInfo),
       ],
     );
 
@@ -52,7 +52,7 @@ void main() {
         ),
         act: (bloc) => bloc.add(AuthenticationUserInfoChanged(userInfo)),
         expect: () => <AuthenticationState>[
-          AuthenticationState.authenticated(userInfo),
+          AuthenticationAuthenticated(userInfo),
         ],
       );
 
@@ -64,7 +64,7 @@ void main() {
         act: (bloc) =>
             bloc.add(const AuthenticationUserInfoChanged(UserInfo.empty)),
         expect: () => const <AuthenticationState>[
-          AuthenticationState.unauthenticated(),
+          AuthenticationUnauthenticated(),
         ],
       );
     });
