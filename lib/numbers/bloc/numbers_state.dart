@@ -7,10 +7,12 @@ abstract class NumbersState extends Equatable {
   List<Object> get props => [];
 }
 
-class NumbersLoading extends NumbersState {}
+class NumbersLoading extends NumbersState {
+  const NumbersLoading();
+}
 
 class NumbersLoaded extends NumbersState {
-  const NumbersLoaded([this.numbers = const []]);
+  const NumbersLoaded(this.numbers);
 
   final List<Number> numbers;
 
@@ -18,4 +20,6 @@ class NumbersLoaded extends NumbersState {
   List<Object> get props => [numbers];
 }
 
-class NumbersNotLoaded extends NumbersState {}
+class NumbersNotLoaded extends NumbersState {
+  const NumbersNotLoaded();
+}

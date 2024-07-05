@@ -11,12 +11,12 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
   NumbersBloc({
     required NumbersRepository numbersRepository,
   })  : _numbersRepository = numbersRepository,
-        super(NumbersLoading()) {
+        super(const NumbersLoading()) {
     on<LoadNumbers>(_onLoadNumbers);
     on<AddNumber>(_onAddNumber);
     on<UpdateNumber>(_onUpdateNumber);
     on<DeleteNumber>(_onDeleteNumber);
-    on<NumbersUpdated>(_onNumbersUpdate);
+    on<NumbersUpdated>(_onNumbersUpdated);
   }
   final NumbersRepository _numbersRepository;
   StreamSubscription<List<Number>>? _numbersSubscription;
@@ -52,7 +52,7 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
     await _numbersRepository.deleteNumber(event.number.id);
   }
 
-  Future<void> _onNumbersUpdate(
+  Future<void> _onNumbersUpdated(
     NumbersUpdated event,
     Emitter<NumbersState> emit,
   ) async {

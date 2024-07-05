@@ -48,7 +48,7 @@ void main() {
 
     late AuthenticationRepository authenticationRepository;
 
-    registerFallbackValue(const NumbersLoaded());
+    registerFallbackValue(const NumbersLoaded([]));
     registerFallbackValue(const NumbersUpdated([]));
 
     setUp(() {
@@ -138,7 +138,7 @@ void main() {
       );
       whenListen(
         numbersBloc,
-        Stream.value(const NumbersLoaded()),
+        Stream.value(const NumbersLoaded([])),
         initialState: NumbersLoading(),
       );
       await tester.pumpWidget(
