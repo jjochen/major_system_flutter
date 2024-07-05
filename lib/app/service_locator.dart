@@ -5,8 +5,6 @@ final getIt = GetIt.instance;
 
 class ServiceLocator {
   static void setup() {
-    getIt.registerLazySingleton<FirebaseFirestore>(
-      () => FirebaseFirestore.instance,
-    );
+    getIt.registerLazySingleton(() => FirebaseFirestore.instance);
   }
 }

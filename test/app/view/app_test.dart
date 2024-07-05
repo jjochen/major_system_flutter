@@ -66,6 +66,19 @@ void main() {
       );
       expect(find.byType(AppView), findsOneWidget);
     });
+
+    testWidgets('provides authentication repository', (tester) async {
+      await tester.pumpWidget(
+        App(
+          authenticationRepository: authenticationRepository,
+        ),
+      );
+      final context = tester.element(find.byType(AppView));
+      expect(
+        RepositoryProvider.of<AuthenticationRepository>(context),
+        authenticationRepository,
+      );
+    });
   });
 
   group('AppView', () {
