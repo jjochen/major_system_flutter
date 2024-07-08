@@ -90,7 +90,7 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        expect(find.byType(Numbers), findsOneWidget);
+        expect(find.byType(NumbersList), findsOneWidget);
       });
     });
 

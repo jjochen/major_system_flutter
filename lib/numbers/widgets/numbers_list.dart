@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/numbers/bloc/numbers_bloc.dart';
 import 'package:major_system/numbers/widgets/widgets.dart';
 
-class Numbers extends StatelessWidget {
-  const Numbers({super.key});
+class NumbersList extends StatelessWidget {
+  const NumbersList({super.key});
 
   @override
   Widget build(BuildContext context) {

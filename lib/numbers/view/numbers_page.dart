@@ -43,7 +43,7 @@ class NumbersPage extends StatelessWidget {
             firestore: getIt(),
           ),
         )..add(const LoadNumbers()),
-        child: const Numbers(),
+        child: const NumbersList(),
       ),
     );
   }

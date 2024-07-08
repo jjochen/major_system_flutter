@@ -19,7 +19,7 @@ void main() {
           home: Scaffold(
             body: BlocProvider<NumbersBloc>.value(
               value: numbersBloc,
-              child: const Numbers(),
+              child: const NumbersList(),
             ),
           ),
         );
