@@ -12,32 +12,25 @@ class AuthenticationBloc
   AuthenticationBloc({
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
-        super(const AuthenticationState.unknown()) {
-    on<AuthenticationUserChanged>(_onAuthenticationUserChanged);
+        super(const AuthenticationUnauthenticated()) {
+    on<AuthenticationUserInfoChanged>(_onAuthenticationUserChanged);
     on<AuthenticationLogoutRequested>(_onAuthenticationLogoutRequested);
-
-    _userSubscription = _authenticationRepository.user.listen(
-      (user) => add(AuthenticationUserChanged(user)),
+    _userSubscription = _authenticationRepository.userInfo.listen(
+      (user) => add(AuthenticationUserInfoChanged(user)),
     );
   }
 
   final AuthenticationRepository _authenticationRepository;
-  StreamSubscription<User>? _userSubscription;
-
-  @override
-  Future<void> close() {
-    _userSubscription?.cancel();
-    return super.close();
-  }
+  StreamSubscription<UserInfo>? _userSubscription;
 
   Future<void> _onAuthenticationUserChanged(
-    AuthenticationUserChanged event,
+    AuthenticationUserInfoChanged event,
     Emitter<AuthenticationState> emit,
   ) async {
     emit(
-      event.user != User.empty
-          ? AuthenticationState.authenticated(event.user)
-          : const AuthenticationState.unauthenticated(),
+      event.userInfo == UserInfo.empty
+          ? const AuthenticationUnauthenticated()
+          : AuthenticationAuthenticated(event.userInfo),
     );
   }
 
@@ -46,5 +39,11 @@ class AuthenticationBloc
     Emitter<AuthenticationState> emit,
   ) async {
     unawaited(_authenticationRepository.logOut());
+  }
+
+  @override
+  Future<void> close() {
+    _userSubscription?.cancel();
+    return super.close();
   }
 }

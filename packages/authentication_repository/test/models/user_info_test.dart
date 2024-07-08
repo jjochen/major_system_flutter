@@ -3,14 +3,14 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('User', () {
+  group('UserInfo', () {
     const id = 'mock-id';
     const email = 'mock-email';
 
     test('uses value equality', () {
       expect(
-        User(email: email, id: id),
-        User(email: email, id: id),
+        UserInfo(email: email, id: id),
+        UserInfo(email: email, id: id),
       );
     });
   });

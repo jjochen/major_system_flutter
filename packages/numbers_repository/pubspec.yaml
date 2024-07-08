@@ -11,6 +11,8 @@ dependencies:
   firebase_core: any
   flutter:
     sdk: flutter
+  meta: any
+  path: any
   rxdart: any
 
 dev_dependencies:

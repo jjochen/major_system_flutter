@@ -6,14 +6,15 @@ import 'package:numbers_repository/src/entities/entities.dart';
 
 class FirebaseNumbersRepository implements NumbersRepository {
   const FirebaseNumbersRepository({
-    FirebaseFirestore? firestore,
-  }) : _firestore = firestore;
+    required this.userId,
+    required this.firestore,
+  });
 
-  final FirebaseFirestore? _firestore;
-  FirebaseFirestore _getFirestore() => _firestore ?? FirebaseFirestore.instance;
+  final String userId;
+  final FirebaseFirestore firestore;
 
   CollectionReference<Map<String, dynamic>> get _numbersCollection =>
-      _getFirestore().collection('numbers');
+      firestore.collection('users').doc(userId).collection('numbers');
 
   @override
   Future<Number?> getNumber(String id) async {
@@ -32,7 +33,10 @@ class FirebaseNumbersRepository implements NumbersRepository {
   Stream<List<Number>> numbers() {
     return _numbersCollection.snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
-        final entity = NumberEntity.fromSnapshot(id: doc.id, data: doc.data());
+        final entity = NumberEntity.fromSnapshot(
+          id: doc.id,
+          data: doc.data(),
+        );
         return Number.fromEntity(entity);
       }).toList();
     });
@@ -52,9 +56,9 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
-  Future<void> updateNumber(Number update) {
-    return _numbersCollection
-        .doc(update.id)
-        .update(update.toEntity().toDocument());
+  Future<void> updateNumber(Number newNumber) {
+    return _numbersCollection.doc(newNumber.id).update(
+          newNumber.toEntity().toDocument(),
+        );
   }
 }

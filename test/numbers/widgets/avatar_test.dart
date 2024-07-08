@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:major_system/home/home.dart';
+import 'package:major_system/numbers/numbers.dart';
 
 void main() {
   const imageUrl = 'https://www.fnordware.com/superpng/pngtest16rgba.png';

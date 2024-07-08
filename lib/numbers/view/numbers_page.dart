@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:major_system/app/service_locator.dart';
 import 'package:major_system/attributions/attributions.dart';
 import 'package:major_system/authentication/authentication.dart';
-import 'package:major_system/home/home.dart';
+import 'package:major_system/numbers/numbers.dart';
+import 'package:numbers_repository/numbers_repository.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class NumbersPage extends StatelessWidget {
+  const NumbersPage({super.key});
 
   static Route<dynamic> route() {
-    return MaterialPageRoute<void>(builder: (_) => const HomePage());
+    return MaterialPageRoute<void>(
+      builder: (_) => const NumbersPage(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: const Text('Major System'),
         actions: <Widget>[
           IconButton(
             key: const Key('homePage_attributions_iconButton'),
@@ -27,25 +29,21 @@ class HomePage extends StatelessWidget {
           ),
           IconButton(
             key: const Key('homePage_logout_iconButton'),
-            icon: const Icon(Icons.exit_to_app_outlined),
+            icon: const Icon(Icons.logout_outlined),
             onPressed: () => context
                 .read<AuthenticationBloc>()
                 .add(AuthenticationLogoutRequested()),
           ),
         ],
       ),
-      body: Align(
-        alignment: const Alignment(0, -1 / 3),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Avatar(photo: user.photo),
-            const SizedBox(height: 4),
-            Text(user.email ?? '', style: textTheme.titleLarge),
-            const SizedBox(height: 4),
-            Text(user.name ?? '', style: textTheme.headlineSmall),
-          ],
-        ),
+      body: BlocProvider(
+        create: (context) => NumbersBloc(
+          numbersRepository: FirebaseNumbersRepository(
+            userId: 'tBjzblRguJhTPSlLo8L8GAuIqdD3',
+            firestore: getIt(),
+          ),
+        )..add(const LoadNumbers()),
+        child: const NumbersList(),
       ),
     );
   }

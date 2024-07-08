@@ -33,13 +33,13 @@ class AuthenticationRepository {
   final GoogleSignIn? _googleSignIn;
   GoogleSignIn _getGoogleSignIn() => _googleSignIn ?? GoogleSignIn.standard();
 
-  /// Stream of [User] which will emit the current user when
+  /// Stream of [UserInfo] which will emit the current user when
   /// the authentication state changes.
   ///
-  /// Emits [User.empty] if the user is not authenticated.
-  Stream<User> get user {
+  /// Emits [UserInfo.empty] if the user is not authenticated.
+  Stream<UserInfo> get userInfo {
     return _getFirebaseAuth().authStateChanges().map((firebaseUser) {
-      return firebaseUser == null ? User.empty : firebaseUser.toUser;
+      return firebaseUser == null ? UserInfo.empty : firebaseUser.toUserInfo;
     });
   }
 
@@ -55,7 +55,7 @@ class AuthenticationRepository {
         email: email,
         password: password,
       );
-    } on Exception {
+    } on Exception catch (_) {
       throw SignUpFailure();
     }
   }
@@ -95,7 +95,7 @@ class AuthenticationRepository {
   }
 
   /// Signs out the current user which will emit
-  /// [User.empty] from the [user] Stream.
+  /// [UserInfo.empty] from the [userInfo] Stream.
   ///
   /// Throws a [LogOutFailure] if an exception occurs.
   Future<void> logOut() async {
@@ -111,7 +111,7 @@ class AuthenticationRepository {
 }
 
 extension on firebase_auth.User {
-  User get toUser {
-    return User(id: uid, email: email, name: displayName, photo: photoURL);
+  UserInfo get toUserInfo {
+    return UserInfo(id: uid, email: email, name: displayName, photo: photoURL);
   }
 }
