@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:major_system/numbers/bloc/numbers_bloc.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 import 'package:test/test.dart';
@@ -8,14 +10,14 @@ void main() {
 
     group('NumbersLoading', () {
       test('should be a subclass of NumbersState', () {
-        expect(const NumbersLoading(), isA<NumbersState>());
+        expect(NumbersLoading(), isA<NumbersState>());
       });
 
       test('should support value equality', () {
         expect(
-          const NumbersLoading(),
+          NumbersLoading(),
           equals(
-            const NumbersLoading(),
+            NumbersLoading(),
           ),
         );
       });
@@ -23,32 +25,32 @@ void main() {
 
     group('NumbersLoaded', () {
       test('should be a subclass of NumbersState', () {
-        expect(const NumbersLoaded([number]), isA<NumbersState>());
+        expect(NumbersLoaded([number]), isA<NumbersState>());
       });
 
       test('should support value equality', () {
         expect(
-          const NumbersLoaded([number]),
-          equals(const NumbersLoaded([number])),
+          NumbersLoaded([number]),
+          equals(NumbersLoaded([number])),
         );
 
         expect(
-          const NumbersLoaded([]),
-          isNot(const NumbersLoaded([number])),
+          NumbersLoaded([]),
+          isNot(NumbersLoaded([number])),
         );
       });
     });
 
     group('NumbersNotLoaded', () {
       test('should be a subclass of NumbersState', () {
-        expect(const NumbersNotLoaded(), isA<NumbersState>());
+        expect(NumbersNotLoaded(), isA<NumbersState>());
       });
 
       test('should support value equality', () {
         expect(
-          const NumbersNotLoaded(),
+          NumbersNotLoaded(),
           equals(
-            const NumbersNotLoaded(),
+            NumbersNotLoaded(),
           ),
         );
       });

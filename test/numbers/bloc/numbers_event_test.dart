@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
 import 'package:major_system/numbers/bloc/numbers_bloc.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 import 'package:test/test.dart';
@@ -9,95 +11,85 @@ void main() {
 
     group('LoadNumbers', () {
       test('should be a subclass of NumbersEvent', () {
-        expect(const LoadNumbers(), isA<NumbersEvent>());
+        expect(LoadNumbers(), isA<NumbersEvent>());
       });
 
       test('should support value equality', () {
         expect(
-          const LoadNumbers(),
-          equals(
-            const LoadNumbers(),
-          ),
+          LoadNumbers(),
+          LoadNumbers(),
         );
       });
     });
 
     group('AddNumber', () {
       test('should be a subclass of NumbersEvent', () {
-        expect(const AddNumber(number1), isA<NumbersEvent>());
+        expect(AddNumber(number1), isA<NumbersEvent>());
       });
 
       test('should support value equality', () {
         expect(
-          const AddNumber(number1),
-          equals(
-            const AddNumber(number1),
-          ),
+          AddNumber(number1),
+          AddNumber(number1),
         );
 
         expect(
-          const AddNumber(number1),
-          isNot(const AddNumber(number2)),
+          AddNumber(number1),
+          isNot(AddNumber(number2)),
         );
       });
     });
 
     group('UpdateNumber', () {
       test('should be a subclass of NumbersEvent', () {
-        expect(const UpdateNumber(number1), isA<NumbersEvent>());
+        expect(UpdateNumber(number1), isA<NumbersEvent>());
       });
 
       test('should support value equality', () {
         expect(
-          const UpdateNumber(number1),
-          equals(
-            const UpdateNumber(number1),
-          ),
+          UpdateNumber(number1),
+          UpdateNumber(number1),
         );
 
         expect(
-          const UpdateNumber(number1),
-          isNot(const UpdateNumber(number2)),
+          UpdateNumber(number1),
+          isNot(UpdateNumber(number2)),
         );
       });
     });
 
     group('DeleteNumber', () {
       test('should be a subclass of NumbersEvent', () {
-        expect(const DeleteNumber(number1), isA<NumbersEvent>());
+        expect(DeleteNumber(number1), isA<NumbersEvent>());
       });
 
       test('should support value equality', () {
         expect(
-          const DeleteNumber(number1),
-          equals(
-            const DeleteNumber(number1),
-          ),
+          DeleteNumber(number1),
+          DeleteNumber(number1),
         );
 
         expect(
-          const DeleteNumber(number1),
-          isNot(const DeleteNumber(number2)),
+          DeleteNumber(number1),
+          isNot(DeleteNumber(number2)),
         );
       });
     });
 
     group('NumbersUpdated', () {
       test('should be a subclass of NumbersEvent', () {
-        expect(const NumbersUpdated([number1]), isA<NumbersEvent>());
+        expect(NumbersUpdated([number1]), isA<NumbersEvent>());
       });
 
       test('should support value equality', () {
         expect(
-          const NumbersUpdated([number1]),
-          equals(
-            const NumbersUpdated([number1]),
-          ),
+          NumbersUpdated([number1]),
+          NumbersUpdated([number1]),
         );
 
         expect(
-          const NumbersUpdated([number1]),
-          isNot(const NumbersUpdated([number2])),
+          NumbersUpdated([number1]),
+          isNot(NumbersUpdated([number2])),
         );
       });
     });
