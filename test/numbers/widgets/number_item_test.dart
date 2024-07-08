@@ -14,7 +14,6 @@ void main() {
       final widget = Material(
         child: NumberItem(
           number: number,
-          onDismissed: (direction) {},
           onTap: () {},
         ),
       );
