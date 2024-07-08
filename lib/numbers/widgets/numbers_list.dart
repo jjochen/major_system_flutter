@@ -14,25 +14,14 @@ class NumbersList extends StatelessWidget {
           return const LoadingIndicator();
         } else if (state is NumbersLoaded) {
           final numbers = state.numbers;
-          return ListView.builder(
+          return ListView.separated(
             itemCount: numbers.length,
             itemBuilder: (context, index) {
               final number = numbers[index];
               return NumberItem(
                 number: number,
-                onDismissed: (direction) {
-                  BlocProvider.of<NumbersBloc>(context)
-                      .add(DeleteNumber(number));
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    DeleteNumberSnackBar(
-                      number: number,
-                      onUndo: () => BlocProvider.of<NumbersBloc>(context)
-                          .add(AddNumber(number)),
-                    ),
-                  );
-                },
                 onTap: () async {
-                  final removedNumber = await Navigator.of(context).push(
+                  await Navigator.of(context).push(
                     MaterialPageRoute<dynamic>(
                       builder: (_) {
                         // TODO(jjochen): Implement DetailsScreen.
@@ -41,17 +30,11 @@ class NumbersList extends StatelessWidget {
                       },
                     ),
                   );
-                  if (removedNumber != null && context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      DeleteNumberSnackBar(
-                        number: number,
-                        onUndo: () => BlocProvider.of<NumbersBloc>(context)
-                            .add(AddNumber(number)),
-                      ),
-                    );
-                  }
                 },
               );
+            },
+            separatorBuilder: (context, index) {
+              return const Divider();
             },
           );
         } else {

@@ -3,13 +3,13 @@ import 'package:numbers_repository/numbers_repository.dart';
 
 class NumberItem extends StatelessWidget {
   const NumberItem({
-    required this.onDismissed,
     required this.onTap,
     required this.number,
+    this.onDismissed,
     super.key,
   });
 
-  final DismissDirectionCallback onDismissed;
+  final DismissDirectionCallback? onDismissed;
   final GestureTapCallback onTap;
   final Number number;
 
@@ -21,7 +21,7 @@ class NumberItem extends StatelessWidget {
       child: ListTile(
         onTap: onTap,
         title: Text(
-          number.toString(),
+          number.value.toString(),
           style: Theme.of(context).textTheme.displayMedium,
         ),
       ),
