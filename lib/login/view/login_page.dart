@@ -6,9 +6,9 @@ import 'package:major_system/login/login.dart';
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
-  static Route<dynamic> route() {
-    return MaterialPageRoute<void>(builder: (_) => const LoginPage());
-  }
+  static Page<dynamic> page() => const MaterialPage<dynamic>(
+        child: LoginPage(),
+      );
 
   @override
   Widget build(BuildContext context) {

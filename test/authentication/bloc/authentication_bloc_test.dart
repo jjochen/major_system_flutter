@@ -25,7 +25,7 @@ void main() {
       final authenticationBloc = AuthenticationBloc(
         authenticationRepository: authenticationRepository,
       );
-      expect(authenticationBloc.state, const AuthenticationUnauthenticated());
+      expect(authenticationBloc.state, const AuthenticationUnknown());
       authenticationBloc.close();
     });
 

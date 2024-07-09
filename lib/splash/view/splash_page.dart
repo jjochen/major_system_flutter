@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class SplashPage extends StatelessWidget {
   const SplashPage({super.key});
 
-  static Route<dynamic> route() {
-    return MaterialPageRoute<void>(builder: (_) => const SplashPage());
+  static Page<dynamic> page() {
+    return const MaterialPage<void>(child: SplashPage());
   }
 
   @override

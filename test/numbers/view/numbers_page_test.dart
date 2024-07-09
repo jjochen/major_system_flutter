@@ -36,11 +36,18 @@ void main() {
     registerFallbackValue(const AuthenticationUnauthenticated());
     registerFallbackValue(AuthenticationLogoutRequested());
 
-    registerFallbackValue(NumbersLoading());
+    registerFallbackValue(NumbersState());
     registerFallbackValue(LoadNumbers());
 
     late AuthenticationBloc authenticationBloc;
     late UserInfo user;
+
+    Widget buildFrame() => BlocProvider<AuthenticationBloc>(
+          create: (context) => authenticationBloc,
+          child: MaterialApp(
+            home: NumbersPage(user: user),
+          ),
+        );
 
     setUp(() {
       GetIt.instance.registerLazySingleton<FirebaseFirestore>(
@@ -63,14 +70,7 @@ void main() {
     group('calls', () {
       testWidgets('AuthenticationLogoutRequested when logout is pressed',
           (tester) async {
-        await tester.pumpWidget(
-          BlocProvider<AuthenticationBloc>(
-            create: (context) => authenticationBloc,
-            child: MaterialApp(
-              home: NumbersPage(),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(logoutButtonKey));
         verify(
@@ -81,14 +81,7 @@ void main() {
 
     group('renders', () {
       testWidgets('numbers widget', (tester) async {
-        await tester.pumpWidget(
-          BlocProvider<AuthenticationBloc>(
-            create: (context) => authenticationBloc,
-            child: MaterialApp(
-              home: NumbersPage(),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         await tester.pumpAndSettle();
         expect(find.byType(NumbersList), findsOneWidget);
       });
@@ -97,14 +90,7 @@ void main() {
     group('navigates', () {
       testWidgets('to Attributions when attributions icon is pressed',
           (tester) async {
-        await tester.pumpWidget(
-          BlocProvider<AuthenticationBloc>(
-            create: (context) => authenticationBloc,
-            child: MaterialApp(
-              home: NumbersPage(),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(attributionsButtonKey));
         await tester.pumpAndSettle();

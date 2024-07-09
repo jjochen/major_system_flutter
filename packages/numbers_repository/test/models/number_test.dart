@@ -23,14 +23,23 @@ void main() {
       );
     });
 
-    test('uses stringify', () {
+    test('toString() uses numberOfDigets', () {
       expect(
         const Number(
           id: id,
-          numberOfDigits: numberOfDigits,
-          value: value,
+          numberOfDigits: 2,
+          value: 42,
         ).toString(),
-        'Number(mock-id, 3, 42)',
+        '42',
+      );
+
+      expect(
+        const Number(
+          id: id,
+          numberOfDigits: 5,
+          value: 42,
+        ).toString(),
+        '00042',
       );
     });
 

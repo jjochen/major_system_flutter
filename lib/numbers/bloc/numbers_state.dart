@@ -1,25 +1,27 @@
 part of 'numbers_bloc.dart';
 
-abstract class NumbersState extends Equatable {
-  const NumbersState();
-
-  @override
-  List<Object> get props => [];
-}
-
-class NumbersLoading extends NumbersState {
-  const NumbersLoading();
-}
-
-class NumbersLoaded extends NumbersState {
-  const NumbersLoaded(this.numbers);
+class NumbersState extends Equatable {
+  const NumbersState({
+    this.numbers = const <Number>[],
+    this.loading = false,
+  });
 
   final List<Number> numbers;
+  final bool loading;
+
+  NumbersState copyWith({
+    List<Number> Function()? numbers,
+    bool Function()? loading,
+  }) {
+    return NumbersState(
+      numbers: numbers != null ? numbers() : this.numbers,
+      loading: loading != null ? loading() : this.loading,
+    );
+  }
 
   @override
-  List<Object> get props => [numbers];
-}
-
-class NumbersNotLoaded extends NumbersState {
-  const NumbersNotLoaded();
+  List<Object?> get props => [
+        numbers,
+        loading,
+      ];
 }

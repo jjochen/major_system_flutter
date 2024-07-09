@@ -26,7 +26,7 @@ class Number extends Equatable {
   List<Object?> get props => [id, numberOfDigits, value];
 
   @override
-  bool? get stringify => true;
+  String toString() => value.toString().padLeft(numberOfDigits, '0');
 
   Number copyWith({String? id, int? numberOfDigits, int? value}) {
     return Number(

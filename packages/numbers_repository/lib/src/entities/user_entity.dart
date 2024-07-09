@@ -33,9 +33,6 @@ class UserEntity extends Equatable {
   @override
   List<Object?> get props => [id, email, name];
 
-  @override
-  bool? get stringify => true;
-
   Map<String, Object?> toJson() {
     return {
       _Key.id: id,

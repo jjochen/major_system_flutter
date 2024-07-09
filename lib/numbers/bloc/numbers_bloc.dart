@@ -11,7 +11,7 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
   NumbersBloc({
     required NumbersRepository numbersRepository,
   })  : _numbersRepository = numbersRepository,
-        super(const NumbersLoading()) {
+        super(const NumbersState()) {
     on<LoadNumbers>(_onLoadNumbers);
     on<AddNumber>(_onAddNumber);
     on<UpdateNumber>(_onUpdateNumber);
@@ -56,7 +56,12 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
     NumbersUpdated event,
     Emitter<NumbersState> emit,
   ) async {
-    emit(NumbersLoaded(event.numbers));
+    emit(
+      state.copyWith(
+        numbers: () => event.numbers,
+        loading: () => false,
+      ),
+    );
   }
 
   @override
