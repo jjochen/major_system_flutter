@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/numbers/bloc/numbers_bloc.dart';
+import 'package:major_system/numbers/view/number_detail_page.dart';
 import 'package:major_system/numbers/widgets/widgets.dart';
 
 class NumbersList extends StatelessWidget {
@@ -19,9 +20,12 @@ class NumbersList extends StatelessWidget {
             return NumberItem(
               number: number,
               onTap: () async {
-                context.read<NumbersBloc>().add(
-                      SelectNumber(number),
-                    );
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute<dynamic>(
+                    builder: (context) => NumberDetailPage(number: number),
+                  ),
+                );
               },
             );
           },

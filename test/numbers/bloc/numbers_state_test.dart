@@ -15,12 +15,10 @@ void main() {
         NumbersState(
           numbers: [number1, number2],
           loading: true,
-          selectedNumber: number1,
         ),
         NumbersState(
           numbers: [number1, number2],
           loading: true,
-          selectedNumber: number1,
         ),
       );
     });
@@ -30,13 +28,11 @@ void main() {
         NumbersState(
           numbers: [number1],
           loading: true,
-          selectedNumber: number1,
         ),
         isNot(
           NumbersState(
             numbers: [number2],
             loading: true,
-            selectedNumber: number1,
           ),
         ),
       );
@@ -47,30 +43,11 @@ void main() {
         NumbersState(
           numbers: [number1, number2],
           loading: true,
-          selectedNumber: number1,
         ),
         isNot(
           NumbersState(
             numbers: [number1, number2],
             loading: false,
-            selectedNumber: number1,
-          ),
-        ),
-      );
-    });
-
-    test('should not be equal when selectedNumber is different', () {
-      expect(
-        NumbersState(
-          numbers: [number1, number2],
-          loading: true,
-          selectedNumber: number1,
-        ),
-        isNot(
-          NumbersState(
-            numbers: [number1, number2],
-            loading: true,
-            selectedNumber: number2,
           ),
         ),
       );

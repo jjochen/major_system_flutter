@@ -1,31 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:major_system/numbers/numbers.dart';
+import 'package:numbers_repository/numbers_repository.dart';
 
 class NumberDetailPage extends StatelessWidget {
-  const NumberDetailPage({super.key});
+  const NumberDetailPage({
+    required this.number,
+    super.key,
+  });
 
-  static Page<void> page() => const MaterialPage<void>(
-        child: NumberDetailPage(),
-      );
+  final Number number;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Number Details'),
+        title: Text(number.toString()),
       ),
       body: Center(
-        child: BlocBuilder<NumbersBloc, NumbersState>(
-          builder: (context, state) {
-            final number = state.selectedNumber;
-            if (number != null) {
-              return Text(number.value.toString());
-            } else {
-              return const Text('No number selected');
-            }
-          },
-        ),
+        child: Text(number.value.toString()),
       ),
     );
   }

@@ -25,9 +25,6 @@ class User extends Equatable {
   @override
   List<Object?> get props => [id, email, name];
 
-  @override
-  bool? get stringify => true;
-
   User copyWith({
     String Function()? id,
     String? Function()? email,
