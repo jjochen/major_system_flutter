@@ -18,10 +18,10 @@ void main() {
       numbersRepository = MockNumbersRepository();
     });
 
-    test('initial state should be NumbersLoading', () {
+    test('initial state should be NumbersState()', () {
       expect(
         buildBloc().state,
-        equals(const NumbersLoading()),
+        equals(const NumbersState()),
       );
     });
 
@@ -36,7 +36,7 @@ void main() {
         build: buildBloc,
         act: (bloc) => bloc.add(const LoadNumbers()),
         expect: () => const <NumbersState>[
-          NumbersLoaded([number]),
+          NumbersState(numbers: [number]),
         ],
         verify: (bloc) {
           verify(() => numbersRepository.numbers()).called(1);
@@ -101,7 +101,7 @@ void main() {
         build: buildBloc,
         act: (bloc) => bloc.add(const NumbersUpdated([number])),
         expect: () => const <NumbersState>[
-          NumbersLoaded([number]),
+          NumbersState(numbers: [number]),
         ],
       );
     });

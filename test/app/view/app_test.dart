@@ -2,17 +2,13 @@
 
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
+import 'package:major_system/app/flow/app_flow.dart';
 import 'package:major_system/app/view/app.dart';
 import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/authentication/bloc/authentication_bloc.dart';
-import 'package:major_system/login/login.dart';
 import 'package:major_system/numbers/numbers.dart';
-import 'package:major_system/splash/splash.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
@@ -48,7 +44,7 @@ void main() {
 
     late AuthenticationRepository authenticationRepository;
 
-    registerFallbackValue(const NumbersLoaded([]));
+    registerFallbackValue(const NumbersState());
     registerFallbackValue(const NumbersUpdated([]));
 
     setUp(() {
@@ -58,13 +54,13 @@ void main() {
       );
     });
 
-    testWidgets('renders AppView', (tester) async {
+    testWidgets('renders AppFlow', (tester) async {
       await tester.pumpWidget(
         App(
           authenticationRepository: authenticationRepository,
         ),
       );
-      expect(find.byType(AppView), findsOneWidget);
+      expect(find.byType(AppFlow), findsOneWidget);
     });
 
     testWidgets('provides authentication repository', (tester) async {
@@ -73,109 +69,11 @@ void main() {
           authenticationRepository: authenticationRepository,
         ),
       );
-      final context = tester.element(find.byType(AppView));
+      final context = tester.element(find.byType(AppFlow));
       expect(
         RepositoryProvider.of<AuthenticationRepository>(context),
         authenticationRepository,
       );
-    });
-  });
-
-  group('AppView', () {
-    late AuthenticationBloc authenticationBloc;
-    late AuthenticationRepository authenticationRepository;
-    late NumbersBloc numbersBloc;
-
-    setUp(() {
-      GetIt.instance.registerLazySingleton<FirebaseFirestore>(
-        FakeFirebaseFirestore.new,
-      );
-      authenticationBloc = MockAuthenticationBloc();
-      authenticationRepository = MockAuthenticationRepository();
-      numbersBloc = MockNumbersBloc();
-    });
-
-    tearDown(() {
-      GetIt.instance.reset();
-    });
-
-    testWidgets('renders SplashPage by default', (tester) async {
-      when(() => authenticationBloc.state)
-          .thenReturn(const AuthenticationUnauthenticated());
-      await tester.pumpWidget(
-        BlocProvider.value(value: authenticationBloc, child: const AppView()),
-      );
-      await tester.pumpAndSettle();
-      expect(find.byType(SplashPage), findsOneWidget);
-    });
-
-    testWidgets('navigates to LoginPage when status is unauthenticated',
-        (tester) async {
-      whenListen(
-        authenticationBloc,
-        Stream.value(const AuthenticationUnauthenticated()),
-        initialState: const AuthenticationUnauthenticated(),
-      );
-      await tester.pumpWidget(
-        RepositoryProvider.value(
-          value: authenticationRepository,
-          child: BlocProvider.value(
-            value: authenticationBloc,
-            child: const AppView(),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.byType(LoginPage), findsOneWidget);
-    });
-
-    testWidgets('navigates to NumbersPage when status is authenticated',
-        (tester) async {
-      whenListen(
-        authenticationBloc,
-        Stream.value(AuthenticationAuthenticated(MockAuthUser())),
-        initialState: const AuthenticationUnauthenticated(),
-      );
-      whenListen(
-        numbersBloc,
-        Stream.value(const NumbersLoaded([])),
-        initialState: NumbersLoading(),
-      );
-      await tester.pumpWidget(
-        RepositoryProvider.value(
-          value: authenticationRepository,
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider<AuthenticationBloc>(
-                create: (context) => authenticationBloc,
-              ),
-              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
-            ],
-            child: AppView(),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      expect(find.byType(NumbersPage), findsOneWidget);
-    });
-
-    testWidgets('navigates to HomePage when status is unknown', (tester) async {
-      whenListen(
-        authenticationBloc,
-        Stream.value(const AuthenticationUnauthenticated()),
-        initialState: AuthenticationUnauthenticated(),
-      );
-      await tester.pumpWidget(
-        RepositoryProvider.value(
-          value: authenticationRepository,
-          child: BlocProvider.value(
-            value: authenticationBloc,
-            child: const AppView(),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-      // TODO(jjochen): Handle this case.
     });
   });
 }

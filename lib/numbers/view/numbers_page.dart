@@ -9,11 +9,9 @@ import 'package:numbers_repository/numbers_repository.dart';
 class NumbersPage extends StatelessWidget {
   const NumbersPage({super.key});
 
-  static Route<dynamic> route() {
-    return MaterialPageRoute<void>(
-      builder: (_) => const NumbersPage(),
-    );
-  }
+  static Page<void> page() => const MaterialPage<void>(
+        child: NumbersPage(),
+      );
 
   @override
   Widget build(BuildContext context) {

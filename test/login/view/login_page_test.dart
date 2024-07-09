@@ -12,8 +12,8 @@ class MockAuthenticationRepository extends Mock
 
 void main() {
   group('LoginPage', () {
-    test('has a route', () {
-      expect(LoginPage.route(), isA<MaterialPageRoute<dynamic>>());
+    test('has a page', () {
+      expect(LoginPage.page(), isA<MaterialPage<dynamic>>());
     });
 
     testWidgets('renders a LoginForm', (tester) async {

@@ -36,7 +36,7 @@ void main() {
     registerFallbackValue(const AuthenticationUnauthenticated());
     registerFallbackValue(AuthenticationLogoutRequested());
 
-    registerFallbackValue(NumbersLoading());
+    registerFallbackValue(NumbersState());
     registerFallbackValue(LoadNumbers());
 
     late AuthenticationBloc authenticationBloc;

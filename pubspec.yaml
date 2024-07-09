@@ -13,6 +13,7 @@ dependencies:
   cloud_firestore: any
   equatable: ^2.0.0
   firebase_core: ^3.1.1
+  flow_builder: ^0.1.0
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.1
