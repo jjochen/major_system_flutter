@@ -12,7 +12,7 @@ class AuthenticationBloc
   AuthenticationBloc({
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
-        super(const AuthenticationUnauthenticated()) {
+        super(const AuthenticationUnknown()) {
     on<AuthenticationUserInfoChanged>(_onAuthenticationUserChanged);
     on<AuthenticationLogoutRequested>(_onAuthenticationLogoutRequested);
     _userSubscription = _authenticationRepository.userInfo.listen(

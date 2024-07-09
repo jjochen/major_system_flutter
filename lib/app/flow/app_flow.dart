@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/login/login.dart';
 import 'package:major_system/numbers/numbers.dart';
+import 'package:major_system/splash/splash.dart';
 
 class AppFlow extends StatelessWidget {
   const AppFlow({super.key});
@@ -17,9 +18,13 @@ class AppFlow extends StatelessWidget {
           return [
             NumbersPage.page(),
           ];
-        } else {
+        } else if (state is AuthenticationUnauthenticated) {
           return [
             LoginPage.page(),
+          ];
+        } else {
+          return [
+            SplashPage.page(),
           ];
         }
       },

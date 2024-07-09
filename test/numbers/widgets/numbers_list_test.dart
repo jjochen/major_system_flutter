@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:major_system/numbers/numbers.dart';
+import 'package:major_system/numbers/view/number_detail_page.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
@@ -64,7 +65,7 @@ void main() {
       expect(find.byType(Divider), findsOneWidget);
     });
 
-    testWidgets('adds SelectNumber when NumberItem is tapped',
+    testWidgets('pushes NumberDetailPage when NumberItem is tapped',
         (WidgetTester tester) async {
       whenListen(
         numbersBloc,
@@ -81,7 +82,7 @@ void main() {
       await tester.tap(numberItemFinder);
       await tester.pumpAndSettle();
 
-      verify(() => numbersBloc.add(const SelectNumber(number1))).called(1);
+      expect(find.byType(NumberDetailPage), findsOneWidget);
     });
   });
 }

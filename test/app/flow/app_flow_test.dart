@@ -13,6 +13,7 @@ import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/authentication/bloc/authentication_bloc.dart';
 import 'package:major_system/login/login.dart';
 import 'package:major_system/numbers/numbers.dart';
+import 'package:major_system/splash/splash.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
@@ -86,7 +87,21 @@ void main() {
       whenListen(
         authenticationBloc,
         Stream<AuthenticationState>.empty(),
-        initialState: const AuthenticationUnauthenticated(),
+        initialState: const AuthenticationUnknown(),
+      );
+
+      await tester.pumpWidget(buildFrame());
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SplashPage), findsOneWidget);
+    });
+
+    testWidgets('navigates to LoginPage when status is unauthenticated',
+        (tester) async {
+      whenListen(
+        authenticationBloc,
+        Stream.value(AuthenticationUnauthenticated()),
+        initialState: const AuthenticationUnknown(),
       );
 
       await tester.pumpWidget(buildFrame());
@@ -100,7 +115,7 @@ void main() {
       whenListen(
         authenticationBloc,
         Stream.value(AuthenticationAuthenticated(MockAuthUser())),
-        initialState: const AuthenticationUnauthenticated(),
+        initialState: const AuthenticationUnknown(),
       );
 
       await tester.pumpWidget(buildFrame());
@@ -116,7 +131,7 @@ void main() {
           AuthenticationAuthenticated(MockAuthUser()),
           AuthenticationUnauthenticated(),
         ]),
-        initialState: const AuthenticationUnauthenticated(),
+        initialState: const AuthenticationUnknown(),
       );
 
       await tester.pumpWidget(buildFrame());
