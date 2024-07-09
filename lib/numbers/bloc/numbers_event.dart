@@ -38,15 +38,6 @@ class DeleteNumber extends NumbersEvent {
   List<Object> get props => [number];
 }
 
-class SelectNumber extends NumbersEvent {
-  const SelectNumber(this.number);
-
-  final Number number;
-
-  @override
-  List<Object> get props => [number];
-}
-
 class NumbersUpdated extends NumbersEvent {
   const NumbersUpdated(this.numbers);
 

@@ -35,6 +35,17 @@ void main() {
 
     late LoginCubit loginCubit;
 
+    MaterialApp buildFrame() {
+      return MaterialApp(
+        home: Scaffold(
+          body: BlocProvider.value(
+            value: loginCubit,
+            child: LoginForm(),
+          ),
+        ),
+      );
+    }
+
     setUp(() {
       loginCubit = MockLoginCubit();
       when(() => loginCubit.state).thenReturn(const LoginState());
@@ -42,16 +53,7 @@ void main() {
 
     group('calls', () {
       testWidgets('emailChanged when email changes', (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: loginCubit,
-                child: const LoginForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         await tester.enterText(find.byKey(emailInputKey), testEmail);
         verify(() => loginCubit.emailChanged(testEmail)).called(1);
       });
@@ -78,16 +80,7 @@ void main() {
         );
         when(() => loginCubit.logInWithCredentials())
             .thenAnswer((_) => Future.value());
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: loginCubit,
-                child: const LoginForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         await tester.tap(find.byKey(loginButtonKey));
         verify(() => loginCubit.logInWithCredentials()).called(1);
       });
@@ -96,16 +89,7 @@ void main() {
           (tester) async {
         when(() => loginCubit.logInWithGoogle())
             .thenAnswer((_) => Future.value());
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: loginCubit,
-                child: const LoginForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         await tester.tap(find.byKey(signInWithGoogleButtonKey));
         verify(() => loginCubit.logInWithGoogle()).called(1);
       });
@@ -121,16 +105,7 @@ void main() {
             LoginState(submissionStatus: FormzSubmissionStatus.failure),
           ]),
         );
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: loginCubit,
-                child: const LoginForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         await tester.pump();
         expect(find.text('Authentication Failure'), findsOneWidget);
       });
@@ -140,16 +115,7 @@ void main() {
         final email = MockEmail();
         when(() => email.isNotValid).thenReturn(true);
         when(() => loginCubit.state).thenReturn(LoginState(email: email));
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: loginCubit,
-                child: const LoginForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         expect(find.text('invalid email'), findsOneWidget);
       });
 
@@ -158,16 +124,7 @@ void main() {
         final password = MockPassword();
         when(() => password.isNotValid).thenReturn(true);
         when(() => loginCubit.state).thenReturn(LoginState(password: password));
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: loginCubit,
-                child: const LoginForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         expect(find.text('invalid password'), findsOneWidget);
       });
 
@@ -177,16 +134,7 @@ void main() {
         when(() => loginCubit.state).thenReturn(
           const LoginState(),
         );
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: loginCubit,
-                child: const LoginForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         final loginButton = tester.widget<ElevatedButton>(
           find.byKey(loginButtonKey),
         );
@@ -198,16 +146,7 @@ void main() {
         when(() => loginCubit.state).thenReturn(
           const LoginState(),
         );
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: loginCubit,
-                child: const LoginForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         final loginButton = tester.widget<ElevatedButton>(
           find.byKey(loginButtonKey),
         );
@@ -215,16 +154,7 @@ void main() {
       });
 
       testWidgets('Sign in with Google Button', (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: loginCubit,
-                child: const LoginForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         expect(find.byKey(signInWithGoogleButtonKey), findsOneWidget);
       });
     });
@@ -235,14 +165,7 @@ void main() {
         await tester.pumpWidget(
           RepositoryProvider<AuthenticationRepository>(
             create: (_) => MockAuthenticationRepository(),
-            child: MaterialApp(
-              home: Scaffold(
-                body: BlocProvider.value(
-                  value: loginCubit,
-                  child: const LoginForm(),
-                ),
-              ),
-            ),
+            child: buildFrame(),
           ),
         );
         await tester.tap(find.byKey(createAccountButtonKey));
