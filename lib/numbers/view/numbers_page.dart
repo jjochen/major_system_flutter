@@ -1,3 +1,4 @@
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/app/service_locator.dart';
@@ -7,10 +8,15 @@ import 'package:major_system/numbers/numbers.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
 class NumbersPage extends StatelessWidget {
-  const NumbersPage({super.key});
+  const NumbersPage({
+    required this.user,
+    super.key,
+  });
 
-  static Page<void> page() => const MaterialPage<void>(
-        child: NumbersPage(),
+  final UserInfo user;
+
+  static Page<void> page({required UserInfo user}) => MaterialPage<void>(
+        child: NumbersPage(user: user),
       );
 
   @override
@@ -37,7 +43,7 @@ class NumbersPage extends StatelessWidget {
       body: BlocProvider(
         create: (context) => NumbersBloc(
           numbersRepository: FirebaseNumbersRepository(
-            userId: 'tBjzblRguJhTPSlLo8L8GAuIqdD3',
+            userId: user.id,
             firestore: getIt(),
           ),
         )..add(const LoadNumbers()),

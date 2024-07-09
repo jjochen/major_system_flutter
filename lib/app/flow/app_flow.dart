@@ -16,7 +16,7 @@ class AppFlow extends StatelessWidget {
       onGeneratePages: (AuthenticationState state, List<Page<dynamic>> pages) {
         if (state is AuthenticationAuthenticated) {
           return [
-            NumbersPage.page(),
+            NumbersPage.page(user: state.user),
           ];
         } else if (state is AuthenticationUnauthenticated) {
           return [
