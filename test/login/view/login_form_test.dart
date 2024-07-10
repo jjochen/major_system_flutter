@@ -48,39 +48,38 @@ void main() {
 
     setUp(() {
       loginCubit = MockLoginCubit();
-      when(() => loginCubit.state).thenReturn(const LoginState());
+      whenListen(
+        loginCubit,
+        Stream<LoginState>.empty(),
+        initialState: LoginState(),
+      );
     });
 
     group('calls', () {
       testWidgets('emailChanged when email changes', (tester) async {
         await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         await tester.enterText(find.byKey(emailInputKey), testEmail);
         verify(() => loginCubit.emailChanged(testEmail)).called(1);
       });
 
       testWidgets('passwordChanged when password changes', (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: loginCubit,
-                child: const LoginForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
         await tester.enterText(find.byKey(passwordInputKey), testPassword);
         verify(() => loginCubit.passwordChanged(testPassword)).called(1);
       });
 
       testWidgets('logInWithCredentials when login button is pressed',
           (tester) async {
-        when(() => loginCubit.state).thenReturn(
-          const LoginState(),
+        whenListen(
+          loginCubit,
+          Stream<LoginState>.fromIterable([]),
+          initialState: LoginState(),
         );
         when(() => loginCubit.logInWithCredentials())
             .thenAnswer((_) => Future.value());
         await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(loginButtonKey));
         verify(() => loginCubit.logInWithCredentials()).called(1);
       });
@@ -90,6 +89,7 @@ void main() {
         when(() => loginCubit.logInWithGoogle())
             .thenAnswer((_) => Future.value());
         await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(signInWithGoogleButtonKey));
         verify(() => loginCubit.logInWithGoogle()).called(1);
       });
@@ -104,9 +104,10 @@ void main() {
             LoginState(submissionStatus: FormzSubmissionStatus.inProgress),
             LoginState(submissionStatus: FormzSubmissionStatus.failure),
           ]),
+          initialState: LoginState(),
         );
         await tester.pumpWidget(buildFrame());
-        await tester.pump();
+        await tester.pumpAndSettle();
         expect(find.text('Authentication Failure'), findsOneWidget);
       });
 
@@ -114,8 +115,15 @@ void main() {
           (tester) async {
         final email = MockEmail();
         when(() => email.isNotValid).thenReturn(true);
-        when(() => loginCubit.state).thenReturn(LoginState(email: email));
+        whenListen(
+          loginCubit,
+          Stream.fromIterable(<LoginState>[
+            LoginState(email: email),
+          ]),
+          initialState: LoginState(),
+        );
         await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         expect(find.text('invalid email'), findsOneWidget);
       });
 
@@ -123,30 +131,45 @@ void main() {
           (tester) async {
         final password = MockPassword();
         when(() => password.isNotValid).thenReturn(true);
-        when(() => loginCubit.state).thenReturn(LoginState(password: password));
+        whenListen(
+          loginCubit,
+          Stream.fromIterable(<LoginState>[
+            LoginState(password: password),
+          ]),
+          initialState: LoginState(),
+        );
         await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         expect(find.text('invalid password'), findsOneWidget);
       });
 
-      testWidgets(
-          skip: true, // Removed check for validation for now. Needed?
-          'disabled login button when status is not validated', (tester) async {
-        when(() => loginCubit.state).thenReturn(
-          const LoginState(),
+      testWidgets('disabled login button when status is not valid',
+          (tester) async {
+        whenListen(
+          loginCubit,
+          Stream.fromIterable(<LoginState>[
+            LoginState(isValid: false),
+          ]),
+          initialState: LoginState(),
         );
         await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         final loginButton = tester.widget<ElevatedButton>(
           find.byKey(loginButtonKey),
         );
         expect(loginButton.enabled, isFalse);
       });
 
-      testWidgets('enabled login button when status is validated',
-          (tester) async {
-        when(() => loginCubit.state).thenReturn(
-          const LoginState(),
+      testWidgets('enabled login button when status is valid', (tester) async {
+        whenListen(
+          loginCubit,
+          Stream.fromIterable(<LoginState>[
+            LoginState(),
+          ]),
+          initialState: LoginState(isValid: false),
         );
         await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         final loginButton = tester.widget<ElevatedButton>(
           find.byKey(loginButtonKey),
         );
@@ -155,6 +178,7 @@ void main() {
 
       testWidgets('Sign in with Google Button', (tester) async {
         await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         expect(find.byKey(signInWithGoogleButtonKey), findsOneWidget);
       });
     });
