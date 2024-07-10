@@ -37,54 +37,45 @@ void main() {
 
     late SignUpCubit signUpCubit;
 
+    Widget buildFrame() {
+      return MaterialApp(
+        home: Scaffold(
+          body: BlocProvider.value(
+            value: signUpCubit,
+            child: SignUpForm(),
+          ),
+        ),
+      );
+    }
+
     setUp(() {
       signUpCubit = MockSignUpCubit();
-      when(() => signUpCubit.state).thenReturn(const SignUpState());
+      whenListen(
+        signUpCubit,
+        Stream<SignUpState>.empty(),
+        initialState: SignUpState(),
+      );
     });
 
     group('calls', () {
       testWidgets('emailChanged when email changes', (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: signUpCubit,
-                child: SignUpForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         await tester.enterText(find.byKey(emailInputKey), testEmail);
         verify(() => signUpCubit.emailChanged(testEmail)).called(1);
       });
 
       testWidgets('passwordChanged when password changes', (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: signUpCubit,
-                child: SignUpForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         await tester.enterText(find.byKey(passwordInputKey), testPassword);
         verify(() => signUpCubit.passwordChanged(testPassword)).called(1);
       });
 
       testWidgets('confirmedPasswordChanged when confirmedPassword changes',
           (tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: signUpCubit,
-                child: SignUpForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         await tester.enterText(
           find.byKey(confirmedPasswordInputKey),
           testConfirmedPassword,
@@ -99,20 +90,12 @@ void main() {
         when(() => signUpCubit.state).thenReturn(
           const SignUpState(),
         );
-        when(() => signUpCubit.signUpFormSubmitted())
+        when(() => signUpCubit.submitSignUpForm())
             .thenAnswer((_) => Future.value());
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: signUpCubit,
-                child: SignUpForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         await tester.tap(find.byKey(signUpButtonKey));
-        verify(() => signUpCubit.signUpFormSubmitted()).called(1);
+        verify(() => signUpCubit.submitSignUpForm()).called(1);
       });
     });
 
@@ -126,16 +109,8 @@ void main() {
             SignUpState(submissionStatus: FormzSubmissionStatus.failure),
           ]),
         );
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: signUpCubit,
-                child: SignUpForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         await tester.pump();
         expect(find.text('Sign Up Failure'), findsOneWidget);
       });
@@ -144,17 +119,15 @@ void main() {
           (tester) async {
         final email = MockEmail();
         when(() => email.isNotValid).thenReturn(true);
-        when(() => signUpCubit.state).thenReturn(SignUpState(email: email));
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: signUpCubit,
-                child: SignUpForm(),
-              ),
-            ),
-          ),
+        whenListen(
+          signUpCubit,
+          Stream<SignUpState>.fromIterable(<SignUpState>[
+            SignUpState(email: email),
+          ]),
+          initialState: SignUpState(),
         );
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         expect(find.text('invalid email'), findsOneWidget);
       });
 
@@ -162,18 +135,15 @@ void main() {
           (tester) async {
         final password = MockPassword();
         when(() => password.isNotValid).thenReturn(true);
-        when(() => signUpCubit.state)
-            .thenReturn(SignUpState(password: password));
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: signUpCubit,
-                child: SignUpForm(),
-              ),
-            ),
-          ),
+        whenListen(
+          signUpCubit,
+          Stream<SignUpState>.fromIterable(<SignUpState>[
+            SignUpState(password: password),
+          ]),
+          initialState: SignUpState(),
         );
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         expect(find.text('invalid password'), findsOneWidget);
       });
 
@@ -182,57 +152,46 @@ void main() {
           ' when confirmedPassword is invalid', (tester) async {
         final confirmedPassword = MockConfirmedPassword();
         when(() => confirmedPassword.isNotValid).thenReturn(true);
-        when(() => signUpCubit.state)
-            .thenReturn(SignUpState(confirmedPassword: confirmedPassword));
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: signUpCubit,
-                child: SignUpForm(),
-              ),
-            ),
-          ),
+        whenListen(
+          signUpCubit,
+          Stream<SignUpState>.fromIterable(<SignUpState>[
+            SignUpState(confirmedPassword: confirmedPassword),
+          ]),
+          initialState: SignUpState(),
         );
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         expect(find.text('passwords do not match'), findsOneWidget);
       });
 
       testWidgets('disabled sign up button when status is not validated',
           (tester) async {
-        when(() => signUpCubit.state).thenReturn(
-          const SignUpState(isValid: false),
+        whenListen(
+          signUpCubit,
+          Stream<SignUpState>.fromIterable(<SignUpState>[
+            SignUpState(isValid: false),
+          ]),
+          initialState: SignUpState(),
         );
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: signUpCubit,
-                child: SignUpForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         final signUpButton = tester.widget<ElevatedButton>(
           find.byKey(signUpButtonKey),
         );
         expect(signUpButton.enabled, isFalse);
       });
 
-      testWidgets('enabled sign up button when status is validated',
+      testWidgets('enabled sign up button when status is valid',
           (tester) async {
-        when(() => signUpCubit.state).thenReturn(
-          const SignUpState(),
+        whenListen(
+          signUpCubit,
+          Stream<SignUpState>.fromIterable(<SignUpState>[
+            SignUpState(),
+          ]),
+          initialState: SignUpState(isValid: false),
         );
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: signUpCubit,
-                child: SignUpForm(),
-              ),
-            ),
-          ),
-        );
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
         final signUpButton = tester.widget<ElevatedButton>(
           find.byKey(signUpButtonKey),
         );

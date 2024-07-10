@@ -16,7 +16,11 @@ class LoginCubit extends Cubit<LoginState> {
     emit(
       state.copyWith(
         email: email,
-        isValid: Formz.validate([email, state.password]),
+        isValid: Formz.validate([
+          email,
+          state.password,
+        ]),
+        submissionStatus: FormzSubmissionStatus.initial,
       ),
     );
   }
@@ -27,6 +31,7 @@ class LoginCubit extends Cubit<LoginState> {
       state.copyWith(
         password: password,
         isValid: Formz.validate([state.email, password]),
+        submissionStatus: FormzSubmissionStatus.initial,
       ),
     );
   }

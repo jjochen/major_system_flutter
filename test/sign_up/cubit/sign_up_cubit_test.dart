@@ -163,7 +163,7 @@ void main() {
           password: validPassword,
           confirmedPassword: validConfirmedPassword,
         ),
-        act: (cubit) => cubit.signUpFormSubmitted(),
+        act: (cubit) => cubit.submitSignUpForm(),
         verify: (_) {
           verify(
             () => authenticationRepository.signUp(
@@ -191,7 +191,7 @@ void main() {
           password: validPassword,
           confirmedPassword: validConfirmedPassword,
         ),
-        act: (cubit) => cubit.signUpFormSubmitted(),
+        act: (cubit) => cubit.submitSignUpForm(),
         expect: () => const <SignUpState>[
           SignUpState(
             submissionStatus: FormzSubmissionStatus.inProgress,
@@ -225,7 +225,7 @@ void main() {
           password: validPassword,
           confirmedPassword: validConfirmedPassword,
         ),
-        act: (cubit) => cubit.signUpFormSubmitted(),
+        act: (cubit) => cubit.submitSignUpForm(),
         expect: () => const <SignUpState>[
           SignUpState(
             submissionStatus: FormzSubmissionStatus.inProgress,

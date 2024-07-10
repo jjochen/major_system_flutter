@@ -13,7 +13,7 @@ class NumbersList extends StatelessWidget {
       builder: (context, state) {
         final numbers = state.numbers;
         return ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+          padding: const EdgeInsets.symmetric(vertical: 24),
           itemCount: numbers.length,
           itemBuilder: (context, index) {
             final number = numbers[index];

@@ -112,7 +112,8 @@ class _SignUpButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SignUpCubit, SignUpState>(
       buildWhen: (previous, current) =>
-          previous.submissionStatus != current.submissionStatus,
+          previous.submissionStatus != current.submissionStatus ||
+          previous.isValid != current.isValid,
       builder: (context, state) {
         return state.submissionStatus.isInProgress
             ? const CircularProgressIndicator()
@@ -125,7 +126,7 @@ class _SignUpButton extends StatelessWidget {
                   backgroundColor: Colors.orangeAccent,
                 ),
                 onPressed: state.isValid
-                    ? context.read<SignUpCubit>().signUpFormSubmitted
+                    ? context.read<SignUpCubit>().submitSignUpForm
                     : null,
                 child: const Text('SIGN UP'),
               );

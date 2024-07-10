@@ -21,6 +21,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.password,
           state.confirmedPassword,
         ]),
+        submissionStatus: FormzSubmissionStatus.initial,
       ),
     );
   }
@@ -40,6 +41,7 @@ class SignUpCubit extends Cubit<SignUpState> {
           password,
           state.confirmedPassword,
         ]),
+        submissionStatus: FormzSubmissionStatus.initial,
       ),
     );
   }
@@ -57,11 +59,12 @@ class SignUpCubit extends Cubit<SignUpState> {
           state.password,
           confirmedPassword,
         ]),
+        submissionStatus: FormzSubmissionStatus.initial,
       ),
     );
   }
 
-  Future<void> signUpFormSubmitted() async {
+  Future<void> submitSignUpForm() async {
     emit(state.copyWith(submissionStatus: FormzSubmissionStatus.inProgress));
     try {
       await _authenticationRepository.signUp(
