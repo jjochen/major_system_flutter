@@ -99,7 +99,7 @@ void main() {
         when(() => signUpCubit.state).thenReturn(
           const SignUpState(),
         );
-        when(() => signUpCubit.signUpFormSubmitted())
+        when(() => signUpCubit.submitSignUpForm())
             .thenAnswer((_) => Future.value());
         await tester.pumpWidget(
           MaterialApp(
@@ -112,7 +112,7 @@ void main() {
           ),
         );
         await tester.tap(find.byKey(signUpButtonKey));
-        verify(() => signUpCubit.signUpFormSubmitted()).called(1);
+        verify(() => signUpCubit.submitSignUpForm()).called(1);
       });
     });
 

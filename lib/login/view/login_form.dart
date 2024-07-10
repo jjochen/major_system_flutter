@@ -96,7 +96,8 @@ class _LoginButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<LoginCubit, LoginState>(
       buildWhen: (previous, current) =>
-          previous.submissionStatus != current.submissionStatus,
+          previous.submissionStatus != current.submissionStatus ||
+          previous.isValid != current.isValid,
       builder: (context, state) {
         return state.submissionStatus.isInProgress
             ? const CircularProgressIndicator()
