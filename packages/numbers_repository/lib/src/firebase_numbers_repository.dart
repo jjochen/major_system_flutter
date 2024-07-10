@@ -37,6 +37,16 @@ class FirebaseNumbersRepository implements NumbersRepository {
           id: doc.id,
           data: doc.data(),
         );
+        final words =
+            doc.reference.collection('words').snapshots().map((snapshot) {
+          return snapshot.docs.map((doc) {
+            final entity = WordEntity.fromSnapshot(
+              id: doc.id,
+              data: doc.data(),
+            );
+            return Word.fromEntity(entity);
+          }).toList();
+        });
         return Number.fromEntity(entity);
       }).toList();
     });
