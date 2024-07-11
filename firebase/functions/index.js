@@ -1,21 +1,10 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
+admin.initializeApp();
+const logger = functions.logger;
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
-
-initializeApp();
-
-export const updateMainWord = firestore
-  .document('users/{userId}/numbers/{numberId}/words/{wordId}')
+exports.watchWordsUpdate = functions.region('europe-west3').firestore
+  .document("users/{userId}/numbers/{numberId}/words/{wordId}")
   .onUpdate(async (change, context) => {
     try {
       const { userId, numberId, wordId } = context.params;
@@ -27,11 +16,11 @@ export const updateMainWord = firestore
       if (isNewMainWord) {
         logger.info('Updating main word:', newValue.value);
 
-        const userDocumentRef = _firestore().collection('users').doc(userId);
+        const userDocumentRef = admin.firestore().collection('users').doc(userId);
         const numberDocumentRef = userDocumentRef.collection('numbers').doc(numberId);
         const wordsCollectionRef = numberDocumentRef.collection('words');
 
-        const batch = _firestore().batch();
+        const batch = admin.firestore().batch();
         const wordsSnapshot = await wordsCollectionRef.get();
         wordsSnapshot.forEach(doc => {
           if (doc.id !== wordId && doc.data().is_main) {
@@ -47,4 +36,5 @@ export const updateMainWord = firestore
     } catch (error) {            
       logger.error('Error updating main word:', error);
     }
+    return null;
   });
