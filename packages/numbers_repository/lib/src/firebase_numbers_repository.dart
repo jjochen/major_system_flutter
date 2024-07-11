@@ -6,7 +6,7 @@ import 'package:numbers_repository/src/entities/entities.dart';
 
 class FirebaseNumbersRepository implements NumbersRepository {
   const FirebaseNumbersRepository({
-    required this.userId,
+    required this.userId, // TODO(jjochen): Move userId to method arguments?
     required this.firestore,
   });
 
