@@ -26,9 +26,9 @@ void main() {
 
     test('should create a copy with updated properties', () {
       final updatedWord = word.copyWith(
-        id: () =>  '2',
-        value: () =>  'updated example',
-        isMain: () =>  false,
+        id: () => '2',
+        value: () => 'updated example',
+        isMain: () => false,
       );
 
       expect(
