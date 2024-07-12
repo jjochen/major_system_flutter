@@ -7,6 +7,7 @@ void main() {
     const id = 'mock-id';
     const numberOfDigits = 3;
     const value = 42;
+    const mainWord = 'main-word';
 
     test('uses value equality', () {
       expect(
@@ -14,11 +15,81 @@ void main() {
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
+          mainWord: mainWord,
         ),
         const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
+          mainWord: mainWord,
+        ),
+      );
+
+      expect(
+        const Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+          mainWord: mainWord,
+        ),
+        isNot(
+          const Number(
+            id: 'other-id',
+            numberOfDigits: numberOfDigits,
+            value: value,
+            mainWord: mainWord,
+          ),
+        ),
+      );
+
+      expect(
+        const Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+          mainWord: mainWord,
+        ),
+        isNot(
+          const Number(
+            id: id,
+            numberOfDigits: 2,
+            value: value,
+            mainWord: mainWord,
+          ),
+        ),
+      );
+
+      expect(
+        const Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+          mainWord: mainWord,
+        ),
+        isNot(
+          const Number(
+            id: id,
+            numberOfDigits: numberOfDigits,
+            value: 99,
+            mainWord: mainWord,
+          ),
+        ),
+      );
+
+      expect(
+        const Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+          mainWord: mainWord,
+        ),
+        isNot(
+          const Number(
+            id: id,
+            numberOfDigits: numberOfDigits,
+            value: value,
+            mainWord: 'other-main-word',
+          ),
         ),
       );
     });
@@ -29,6 +100,7 @@ void main() {
           id: id,
           numberOfDigits: 2,
           value: 42,
+          mainWord: mainWord,
         ).toString(),
         '42',
       );
@@ -50,11 +122,13 @@ void main() {
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
-        ).copyWith(id: newId),
+          mainWord: mainWord,
+        ).copyWith(id: () => newId),
         const Number(
           id: newId,
           numberOfDigits: numberOfDigits,
           value: value,
+          mainWord: mainWord,
         ),
       );
     });
@@ -66,11 +140,13 @@ void main() {
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
-        ).copyWith(numberOfDigits: newNumberOfDigits),
+          mainWord: mainWord,
+        ).copyWith(numberOfDigits: () => newNumberOfDigits),
         const Number(
           id: id,
           numberOfDigits: newNumberOfDigits,
           value: value,
+          mainWord: mainWord,
         ),
       );
     });
@@ -82,11 +158,46 @@ void main() {
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
-        ).copyWith(value: newValue),
+          mainWord: mainWord,
+        ).copyWith(value: () => newValue),
         const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: newValue,
+          mainWord: mainWord,
+        ),
+      );
+    });
+
+    test('copies with new main word', () {
+      const newMainWord = 'new-main-word';
+      expect(
+        const Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+          mainWord: mainWord,
+        ).copyWith(mainWord: () => newMainWord),
+        const Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+          mainWord: newMainWord,
+        ),
+      );
+    });
+    test('copies with main word set to null', () {
+      expect(
+        const Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+          mainWord: mainWord,
+        ).copyWith(mainWord: () => null),
+        const Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
         ),
       );
     });
@@ -97,11 +208,13 @@ void main() {
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
+          mainWord: mainWord,
         ).toEntity(),
         const NumberEntity(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
+          mainWord: mainWord,
         ),
       );
     });
@@ -113,12 +226,14 @@ void main() {
             id: id,
             numberOfDigits: numberOfDigits,
             value: value,
+            mainWord: mainWord,
           ),
         ),
         const Number(
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
+          mainWord: mainWord,
         ),
       );
     });

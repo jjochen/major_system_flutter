@@ -16,7 +16,7 @@ class NumberDetailPage extends StatelessWidget {
         title: Text(number.toString()),
       ),
       body: Center(
-        child: Text(number.value.toString()),
+        child: Text(number.toString()),
       ),
     );
   }

@@ -6,32 +6,16 @@ import 'package:numbers_repository/src/entities/entities.dart';
 
 class FirebaseNumbersRepository implements NumbersRepository {
   const FirebaseNumbersRepository({
-    required this.userId,
+    required this.userId, // TODO(jjochen): Move userId to method arguments?
     required this.firestore,
   });
 
   final String userId;
   final FirebaseFirestore firestore;
 
-  CollectionReference<Map<String, dynamic>> get _numbersCollection =>
-      firestore.collection('users').doc(userId).collection('numbers');
-
-  @override
-  Future<Number?> getNumber(String id) async {
-    final snapshot = await _numbersCollection.doc(id).get();
-    return snapshot.exists
-        ? Number.fromEntity(
-            NumberEntity.fromSnapshot(
-              id: snapshot.id,
-              data: snapshot.data(),
-            ),
-          )
-        : null;
-  }
-
   @override
   Stream<List<Number>> numbers() {
-    return _numbersCollection.snapshots().map((snapshot) {
+    return _numbersCollectionRef().snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         final entity = NumberEntity.fromSnapshot(
           id: doc.id,
@@ -43,22 +27,118 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
+  Future<Number?> getNumberWithId(String id) async {
+    final snapshot = await _numbersCollectionRef().doc(id).get();
+    return snapshot.exists
+        ? Number.fromEntity(
+            NumberEntity.fromSnapshot(
+              id: snapshot.id,
+              data: snapshot.data(),
+            ),
+          )
+        : null;
+  }
+
+  @override
   Future<String> addNewNumber(Number number) async {
-    final documentReference = await _numbersCollection.add(
-      number.toEntity().toDocument(),
+    final documentReference = await _numbersCollectionRef().add(
+      number.toEntity().getDocumentData(),
     );
     return documentReference.id;
   }
 
   @override
-  Future<void> deleteNumber(String id) async {
-    return _numbersCollection.doc(id).delete();
+  Future<void> deleteNumber(Number number) async {
+    return _numberRef(number).delete();
   }
 
   @override
-  Future<void> updateNumber(Number newNumber) {
-    return _numbersCollection.doc(newNumber.id).update(
-          newNumber.toEntity().toDocument(),
-        );
+  Future<void> updateNumber(Number updatedNumber) {
+    return _numberRef(updatedNumber).update(
+      updatedNumber.toEntity().getDocumentData(),
+    );
   }
+
+  @override
+  Future<String> addNewWord(Word word, {required Number number}) async {
+    final documentReference = await _wordsCollectionRef(number).add(
+      word.toEntity().getDocumentData(),
+    );
+    return documentReference.id;
+  }
+
+  @override
+  Stream<List<Word>> words({required Number number}) {
+    return _wordsCollectionRef(number).snapshots().map(
+      (snapshot) {
+        return snapshot.docs.map((doc) {
+          final entity = WordEntity.fromSnapshot(
+            id: doc.id,
+            data: doc.data(),
+          );
+          return Word.fromEntity(entity);
+        }).toList();
+      },
+    );
+  }
+
+  @override
+  Future<Word?> getWordWithId(String id, {required Number number}) async {
+    final snapshot = await _wordsCollectionRef(number).doc(id).get();
+    return snapshot.exists
+        ? Word.fromEntity(
+            WordEntity.fromSnapshot(
+              id: snapshot.id,
+              data: snapshot.data(),
+            ),
+          )
+        : null;
+  }
+
+  @override
+  Future<void> updateWord(Word word, {required Number number}) {
+    return _wordRef(word, number: number).update(
+      word.toEntity().getDocumentData(),
+    );
+  }
+
+  @override
+  Future<void> deleteWord(Word word, {required Number number}) {
+    return _wordRef(word, number: number).delete();
+  }
+
+  @override
+  Future<void> setWordAsMain(Word? word, {required Number number}) async {
+    final wordsSnapshot = await _wordsCollectionRef(number).get();
+    final wordsDocs = wordsSnapshot.docs;
+
+    final batch = firestore.batch();
+    for (final doc in wordsDocs) {
+      final newIsMainFlag = word != null && doc.id == word.id;
+      final newData = WordEntity.getUpdateData(
+        isMain: () => newIsMainFlag,
+      );
+      batch.update(doc.reference, newData);
+    }
+    await batch.commit();
+
+    await updateNumber(number.copyWith(mainWord: () => word?.value));
+  }
+
+  CollectionReference<Map<String, dynamic>> _numbersCollectionRef() =>
+      firestore.collection('users').doc(userId).collection('numbers');
+
+  DocumentReference<Map<String, dynamic>> _numberRef(Number number) =>
+      _numbersCollectionRef().doc(number.id);
+
+  CollectionReference<Map<String, dynamic>> _wordsCollectionRef(
+    Number number,
+  ) =>
+      _numberRef(number).collection('words');
+
+  DocumentReference<Map<String, dynamic>> _wordRef(
+    Word word, {
+    required Number number,
+  }) =>
+      _wordsCollectionRef(number).doc(word.id);
 }

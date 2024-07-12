@@ -8,7 +8,12 @@ void main() {
     const id = '1234';
     const numberOfDigits = 2;
     const value = 42;
-    const number = Number(id: id, numberOfDigits: numberOfDigits, value: value);
+    const number = Number(
+      id: id,
+      numberOfDigits: numberOfDigits,
+      value: value,
+      mainWord: 'main-word',
+    );
 
     testWidgets('renders ListTile', (tester) async {
       final widget = Material(

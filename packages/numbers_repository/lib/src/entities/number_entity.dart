@@ -5,15 +5,8 @@ class NumberEntity extends Equatable {
     required this.id,
     required this.numberOfDigits,
     required this.value,
+    this.mainWord,
   });
-
-  factory NumberEntity.fromJson(Map<String, Object> json) {
-    return NumberEntity(
-      id: json[_Key.id]! as String,
-      numberOfDigits: json[_Key.numberOfDigits]! as int,
-      value: json[_Key.value]! as int,
-    );
-  }
 
   factory NumberEntity.fromSnapshot({
     required String id,
@@ -23,34 +16,46 @@ class NumberEntity extends Equatable {
       id: id,
       numberOfDigits: data?[_Key.numberOfDigits] as int? ?? 0,
       value: data?[_Key.value] as int? ?? 0,
+      mainWord: data?[_Key.mainWord] as String?,
     );
   }
 
   final String id;
   final int numberOfDigits;
   final int value;
+  final String? mainWord;
 
   @override
-  List<Object?> get props => [id, numberOfDigits, value];
+  List<Object?> get props => [
+        id,
+        numberOfDigits,
+        value,
+        mainWord,
+      ];
 
-  Map<String, Object> toJson() {
+  Map<String, Object?> getDocumentData() {
     return {
-      _Key.id: id,
       _Key.numberOfDigits: numberOfDigits,
       _Key.value: value,
+      _Key.mainWord: mainWord,
     };
   }
 
-  Map<String, Object> toDocument() {
+  static Map<String, Object?> getUpdateData({
+    int Function()? numberOfDigits,
+    int Function()? value,
+    String Function()? mainWord,
+  }) {
     return {
-      _Key.numberOfDigits: numberOfDigits,
-      _Key.value: value,
+      if (numberOfDigits != null) _Key.numberOfDigits: numberOfDigits(),
+      if (value != null) _Key.value: value(),
+      if (mainWord != null) _Key.mainWord: mainWord(),
     };
   }
 }
 
 class _Key {
-  static const String id = 'id';
   static const String numberOfDigits = 'number_of_digits';
   static const String value = 'value';
+  static const String mainWord = 'main_word';
 }

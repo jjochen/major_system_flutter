@@ -13,12 +13,21 @@ class NumberItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final title = number.toString();
+    final subtitle = number.mainWord;
     return ListTile(
       onTap: onTap,
       title: Text(
-        number.value.toString(),
-        style: Theme.of(context).textTheme.headlineSmall,
+        title,
+        style: textTheme.headlineSmall,
       ),
+      subtitle: subtitle == null
+          ? null
+          : Text(
+              subtitle,
+              style: textTheme.bodyMedium,
+            ),
     );
   }
 }

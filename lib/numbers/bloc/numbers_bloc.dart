@@ -49,7 +49,7 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
     DeleteNumber event,
     Emitter<NumbersState> emit,
   ) async {
-    await _numbersRepository.deleteNumber(event.number.id);
+    await _numbersRepository.deleteNumber(event.number);
   }
 
   Future<void> _onNumbersUpdated(

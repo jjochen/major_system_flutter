@@ -7,7 +7,12 @@ import 'package:test/test.dart';
 class MockNumbersRepository extends Mock implements NumbersRepository {}
 
 void main() {
-  const number = Number(id: 'id', numberOfDigits: 1, value: 1);
+  const number = Number(
+    id: 'id',
+    numberOfDigits: 1,
+    value: 1,
+    mainWord: 'mainWord',
+  );
 
   group('NumbersBloc', () {
     late NumbersRepository numbersRepository;
@@ -82,7 +87,7 @@ void main() {
       blocTest<NumbersBloc, NumbersState>(
         'should delete a number from the repository',
         setUp: () {
-          when(() => numbersRepository.deleteNumber(number.id)).thenAnswer(
+          when(() => numbersRepository.deleteNumber(number)).thenAnswer(
             (_) => Future<void>.value(),
           );
         },
@@ -90,7 +95,7 @@ void main() {
         act: (bloc) => bloc.add(const DeleteNumber(number)),
         expect: () => const <NumbersState>[],
         verify: (bloc) {
-          verify(() => numbersRepository.deleteNumber(number.id)).called(1);
+          verify(() => numbersRepository.deleteNumber(number)).called(1);
         },
       );
     });

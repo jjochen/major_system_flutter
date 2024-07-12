@@ -8,7 +8,7 @@ class DeleteNumberSnackBar extends SnackBar {
     super.key,
   }) : super(
           content: Text(
-            'Deleted ${number.value}', // TODO(jjochen): use .displayText
+            'Deleted $number',
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
