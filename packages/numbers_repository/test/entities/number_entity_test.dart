@@ -1,19 +1,23 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:numbers_repository/src/entities/entities.dart';
+import 'package:numbers_repository/src/entities/number_entity.dart';
 
 void main() {
   group('NumberEntity', () {
     const id = 'mock-id';
     const numberOfDigits = 2;
     const value = 23;
+    const mainWord = 'main-word';
     const data = {
       'number_of_digits': numberOfDigits,
       'value': value,
+      'main_word': mainWord,
     };
     const numberEntity = NumberEntity(
       id: id,
       numberOfDigits: numberOfDigits,
       value: value,
+      mainWord: mainWord,
     );
 
     test('uses value equality', () {
@@ -23,29 +27,55 @@ void main() {
           id: id,
           numberOfDigits: numberOfDigits,
           value: value,
+          mainWord: mainWord,
         ),
       );
-    });
 
-    test('uses stringify', () {
       expect(
-        numberEntity.toString(),
-        'NumberEntity(mock-id, 2, 23)',
+        numberEntity,
+        isNot(
+          const NumberEntity(
+            id: 'other-id',
+            numberOfDigits: numberOfDigits,
+            value: value,
+            mainWord: mainWord,
+          ),
+        ),
       );
-    });
 
-    test('from json', () {
-      final json = {
-        'id': id,
-        'number_of_digits': numberOfDigits,
-        'value': value,
-      };
       expect(
-        NumberEntity.fromJson(json),
-        const NumberEntity(
-          id: id,
-          numberOfDigits: numberOfDigits,
-          value: value,
+        numberEntity,
+        isNot(
+          const NumberEntity(
+            id: id,
+            numberOfDigits: 3,
+            value: value,
+            mainWord: mainWord,
+          ),
+        ),
+      );
+
+      expect(
+        numberEntity,
+        isNot(
+          const NumberEntity(
+            id: id,
+            numberOfDigits: numberOfDigits,
+            value: 42,
+            mainWord: mainWord,
+          ),
+        ),
+      );
+
+      expect(
+        numberEntity,
+        isNot(
+          const NumberEntity(
+            id: id,
+            numberOfDigits: numberOfDigits,
+            value: value,
+            mainWord: 'other-main-word',
+          ),
         ),
       );
     });
@@ -60,30 +90,10 @@ void main() {
       );
     });
 
-    test('to json', () {
-      final json = {
-        'id': id,
-        'number_of_digits': numberOfDigits,
-        'value': value,
-      };
+    test('get document data', () {
       expect(
-        numberEntity.toJson(),
-        json,
-      );
-    });
-
-    test('to document', () {
-      final document = {
-        'number_of_digits': numberOfDigits,
-        'value': value,
-      };
-      expect(
-        const NumberEntity(
-          id: id,
-          numberOfDigits: numberOfDigits,
-          value: value,
-        ).toDocument(),
-        document,
+        numberEntity.getDocumentData(),
+        data,
       );
     });
   });

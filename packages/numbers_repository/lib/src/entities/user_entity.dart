@@ -7,14 +7,6 @@ class UserEntity extends Equatable {
     this.name,
   });
 
-  factory UserEntity.fromJson(Map<String, Object> json) {
-    return UserEntity(
-      id: json[_Key.id]! as String,
-      email: json[_Key.email] as String?,
-      name: json[_Key.name] as String?,
-    );
-  }
-
   factory UserEntity.fromSnapshot({
     required String id,
     required Map<String, dynamic>? data,
@@ -31,17 +23,13 @@ class UserEntity extends Equatable {
   final String? name;
 
   @override
-  List<Object?> get props => [id, email, name];
+  List<Object?> get props => [
+        id,
+        email,
+        name,
+      ];
 
-  Map<String, Object?> toJson() {
-    return {
-      _Key.id: id,
-      _Key.email: email,
-      _Key.name: name,
-    };
-  }
-
-  Map<String, Object?> toDocument() {
+  Map<String, Object?> getDocumentData() {
     return {
       _Key.email: email,
       _Key.name: name,
@@ -50,7 +38,6 @@ class UserEntity extends Equatable {
 }
 
 class _Key {
-  static const String id = 'id';
   static const String email = 'email';
   static const String name = 'name';
 }

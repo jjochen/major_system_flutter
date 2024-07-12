@@ -6,13 +6,6 @@ class WordEntity extends Equatable {
     required this.value,
   });
 
-  factory WordEntity.fromJson(Map<String, Object> json) {
-    return WordEntity(
-      id: json[_Key.id] as String? ?? '',
-      value: json[_Key.value] as String? ?? '',
-    );
-  }
-
   factory WordEntity.fromSnapshot({
     required String id,
     required Map<String, dynamic>? data,
@@ -32,14 +25,7 @@ class WordEntity extends Equatable {
         value,
       ];
 
-  Map<String, Object?> toJson() {
-    return {
-      _Key.id: id,
-      _Key.value: value,
-    };
-  }
-
-  Map<String, Object?> toDocument() {
+  Map<String, Object?> getDocumentData() {
     return {
       _Key.value: value,
     };
@@ -47,6 +33,5 @@ class WordEntity extends Equatable {
 }
 
 class _Key {
-  static const String id = 'id';
   static const String value = 'value';
 }

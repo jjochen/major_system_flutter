@@ -37,39 +37,7 @@ void main() {
       );
     });
 
-    test('from json', () {
-      final json = {
-        'id': id,
-        'email': email,
-        'name': name,
-      };
-      expect(
-        UserEntity.fromJson(json),
-        const UserEntity(
-          id: id,
-          email: email,
-          name: name,
-        ),
-      );
-    });
-
-    test('to json', () {
-      final json = {
-        'id': id,
-        'email': email,
-        'name': name,
-      };
-      expect(
-        const UserEntity(
-          id: id,
-          email: email,
-          name: name,
-        ).toJson(),
-        json,
-      );
-    });
-
-    test('from document', () {
+    test('from snapshot', () {
       expect(
         UserEntity.fromSnapshot(
           id: id,
@@ -95,7 +63,7 @@ void main() {
       );
     });
 
-    test('to document', () {
+    test('get document data', () {
       final document = {
         'email': email,
         'name': name,
@@ -105,7 +73,7 @@ void main() {
           id: id,
           email: email,
           name: name,
-        ).toDocument(),
+        ).getDocumentData(),
         document,
       );
     });
