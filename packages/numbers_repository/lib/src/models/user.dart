@@ -23,7 +23,11 @@ class User extends Equatable {
   final String? name;
 
   @override
-  List<Object?> get props => [id, email, name];
+  List<Object?> get props => [
+        id,
+        email,
+        name,
+      ];
 
   User copyWith({
     String Function()? id,

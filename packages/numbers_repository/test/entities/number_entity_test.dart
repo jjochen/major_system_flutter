@@ -96,5 +96,43 @@ void main() {
         data,
       );
     });
+
+    test('get update data', () {
+      expect(
+        NumberEntity.getUpdateData(
+          numberOfDigits: () => 3,
+          value: () => 42,
+          mainWord: () => 'new-main-word',
+        ),
+        {
+          'number_of_digits': 3,
+          'value': 42,
+          'main_word': 'new-main-word',
+        },
+      );
+    });
+
+    test('get partial update data', () {
+      expect(
+        NumberEntity.getUpdateData(
+          numberOfDigits: () => numberOfDigits,
+        ),
+        {'number_of_digits': numberOfDigits},
+      );
+
+      expect(
+        NumberEntity.getUpdateData(
+          value: () => value,
+        ),
+        {'value': value},
+      );
+
+      expect(
+        NumberEntity.getUpdateData(
+          mainWord: () => mainWord,
+        ),
+        {'main_word': mainWord},
+      );
+    });
   });
 }
