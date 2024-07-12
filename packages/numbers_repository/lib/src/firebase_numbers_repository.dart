@@ -105,6 +105,24 @@ class FirebaseNumbersRepository implements NumbersRepository {
     );
   }
 
+  @override
+  Future<void> setWordAsMain(Word? word, {required Number number}) async {
+    final wordsSnapshot = await _wordsCollectionRef(number).get();
+    final wordsDocs = wordsSnapshot.docs;
+
+    final batch = firestore.batch();
+    for (final doc in wordsDocs) {
+      final newIsMainFlag = word != null && doc.id == word.id;
+      final newData = WordEntity.getUpdateData(
+        isMain: () => newIsMainFlag,
+      );
+      batch.update(doc.reference, newData);
+    }
+    await batch.commit();
+
+    await updateNumber(number.copyWith(mainWord: () => word?.value));
+  }
+
   CollectionReference<Map<String, dynamic>> _numbersCollectionRef() =>
       firestore.collection('users').doc(userId).collection('numbers');
 

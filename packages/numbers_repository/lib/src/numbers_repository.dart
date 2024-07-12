@@ -22,4 +22,6 @@ abstract class NumbersRepository {
   Future<void> deleteWord(Word word, {required Number number});
 
   Future<void> updateWord(Word word, {required Number number});
+
+  Future<void> setWordAsMain(Word? word, {required Number number});
 }
