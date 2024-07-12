@@ -83,19 +83,16 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
-  Future<void> deleteWord(Word word, {required Number number}) {
-    return _wordRef(word, number: number).delete();
-  }
-
-  @override
-  Future<Word> getWordWithId(String id, {required Number number}) async {
+  Future<Word?> getWordWithId(String id, {required Number number}) async {
     final snapshot = await _wordsCollectionRef(number).doc(id).get();
-    return Word.fromEntity(
-      WordEntity.fromSnapshot(
-        id: snapshot.id,
-        data: snapshot.data(),
-      ),
-    );
+    return snapshot.exists
+        ? Word.fromEntity(
+            WordEntity.fromSnapshot(
+              id: snapshot.id,
+              data: snapshot.data(),
+            ),
+          )
+        : null;
   }
 
   @override
@@ -103,6 +100,11 @@ class FirebaseNumbersRepository implements NumbersRepository {
     return _wordRef(word, number: number).update(
       word.toEntity().getDocumentData(),
     );
+  }
+
+  @override
+  Future<void> deleteWord(Word word, {required Number number}) {
+    return _wordRef(word, number: number).delete();
   }
 
   @override
@@ -132,7 +134,7 @@ class FirebaseNumbersRepository implements NumbersRepository {
   CollectionReference<Map<String, dynamic>> _wordsCollectionRef(
     Number number,
   ) =>
-      _numbersCollectionRef().doc(number.id).collection('words');
+      _numberRef(number).collection('words');
 
   DocumentReference<Map<String, dynamic>> _wordRef(
     Word word, {

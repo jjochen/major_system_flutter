@@ -17,7 +17,7 @@ abstract class NumbersRepository {
 
   Stream<List<Word>> words({required Number number});
 
-  Future<Word> getWordWithId(String id, {required Number number});
+  Future<Word?> getWordWithId(String id, {required Number number});
 
   Future<void> deleteWord(Word word, {required Number number});
 

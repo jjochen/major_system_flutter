@@ -33,14 +33,14 @@ class Word extends Equatable {
   String toString() => value;
 
   Word copyWith({
-    String? id,
-    String? value,
-    bool? isMain,
+    String Function()? id,
+    String Function()? value,
+    bool Function()? isMain,
   }) {
     return Word(
-      id: id ?? this.id,
-      value: value ?? this.value,
-      isMain: isMain ?? this.isMain,
+      id: id != null ? id() : this.id,
+      value: value != null ? value() : this.value,
+      isMain: isMain != null ? isMain() : this.isMain,
     );
   }
 
