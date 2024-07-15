@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:major_system/number_details/view/number_detail_page.dart';
+import 'package:major_system/number_details/view/number_details_page.dart';
 import 'package:major_system/numbers/numbers.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:numbers_repository/numbers_repository.dart';
@@ -82,7 +82,7 @@ void main() {
       await tester.tap(numberItemFinder);
       await tester.pumpAndSettle();
 
-      expect(find.byType(NumberDetailPage), findsOneWidget);
+      expect(find.byType(NumberDetailsPage), findsOneWidget);
     });
   });
 }

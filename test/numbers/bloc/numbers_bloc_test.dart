@@ -34,7 +34,7 @@ void main() {
       blocTest<NumbersBloc, NumbersState>(
         'should load numbers from the repository',
         setUp: () {
-          when(() => numbersRepository.numbers()).thenAnswer(
+          when(() => numbersRepository.watchNumbers()).thenAnswer(
             (_) => Stream.value([number]),
           );
         },
@@ -44,7 +44,7 @@ void main() {
           NumbersState(numbers: [number]),
         ],
         verify: (bloc) {
-          verify(() => numbersRepository.numbers()).called(1);
+          verify(() => numbersRepository.watchNumbers()).called(1);
         },
       );
     });

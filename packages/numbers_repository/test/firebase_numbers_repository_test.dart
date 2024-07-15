@@ -93,7 +93,7 @@ void main() {
 
     test('has empty stream initially', () async {
       expect(
-        firebaseNumbersRepository.numbers(),
+        firebaseNumbersRepository.watchNumbers(),
         emits(<Number>[]),
       );
     });
@@ -105,7 +105,7 @@ void main() {
 
       unawaited(
         expectLater(
-          firebaseNumbersRepository.numbers(),
+          firebaseNumbersRepository.watchNumbers(),
           emitsInOrder([
             [newNumber],
             [updatedNumber],
@@ -224,7 +224,7 @@ void main() {
 
     test('words has empty stream initially', () async {
       expect(
-        firebaseNumbersRepository.words(number: number),
+        firebaseNumbersRepository.watchWords(number: number),
         emits(<Number>[]),
       );
     });
@@ -240,7 +240,7 @@ void main() {
 
       unawaited(
         expectLater(
-          firebaseNumbersRepository.words(number: newNumber),
+          firebaseNumbersRepository.watchWords(number: newNumber),
           emitsInOrder(<List<Word>>[
             [newWord],
             [updatedWord],

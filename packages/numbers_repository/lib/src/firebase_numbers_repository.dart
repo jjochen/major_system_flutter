@@ -14,7 +14,7 @@ class FirebaseNumbersRepository implements NumbersRepository {
   final FirebaseFirestore firestore;
 
   @override
-  Stream<List<Number>> numbers() {
+  Stream<List<Number>> watchNumbers() {
     return _numbersCollectionRef().snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
         final entity = NumberEntity.fromSnapshot(
@@ -24,6 +24,18 @@ class FirebaseNumbersRepository implements NumbersRepository {
         return Number.fromEntity(entity);
       }).toList();
     });
+  }
+
+  @override
+  Stream<Number> watchNumber(Number number) {
+    return _numberRef(number).snapshots().map(
+          (snapshot) => Number.fromEntity(
+            NumberEntity.fromSnapshot(
+              id: snapshot.id,
+              data: snapshot.data(),
+            ),
+          ),
+        );
   }
 
   @override
@@ -48,11 +60,6 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
-  Future<void> deleteNumber(Number number) async {
-    return _numberRef(number).delete();
-  }
-
-  @override
   Future<void> updateNumber(Number updatedNumber) {
     return _numberRef(updatedNumber).update(
       updatedNumber.toEntity().getDocumentData(),
@@ -60,15 +67,12 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
-  Future<String> addNewWord(Word word, {required Number number}) async {
-    final documentReference = await _wordsCollectionRef(number).add(
-      word.toEntity().getDocumentData(),
-    );
-    return documentReference.id;
+  Future<void> deleteNumber(Number number) async {
+    return _numberRef(number).delete();
   }
 
   @override
-  Stream<List<Word>> words({required Number number}) {
+  Stream<List<Word>> watchWords({required Number number}) {
     return _wordsCollectionRef(number).snapshots().map(
       (snapshot) {
         return snapshot.docs.map((doc) {
@@ -96,15 +100,18 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
+  Future<String> addNewWord(Word word, {required Number number}) async {
+    final documentReference = await _wordsCollectionRef(number).add(
+      word.toEntity().getDocumentData(),
+    );
+    return documentReference.id;
+  }
+
+  @override
   Future<void> updateWord(Word word, {required Number number}) {
     return _wordRef(word, number: number).update(
       word.toEntity().getDocumentData(),
     );
-  }
-
-  @override
-  Future<void> deleteWord(Word word, {required Number number}) {
-    return _wordRef(word, number: number).delete();
   }
 
   @override
@@ -123,6 +130,11 @@ class FirebaseNumbersRepository implements NumbersRepository {
     await batch.commit();
 
     await updateNumber(number.copyWith(mainWord: () => word?.value));
+  }
+
+  @override
+  Future<void> deleteWord(Word word, {required Number number}) {
+    return _wordRef(word, number: number).delete();
   }
 
   CollectionReference<Map<String, dynamic>> _numbersCollectionRef() =>

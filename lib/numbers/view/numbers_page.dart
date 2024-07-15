@@ -40,14 +40,17 @@ class NumbersPage extends StatelessWidget {
           ),
         ],
       ),
-      body: BlocProvider(
-        create: (context) => NumbersBloc(
-          numbersRepository: FirebaseNumbersRepository(
-            userId: user.id,
-            firestore: getIt(),
-          ),
-        )..add(const LoadNumbers()),
-        child: const NumbersList(),
+      body: RepositoryProvider<NumbersRepository>(
+        create: (context) => FirebaseNumbersRepository(
+          userId: user.id,
+          firestore: getIt(),
+        ),
+        child: BlocProvider(
+          create: (context) => NumbersBloc(
+            numbersRepository: context.read<NumbersRepository>(),
+          )..add(const LoadNumbers()),
+          child: const NumbersList(),
+        ),
       ),
     );
   }
