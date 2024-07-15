@@ -7,30 +7,37 @@ import 'package:major_system/numbers/numbers.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
+import '../../mocks/number_repository_mocks.dart';
+
 class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
     implements NumbersBloc {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
-  const number1 = Number(id: 'id', numberOfDigits: 1, value: 1);
-  const number2 = Number(id: 'id', numberOfDigits: 1, value: 2);
-  const numbers = [number1, number2];
+  setUpAll(() async {
+    registerFallbackValue(number1);
+  });
 
   group('Numbers Widget', () {
-    late MockNumbersBloc numbersBloc;
+    late NumbersBloc numbersBloc;
+    late NumbersRepository numbersRepository;
 
     Widget buildFrame() => MaterialApp(
           home: Scaffold(
-            body: BlocProvider<NumbersBloc>.value(
-              value: numbersBloc,
-              child: const NumbersList(),
+            body: RepositoryProvider<NumbersRepository>.value(
+              value: numbersRepository,
+              child: BlocProvider<NumbersBloc>.value(
+                value: numbersBloc,
+                child: const NumbersList(),
+              ),
             ),
           ),
         );
 
     setUp(() {
       numbersBloc = MockNumbersBloc();
+      numbersRepository = MockNumbersRepository();
     });
 
     testWidgets('renders ListView.builder when state is NumbersLoaded',
