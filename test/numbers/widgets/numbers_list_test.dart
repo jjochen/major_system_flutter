@@ -33,20 +33,6 @@ void main() {
       numbersBloc = MockNumbersBloc();
     });
 
-    // testWidgets('renders LoadingIndicator when state is NumbersLoading',
-    //     (WidgetTester tester) async {
-    //   whenListen(
-    //     numbersBloc,
-    //     Stream<NumbersState>.fromIterable([]),
-    //     initialState: const NumbersState(loading: true),
-    //   );
-
-    //   await tester.pumpWidget(buildFrame());
-    //   await tester.pump();
-
-    //   expect(find.byType(LoadingIndicator), findsOneWidget);
-    // });
-
     testWidgets('renders ListView.builder when state is NumbersLoaded',
         (WidgetTester tester) async {
       whenListen(

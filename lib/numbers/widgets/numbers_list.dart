@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/number_details/view/number_details_page.dart';
 import 'package:major_system/numbers/bloc/numbers_bloc.dart';
 import 'package:major_system/numbers/widgets/widgets.dart';
+import 'package:numbers_repository/numbers_repository.dart';
 
 class NumbersList extends StatelessWidget {
   const NumbersList({super.key});
@@ -20,10 +21,14 @@ class NumbersList extends StatelessWidget {
             return NumberItem(
               number: number,
               onTap: () async {
+                final repository = context.read<NumbersRepository>();
                 await Navigator.push(
                   context,
                   MaterialPageRoute<dynamic>(
-                    builder: (context) => NumberDetailsPage(number: number),
+                    builder: (context) => NumberDetailsPage(
+                      number: number,
+                      numbersRepository: repository,
+                    ),
                   ),
                 );
               },
