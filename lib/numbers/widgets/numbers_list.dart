@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:major_system/number_details/view/number_detail_page.dart';
 import 'package:major_system/numbers/bloc/numbers_bloc.dart';
-import 'package:major_system/numbers/view/number_detail_page.dart';
 import 'package:major_system/numbers/widgets/widgets.dart';
 
 class NumbersList extends StatelessWidget {

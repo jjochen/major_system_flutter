@@ -1,2 +1,2 @@
-export 'cubit/login_cubit.dart';
+export 'cubit/cubit.dart';
 export 'view/view.dart';
