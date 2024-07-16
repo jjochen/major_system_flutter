@@ -5,7 +5,7 @@ import 'package:numbers_repository/numbers_repository.dart';
 abstract class NumbersRepository {
   Stream<List<Number>> watchNumbers();
 
-  Stream<Number> watchNumber(Number number);
+  Stream<Number?> watchNumber(Number number);
 
   Future<Number?> getNumberWithId(String id);
 

@@ -15,40 +15,22 @@ class FirebaseNumbersRepository implements NumbersRepository {
 
   @override
   Stream<List<Number>> watchNumbers() {
-    return _numbersCollectionRef().snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        final entity = NumberEntity.fromSnapshot(
-          id: doc.id,
-          data: doc.data(),
+    return _numbersCollectionRef().snapshots().map(
+          (snapshot) => snapshot.docs.map((doc) => doc.toNumber()).toList(),
         );
-        return Number.fromEntity(entity);
-      }).toList();
-    });
   }
 
   @override
-  Stream<Number> watchNumber(Number number) {
+  Stream<Number?> watchNumber(Number number) {
     return _numberRef(number).snapshots().map(
-          (snapshot) => Number.fromEntity(
-            NumberEntity.fromSnapshot(
-              id: snapshot.id,
-              data: snapshot.data(),
-            ),
-          ),
+          (snapshot) => snapshot.toNumberOrNull(),
         );
   }
 
   @override
   Future<Number?> getNumberWithId(String id) async {
     final snapshot = await _numbersCollectionRef().doc(id).get();
-    return snapshot.exists
-        ? Number.fromEntity(
-            NumberEntity.fromSnapshot(
-              id: snapshot.id,
-              data: snapshot.data(),
-            ),
-          )
-        : null;
+    return snapshot.toNumberOrNull();
   }
 
   @override
@@ -74,29 +56,14 @@ class FirebaseNumbersRepository implements NumbersRepository {
   @override
   Stream<List<Word>> watchWords({required Number number}) {
     return _wordsCollectionRef(number).snapshots().map(
-      (snapshot) {
-        return snapshot.docs.map((doc) {
-          final entity = WordEntity.fromSnapshot(
-            id: doc.id,
-            data: doc.data(),
-          );
-          return Word.fromEntity(entity);
-        }).toList();
-      },
-    );
+          (snapshot) => snapshot.docs.map((doc) => doc.toWord()).toList(),
+        );
   }
 
   @override
   Future<Word?> getWordWithId(String id, {required Number number}) async {
     final snapshot = await _wordsCollectionRef(number).doc(id).get();
-    return snapshot.exists
-        ? Word.fromEntity(
-            WordEntity.fromSnapshot(
-              id: snapshot.id,
-              data: snapshot.data(),
-            ),
-          )
-        : null;
+    return snapshot.toWordOrNull();
   }
 
   @override
@@ -153,4 +120,32 @@ class FirebaseNumbersRepository implements NumbersRepository {
     required Number number,
   }) =>
       _wordsCollectionRef(number).doc(word.id);
+}
+
+extension _SnapshotConverter on DocumentSnapshot<Map<String, dynamic>> {
+  Number toNumber() {
+    final entity = NumberEntity.fromSnapshot(
+      id: id,
+      data: data(),
+    );
+    return Number.fromEntity(entity);
+  }
+
+  Number? toNumberOrNull() {
+    if (!exists) return null;
+    return toNumber();
+  }
+
+  Word toWord() {
+    final entity = WordEntity.fromSnapshot(
+      id: id,
+      data: data(),
+    );
+    return Word.fromEntity(entity);
+  }
+
+  Word? toWordOrNull() {
+    if (!exists) return null;
+    return toWord();
+  }
 }

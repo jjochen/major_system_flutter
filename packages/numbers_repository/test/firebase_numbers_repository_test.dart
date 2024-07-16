@@ -77,6 +77,49 @@ void main() {
       });
     });
 
+    group('watchNumber', () {
+      test('emits number', () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => newId);
+
+        expect(
+          firebaseNumbersRepository.watchNumber(newNumber),
+          emits(newNumber),
+        );
+      });
+
+      test('emits updated number when number is changed', () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => newId);
+        final updatedNumber = newNumber.copyWith(value: () => 100);
+
+        expect(
+          firebaseNumbersRepository.watchNumber(newNumber),
+          emitsInOrder([
+            newNumber,
+            updatedNumber,
+          ]),
+        );
+
+        await firebaseNumbersRepository.updateNumber(updatedNumber);
+      });
+
+      test('emits null when number is deleted', () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => newId);
+
+        expect(
+          firebaseNumbersRepository.watchNumber(newNumber),
+          emitsInOrder([
+            newNumber,
+            null,
+          ]),
+        );
+
+        await firebaseNumbersRepository.deleteNumber(newNumber);
+      });
+    });
+
     group('getNumberWithId', () {
       test('returns correct number', () async {
         final newId = await firebaseNumbersRepository.addNewNumber(number);
