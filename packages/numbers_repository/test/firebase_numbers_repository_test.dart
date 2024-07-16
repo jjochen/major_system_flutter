@@ -48,250 +48,280 @@ void main() {
       fakeFirebaseFirestore.clearPersistence();
     });
 
-    test('getNumber returns correct number', () async {
-      final newId = await firebaseNumbersRepository.addNewNumber(number);
-      final result = await firebaseNumbersRepository.getNumberWithId(newId);
-      expect(
-        result,
-        number.copyWith(id: () => newId),
-      );
-    });
-
-    test('getNumberWithId returns null when no number is found', () async {
-      final result =
-          await firebaseNumbersRepository.getNumberWithId('non-existing-id');
-      expect(result, isNull);
-    });
-
-    test('deleteNumber removes number', () async {
-      final newId = await firebaseNumbersRepository.addNewNumber(number);
-      final newNumber = number.copyWith(id: () => newId);
-      final intermediateResult =
-          await firebaseNumbersRepository.getNumberWithId(newId);
-      expect(
-        intermediateResult,
-        newNumber,
-      );
-
-      await firebaseNumbersRepository.deleteNumber(newNumber);
-      final result = await firebaseNumbersRepository.getNumberWithId(newId);
-      expect(result, isNull);
-    });
-
-    test('updateNumber updates number', () async {
-      final newId = await firebaseNumbersRepository.addNewNumber(number);
-      final updatedNumber = number.copyWith(
-        id: () => newId,
-        value: () => 42,
-      );
-
-      await firebaseNumbersRepository.updateNumber(updatedNumber);
-
-      final result = await firebaseNumbersRepository.getNumberWithId(newId);
-      expect(result, updatedNumber);
-    });
-
-    test('has empty stream initially', () async {
-      expect(
-        firebaseNumbersRepository.watchNumbers(),
-        emits(<Number>[]),
-      );
-    });
-
-    test('stream emits updated list of numbers', () async {
-      final newId = await firebaseNumbersRepository.addNewNumber(number);
-      final newNumber = number.copyWith(id: () => newId);
-      final updatedNumber = newNumber.copyWith(value: () => 43);
-
-      unawaited(
-        expectLater(
+    group('watchNumbers', () {
+      test('emits empty list initially', () async {
+        expect(
           firebaseNumbersRepository.watchNumbers(),
-          emitsInOrder([
-            [newNumber],
-            [updatedNumber],
-            <Number>[],
-          ]),
-        ),
-      );
+          emits(<Number>[]),
+        );
+      });
 
-      await firebaseNumbersRepository.updateNumber(updatedNumber);
-      await firebaseNumbersRepository.deleteNumber(newNumber);
+      test('emits updated list of numbers', () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => newId);
+        final updatedNumber = newNumber.copyWith(value: () => 42);
+
+        unawaited(
+          expectLater(
+            firebaseNumbersRepository.watchNumbers(),
+            emitsInOrder([
+              [newNumber],
+              [updatedNumber],
+              <Number>[],
+            ]),
+          ),
+        );
+
+        await firebaseNumbersRepository.updateNumber(updatedNumber);
+        await firebaseNumbersRepository.deleteNumber(newNumber);
+      });
     });
 
-    test('adds word for given number', () async {
-      final numberId = await firebaseNumbersRepository.addNewNumber(number);
-      final newNumber = number.copyWith(id: () => numberId);
+    group('getNumberWithId', () {
+      test('returns correct number', () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        final result = await firebaseNumbersRepository.getNumberWithId(newId);
+        expect(
+          result,
+          number.copyWith(id: () => newId),
+        );
+      });
 
-      final wordId =
-          await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-      final newWord = word.copyWith(id: () => wordId);
-      final result = await firebaseNumbersRepository.getWordWithId(
-        wordId,
-        number: newNumber,
-      );
-
-      expect(result, newWord);
+      test('returns null when no number is found', () async {
+        final result =
+            await firebaseNumbersRepository.getNumberWithId('non-existing-id');
+        expect(result, isNull);
+      });
     });
 
-    test('gets word for a given number', () async {
-      final numberId = await firebaseNumbersRepository.addNewNumber(number);
-      final newNumber = number.copyWith(id: () => numberId);
+    group('deleteNumber', () {
+      test('removes number', () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => newId);
+        final intermediateResult =
+            await firebaseNumbersRepository.getNumberWithId(newId);
+        expect(
+          intermediateResult,
+          newNumber,
+        );
 
-      final wordId =
-          await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-      final newWord = word.copyWith(id: () => wordId);
-      final result = await firebaseNumbersRepository.getWordWithId(
-        wordId,
-        number: newNumber,
-      );
-
-      expect(result, newWord);
+        await firebaseNumbersRepository.deleteNumber(newNumber);
+        final result = await firebaseNumbersRepository.getNumberWithId(newId);
+        expect(result, isNull);
+      });
     });
 
-    test('getWordWithId returns null when no word is found', () async {
-      final numberId = await firebaseNumbersRepository.addNewNumber(number);
-      final newNumber = number.copyWith(id: () => numberId);
+    group('updateNumber', () {
+      test('updates number', () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        final updatedNumber = number.copyWith(
+          id: () => newId,
+          value: () => 42,
+        );
 
-      final result = await firebaseNumbersRepository.getWordWithId(
-        'non-existing-id',
-        number: newNumber,
-      );
+        await firebaseNumbersRepository.updateNumber(updatedNumber);
 
-      expect(result, isNull);
+        final result = await firebaseNumbersRepository.getNumberWithId(newId);
+        expect(result, updatedNumber);
+      });
     });
 
-    test('deletes word for given number', () async {
-      final numberId = await firebaseNumbersRepository.addNewNumber(number);
-      final newNumber = number.copyWith(id: () => numberId);
+    group('addWord', () {
+      test('adds word for given number', () async {
+        final numberId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => numberId);
 
-      final wordId =
-          await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-      final newWord = word.copyWith(id: () => wordId);
-      final intermediateResult = await firebaseNumbersRepository.getWordWithId(
-        wordId,
-        number: newNumber,
-      );
-      expect(intermediateResult, newWord);
+        final wordId =
+            await firebaseNumbersRepository.addNewWord(word, number: newNumber);
+        final newWord = word.copyWith(id: () => wordId);
+        final result = await firebaseNumbersRepository.getWordWithId(
+          wordId,
+          number: newNumber,
+        );
 
-      await firebaseNumbersRepository.deleteWord(newWord, number: newNumber);
-      final result = await firebaseNumbersRepository.getWordWithId(
-        wordId,
-        number: newNumber,
-      );
-
-      expect(result, isNull);
+        expect(result, newWord);
+      });
     });
 
-    test('updates word for given number', () async {
-      final numberId = await firebaseNumbersRepository.addNewNumber(number);
-      final newNumber = number.copyWith(id: () => numberId);
+    group('getWordWithId', () {
+      test('gets word for a given number', () async {
+        final numberId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => numberId);
 
-      final wordId =
-          await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-      final newWord = word.copyWith(id: () => wordId);
-      final updatedWord = newWord.copyWith(value: () => 'updated-word');
+        final wordId =
+            await firebaseNumbersRepository.addNewWord(word, number: newNumber);
+        final newWord = word.copyWith(id: () => wordId);
+        final result = await firebaseNumbersRepository.getWordWithId(
+          wordId,
+          number: newNumber,
+        );
 
-      await firebaseNumbersRepository.updateWord(
-        updatedWord,
-        number: newNumber,
-      );
+        expect(result, newWord);
+      });
 
-      final result = await firebaseNumbersRepository.getWordWithId(
-        wordId,
-        number: newNumber,
-      );
+      test('returns null when no word is found', () async {
+        final numberId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => numberId);
 
-      expect(result, updatedWord);
+        final result = await firebaseNumbersRepository.getWordWithId(
+          'non-existing-id',
+          number: newNumber,
+        );
+
+        expect(result, isNull);
+      });
     });
 
-    test('sets word as main for given number', () async {
-      final numberId = await firebaseNumbersRepository.addNewNumber(number);
-      final newNumber = number.copyWith(id: () => numberId);
+    group('deleteWord', () {
+      test('deletes word for given number', () async {
+        final numberId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => numberId);
 
-      final wordId =
-          await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-      final newWord = word.copyWith(id: () => wordId);
+        final wordId =
+            await firebaseNumbersRepository.addNewWord(word, number: newNumber);
+        final newWord = word.copyWith(id: () => wordId);
+        final intermediateResult =
+            await firebaseNumbersRepository.getWordWithId(
+          wordId,
+          number: newNumber,
+        );
+        expect(intermediateResult, newWord);
 
-      await firebaseNumbersRepository.setWordAsMain(newWord, number: newNumber);
+        await firebaseNumbersRepository.deleteWord(newWord, number: newNumber);
+        final result = await firebaseNumbersRepository.getWordWithId(
+          wordId,
+          number: newNumber,
+        );
 
-      final result = await firebaseNumbersRepository.getWordWithId(
-        wordId,
-        number: newNumber,
-      );
-
-      expect(result, newWord.copyWith(isMain: () => true));
+        expect(result, isNull);
+      });
     });
 
-    test('words has empty stream initially', () async {
-      expect(
-        firebaseNumbersRepository.watchWords(number: number),
-        emits(<Number>[]),
-      );
+    group('updateWord', () {
+      test('updates word for given number', () async {
+        final numberId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => numberId);
+
+        final wordId =
+            await firebaseNumbersRepository.addNewWord(word, number: newNumber);
+        final newWord = word.copyWith(id: () => wordId);
+        final updatedWord = newWord.copyWith(value: () => 'updated-word');
+
+        await firebaseNumbersRepository.updateWord(
+          updatedWord,
+          number: newNumber,
+        );
+
+        final result = await firebaseNumbersRepository.getWordWithId(
+          wordId,
+          number: newNumber,
+        );
+
+        expect(result, updatedWord);
+      });
     });
 
-    test('words stream emits updated list of words for a given number',
-        () async {
-      final newId = await firebaseNumbersRepository.addNewNumber(number);
-      final newNumber = number.copyWith(id: () => newId);
-      final newWordId =
-          await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-      final newWord = word.copyWith(id: () => newWordId);
-      final updatedWord = newWord.copyWith(value: () => 'updated-word');
+    group('setWordAsMain', () {
+      test('sets word as main for given number', () async {
+        final numberId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => numberId);
 
-      unawaited(
-        expectLater(
-          firebaseNumbersRepository.watchWords(number: newNumber),
-          emitsInOrder(<List<Word>>[
-            [newWord],
-            [updatedWord],
-            [updatedWord.copyWith(isMain: () => true)],
-            [],
-          ]),
-        ),
-      );
+        final wordId =
+            await firebaseNumbersRepository.addNewWord(word, number: newNumber);
+        final newWord = word.copyWith(id: () => wordId);
 
-      await firebaseNumbersRepository.updateWord(
-        updatedWord,
-        number: newNumber,
-      );
-      await firebaseNumbersRepository.setWordAsMain(
-        updatedWord,
-        number: newNumber,
-      );
-      await firebaseNumbersRepository.deleteWord(
-        newWord,
-        number: newNumber,
-      );
+        await firebaseNumbersRepository.setWordAsMain(
+          newWord,
+          number: newNumber,
+        );
+
+        final result = await firebaseNumbersRepository.getWordWithId(
+          wordId,
+          number: newNumber,
+        );
+
+        expect(result, newWord.copyWith(isMain: () => true));
+      });
     });
 
-    test('sets new word as main', () async {
-      final numberId = await firebaseNumbersRepository.addNewNumber(number);
-      final newNumber = number.copyWith(id: () => numberId);
-      final newWordId =
-          await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-      final newWord = word.copyWith(id: () => newWordId);
-      final mainWordId = await firebaseNumbersRepository.addNewWord(
-        mainWord,
-        number: newNumber,
-      );
-      final newMainWord = mainWord.copyWith(id: () => mainWordId);
+    group('watchWords', () {
+      test('words has empty stream initially', () async {
+        expect(
+          firebaseNumbersRepository.watchWords(number: number),
+          emits(<Number>[]),
+        );
+      });
 
-      await firebaseNumbersRepository.setWordAsMain(newWord, number: newNumber);
+      test('words stream emits updated list of words for a given number',
+          () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => newId);
+        final newWordId =
+            await firebaseNumbersRepository.addNewWord(word, number: newNumber);
+        final newWord = word.copyWith(id: () => newWordId);
+        final updatedWord = newWord.copyWith(value: () => 'updated-word');
 
-      final result = await firebaseNumbersRepository.getNumberWithId(numberId);
-      expect(result, newNumber.copyWith(mainWord: () => newWord.value));
+        unawaited(
+          expectLater(
+            firebaseNumbersRepository.watchWords(number: newNumber),
+            emitsInOrder(<List<Word>>[
+              [newWord],
+              [updatedWord],
+              [updatedWord.copyWith(isMain: () => true)],
+              [],
+            ]),
+          ),
+        );
 
-      final mainWordResult = await firebaseNumbersRepository.getWordWithId(
-        mainWordId,
-        number: newNumber,
-      );
-      expect(mainWordResult, newMainWord.copyWith(isMain: () => false));
+        await firebaseNumbersRepository.updateWord(
+          updatedWord,
+          number: newNumber,
+        );
+        await firebaseNumbersRepository.setWordAsMain(
+          updatedWord,
+          number: newNumber,
+        );
+        await firebaseNumbersRepository.deleteWord(
+          newWord,
+          number: newNumber,
+        );
+      });
+    });
 
-      final newWordResult = await firebaseNumbersRepository.getWordWithId(
-        newWordId,
-        number: newNumber,
-      );
-      expect(newWordResult, newWord.copyWith(isMain: () => true));
+    group('setNewWordAsMain', () {
+      test('sets new word as main', () async {
+        final numberId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => numberId);
+        final newWordId =
+            await firebaseNumbersRepository.addNewWord(word, number: newNumber);
+        final newWord = word.copyWith(id: () => newWordId);
+        final mainWordId = await firebaseNumbersRepository.addNewWord(
+          mainWord,
+          number: newNumber,
+        );
+        final newMainWord = mainWord.copyWith(id: () => mainWordId);
+
+        await firebaseNumbersRepository.setWordAsMain(
+          newWord,
+          number: newNumber,
+        );
+
+        final result =
+            await firebaseNumbersRepository.getNumberWithId(numberId);
+        expect(result, newNumber.copyWith(mainWord: () => newWord.value));
+
+        final mainWordResult = await firebaseNumbersRepository.getWordWithId(
+          mainWordId,
+          number: newNumber,
+        );
+        expect(mainWordResult, newMainWord.copyWith(isMain: () => false));
+
+        final newWordResult = await firebaseNumbersRepository.getWordWithId(
+          newWordId,
+          number: newNumber,
+        );
+        expect(newWordResult, newWord.copyWith(isMain: () => true));
+      });
     });
   });
 }
