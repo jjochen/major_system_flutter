@@ -11,9 +11,9 @@ class NumberDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NumberDetailsCubit, NumberDetailsState>(
       builder: (context, state) {
-        if (state is! NumberSelected) return const SizedBox();
-
         final number = state.number;
+        if (number == null) return const SizedBox();
+
         return Scaffold(
           appBar: AppBar(
             title: Text(number.toString()),

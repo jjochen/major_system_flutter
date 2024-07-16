@@ -52,5 +52,36 @@ void main() {
         ),
       );
     });
+
+    group('copyWith', () {
+      test('should copy with new values', () {
+        expect(
+          NumbersState(
+            numbers: [number1],
+            loading: true,
+          ).copyWith(
+            numbers: () => [number2],
+            loading: () => false,
+          ),
+          NumbersState(
+            numbers: [number2],
+            loading: false,
+          ),
+        );
+      });
+
+      test('should copy with same values', () {
+        expect(
+          NumbersState(
+            numbers: [number1],
+            loading: true,
+          ).copyWith(),
+          NumbersState(
+            numbers: [number1],
+            loading: true,
+          ),
+        );
+      });
+    });
   });
 }

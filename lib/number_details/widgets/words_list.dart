@@ -11,11 +11,9 @@ class WordsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NumberDetailsCubit, NumberDetailsState>(
       builder: (context, state) {
-        if (state is! NumberSelected) return const SizedBox();
-
-        return ListView.builder(
-          shrinkWrap: true,
+        return ListView.separated(
           itemCount: state.words.length,
+          separatorBuilder: (context, index) => const Divider(),
           itemBuilder: (context, index) {
             final word = state.words[index];
             return ListTile(
