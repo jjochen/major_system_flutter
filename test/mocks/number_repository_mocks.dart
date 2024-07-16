@@ -1,7 +1,12 @@
 import 'package:mocktail/mocktail.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
-const mainNumber = Number(id: 'main-id', numberOfDigits: 2, value: 42);
+const mainNumber = Number(
+  id: 'main-id',
+  numberOfDigits: 2,
+  value: 42,
+  mainWord: 'Ronja',
+);
 const number1 = Number(id: 'id-1', numberOfDigits: 1, value: 1);
 const number2 = Number(id: 'id-2', numberOfDigits: 1, value: 2);
 const numbers = [number1, number2];
