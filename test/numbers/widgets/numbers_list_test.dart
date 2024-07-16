@@ -2,10 +2,12 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:major_system/number_details/view/number_details_page.dart';
 import 'package:major_system/numbers/numbers.dart';
-import 'package:major_system/numbers/view/number_detail_page.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:numbers_repository/numbers_repository.dart';
+
+import '../../mocks/number_repository_mocks.dart';
 
 class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
     implements NumbersBloc {}
@@ -13,39 +15,30 @@ class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
-  const number1 = Number(id: 'id', numberOfDigits: 1, value: 1);
-  const number2 = Number(id: 'id', numberOfDigits: 1, value: 2);
-  const numbers = [number1, number2];
+  setUpAll(() async {
+    registerFallbackValue(number1);
+  });
 
   group('Numbers Widget', () {
-    late MockNumbersBloc numbersBloc;
+    late NumbersBloc numbersBloc;
+    late NumbersRepository numbersRepository;
 
     Widget buildFrame() => MaterialApp(
           home: Scaffold(
-            body: BlocProvider<NumbersBloc>.value(
-              value: numbersBloc,
-              child: const NumbersList(),
+            body: RepositoryProvider<NumbersRepository>.value(
+              value: numbersRepository,
+              child: BlocProvider<NumbersBloc>.value(
+                value: numbersBloc,
+                child: const NumbersList(),
+              ),
             ),
           ),
         );
 
     setUp(() {
       numbersBloc = MockNumbersBloc();
+      numbersRepository = MockNumbersRepository();
     });
-
-    // testWidgets('renders LoadingIndicator when state is NumbersLoading',
-    //     (WidgetTester tester) async {
-    //   whenListen(
-    //     numbersBloc,
-    //     Stream<NumbersState>.fromIterable([]),
-    //     initialState: const NumbersState(loading: true),
-    //   );
-
-    //   await tester.pumpWidget(buildFrame());
-    //   await tester.pump();
-
-    //   expect(find.byType(LoadingIndicator), findsOneWidget);
-    // });
 
     testWidgets('renders ListView.builder when state is NumbersLoaded',
         (WidgetTester tester) async {
@@ -82,7 +75,7 @@ void main() {
       await tester.tap(numberItemFinder);
       await tester.pumpAndSettle();
 
-      expect(find.byType(NumberDetailPage), findsOneWidget);
+      expect(find.byType(NumberDetailsPage), findsOneWidget);
     });
   });
 }

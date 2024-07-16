@@ -3,25 +3,27 @@ import 'dart:async';
 import 'package:numbers_repository/numbers_repository.dart';
 
 abstract class NumbersRepository {
-  Future<String> addNewNumber(Number number);
+  Stream<List<Number>> watchNumbers();
 
-  Stream<List<Number>> numbers();
+  Stream<Number?> watchNumber(Number number);
 
   Future<Number?> getNumberWithId(String id);
 
-  Future<void> deleteNumber(Number number);
+  Future<String> addNewNumber(Number number);
 
   Future<void> updateNumber(Number number);
 
-  Future<String> addNewWord(Word word, {required Number number});
+  Future<void> deleteNumber(Number number);
 
-  Stream<List<Word>> words({required Number number});
+  Stream<List<Word>> watchWords({required Number number});
 
   Future<Word?> getWordWithId(String id, {required Number number});
 
-  Future<void> deleteWord(Word word, {required Number number});
+  Future<String> addNewWord(Word word, {required Number number});
 
   Future<void> updateWord(Word word, {required Number number});
 
   Future<void> setWordAsMain(Word? word, {required Number number});
+
+  Future<void> deleteWord(Word word, {required Number number});
 }

@@ -26,7 +26,7 @@ class NumbersBloc extends Bloc<NumbersEvent, NumbersState> {
     Emitter<NumbersState> emit,
   ) async {
     unawaited(_numbersSubscription?.cancel());
-    _numbersSubscription = _numbersRepository.numbers().listen(
+    _numbersSubscription = _numbersRepository.watchNumbers().listen(
           (numbers) => add(NumbersUpdated(numbers)),
         );
   }
