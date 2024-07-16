@@ -22,5 +22,10 @@ class MockNumbersRepository extends Mock implements NumbersRepository {
     ).thenAnswer(
       (_) => const Stream.empty(),
     );
+    when(
+      () => setWordAsMain(any(), number: any(named: 'number')),
+    ).thenAnswer(
+      (_) => Future.value(),
+    );
   }
 }
