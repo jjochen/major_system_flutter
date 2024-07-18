@@ -32,5 +32,10 @@ class MockNumbersRepository extends Mock implements NumbersRepository {
     ).thenAnswer(
       (_) => Future.value(),
     );
+    when(
+      () => addNewWord(any(), number: any(named: 'number')),
+    ).thenAnswer(
+      (_) => Future.value('1'),
+    );
   }
 }
