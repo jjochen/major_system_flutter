@@ -55,6 +55,14 @@ class NumberDetailsCubit extends Cubit<NumberDetailsState> {
     numbersRepository.setWordAsMain(word, number: number);
   }
 
+  void addWord(String value) {
+    final number = state.number;
+    if (number == null) return;
+
+    final word = Word(id: '', value: value);
+    numbersRepository.addNewWord(word, number: number);
+  }
+
   @override
   Future<void> close() {
     _numberSubscription?.cancel();
