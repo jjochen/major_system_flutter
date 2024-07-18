@@ -11,16 +11,30 @@ class WordsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<NumberDetailsCubit, NumberDetailsState>(
       builder: (context, state) {
-        return ListView.builder(
-          itemCount: state.words.length + 1,
-          itemBuilder: (context, index) {
-            if (index == state.words.length) {
-              return const AddWordListTile();
-            } else {
-              final word = state.words[index];
-              return WordListTile(word: word);
-            }
-          },
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Text(
+                'Words',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: state.words.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == state.words.length) {
+                    return const AddWordListTile();
+                  } else {
+                    final word = state.words[index];
+                    return WordListTile(word: word);
+                  }
+                },
+              ),
+            ),
+          ],
         );
       },
     );
