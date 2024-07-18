@@ -15,11 +15,11 @@ class AddWordListTile extends StatelessWidget {
       iconColor: foregroundColor,
       textColor: foregroundColor,
       titleTextStyle: theme.textTheme.titleMedium,
-      title: const Text('Add new word'),
+      title: const Text('Add a new word'),
       leading: const Icon(Icons.add_circle_outline),
       onTap: () async {
         final word = await _addWord(context);
-        if (word == null || word.isEmpty) return;
+        if (word == null) return;
         if (!context.mounted) return;
         context.read<NumberDetailsCubit>().addWord(word);
       },
@@ -32,8 +32,10 @@ class AddWordListTile extends StatelessWidget {
       builder: (BuildContext context) {
         var word = '';
         return AlertDialog(
+          key: const Key('add_word_dialog'),
           title: const Text('Add Word'),
           content: TextField(
+            key: const Key('add_word_dialog_text_field'),
             onChanged: (value) {
               word = value;
             },
@@ -44,12 +46,14 @@ class AddWordListTile extends StatelessWidget {
           ),
           actions: [
             TextButton(
+              key: const Key('add_word_dialog_save_button'),
               onPressed: () {
                 Navigator.of(context).pop(word);
               },
               child: const Text('Save'),
             ),
             TextButton(
+              key: const Key('add_word_dialog_cancel_button'),
               onPressed: () {
                 Navigator.of(context).pop();
               },

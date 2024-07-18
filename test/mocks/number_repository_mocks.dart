@@ -11,6 +11,7 @@ const number1 = Number(id: 'id-1', numberOfDigits: 1, value: 1);
 const number2 = Number(id: 'id-2', numberOfDigits: 1, value: 2);
 const numbers = [number1, number2];
 
+const mainWord = Word(id: 'main-id', value: 'Ronja', isMain: true);
 const word1 = Word(id: 'id-1', value: 'one', isMain: true);
 const word2 = Word(id: 'id-2', value: 'two');
 

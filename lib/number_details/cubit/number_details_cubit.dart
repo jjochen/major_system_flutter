@@ -59,6 +59,8 @@ class NumberDetailsCubit extends Cubit<NumberDetailsState> {
     final number = state.number;
     if (number == null) return;
 
+    if (value.isEmpty) return;
+
     final word = Word(id: '', value: value);
     numbersRepository.addNewWord(word, number: number);
   }

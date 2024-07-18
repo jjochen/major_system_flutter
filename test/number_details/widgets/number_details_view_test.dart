@@ -7,21 +7,23 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:major_system/number_details/number_details.dart';
 
 import '../../mocks/number_repository_mocks.dart';
-import 'words_list_test.dart';
+
+class MockNumberDetailsCubit extends MockCubit<NumberDetailsState>
+    implements NumberDetailsCubit {}
 
 void main() {
   group('NumberDetailsView', () {
-    late MockNumberDetailsCubit mockCubit;
+    late MockNumberDetailsCubit cubit;
 
     setUp(() {
-      mockCubit = MockNumberDetailsCubit();
+      cubit = MockNumberDetailsCubit();
     });
 
     MaterialApp buildFrame() {
       return MaterialApp(
         home: Scaffold(
           body: BlocProvider<NumberDetailsCubit>.value(
-            value: mockCubit,
+            value: cubit,
             child: const NumberDetailsView(),
           ),
         ),
@@ -30,7 +32,7 @@ void main() {
 
     testWidgets('renders correctly', (WidgetTester tester) async {
       whenListen(
-        mockCubit,
+        cubit,
         Stream<NumberDetailsState>.empty(),
         initialState:
             NumberDetailsState(number: mainNumber, words: const [word1, word2]),
@@ -45,7 +47,7 @@ void main() {
     testWidgets('renders correctly without number',
         (WidgetTester tester) async {
       whenListen(
-        mockCubit,
+        cubit,
         Stream<NumberDetailsState>.empty(),
         initialState: NumberDetailsState(),
       );

@@ -129,6 +129,23 @@ void main() {
       );
 
       blocTest<NumberDetailsCubit, NumberDetailsState>(
+        'should not add the word to the repository when value is empty',
+        build: buildCubit,
+        seed: () =>
+            const NumberDetailsState(number: number1, words: [word1, word2]),
+        act: (cubit) => cubit.addWord(''),
+        expect: () => const <NumberDetailsState>[],
+        verify: (bloc) {
+          verifyNever(
+            () => numbersRepository.addNewWord(
+              any(),
+              number: any(named: 'number'),
+            ),
+          );
+        },
+      );
+
+      blocTest<NumberDetailsCubit, NumberDetailsState>(
         'should not add the word to the repository when number is null',
         build: buildCubit,
         seed: () => const NumberDetailsState(),
