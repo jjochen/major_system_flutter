@@ -20,7 +20,6 @@ void main() {
     testWidgets('displays number and main word', (tester) async {
       await tester.pumpWidget(buildFrame(mainNumber));
 
-      expect(find.text('42'), findsOneWidget);
       expect(find.text('Ronja'), findsOneWidget);
     });
 
@@ -28,7 +27,6 @@ void main() {
       await tester
           .pumpWidget(buildFrame(mainNumber.copyWith(mainWord: () => null)));
 
-      expect(find.text('42'), findsOneWidget);
       expect(find.text('Ronja'), findsNothing);
     });
   });

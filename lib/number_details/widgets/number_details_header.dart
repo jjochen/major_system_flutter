@@ -12,21 +12,12 @@ class NumberDetailsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mainWord = number.mainWord;
+    if (mainWord == null) return const SizedBox();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            number.toString(),
-            style: Theme.of(context).textTheme.displayLarge,
-          ),
-          if (mainWord != null)
-            Text(
-              mainWord,
-              style: Theme.of(context).textTheme.displayMedium,
-            ),
-        ],
+      child: Text(
+        mainWord,
+        style: Theme.of(context).textTheme.displayMedium,
       ),
     );
   }
