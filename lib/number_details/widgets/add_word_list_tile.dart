@@ -30,38 +30,57 @@ class AddWordListTile extends StatelessWidget {
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        var word = '';
-        return AlertDialog(
-          key: const Key('add_word_dialog'),
-          title: const Text('Add Word'),
-          content: TextField(
-            key: const Key('add_word_dialog_text_field'),
-            onChanged: (value) {
-              word = value;
-            },
-            decoration: const InputDecoration(
-              labelText: 'Word',
-            ),
-            autofocus: true,
-          ),
-          actions: [
-            TextButton(
-              key: const Key('add_word_dialog_save_button'),
-              onPressed: () {
-                Navigator.of(context).pop(word);
-              },
-              child: const Text('Save'),
-            ),
-            TextButton(
-              key: const Key('add_word_dialog_cancel_button'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
+        return const AddWordDialog();
       },
+    );
+  }
+}
+
+class AddWordDialog extends StatefulWidget {
+  const AddWordDialog({super.key});
+
+  @override
+  AddWordDialogState createState() => AddWordDialogState();
+}
+
+class AddWordDialogState extends State<AddWordDialog> {
+  String word = '';
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      key: const Key('add_word_dialog'),
+      title: const Text('Add Word'),
+      content: TextField(
+        key: const Key('add_word_dialog_text_field'),
+        onChanged: (value) {
+          setState(() {
+            word = value;
+          });
+        },
+        decoration: const InputDecoration(
+          labelText: 'Word',
+        ),
+        autofocus: true,
+      ),
+      actions: [
+        TextButton(
+          key: const Key('add_word_dialog_save_button'),
+          onPressed: word.isEmpty
+              ? null
+              : () {
+                  Navigator.of(context).pop(word);
+                },
+          child: const Text('Save'),
+        ),
+        TextButton(
+          key: const Key('add_word_dialog_cancel_button'),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('Cancel'),
+        ),
+      ],
     );
   }
 }

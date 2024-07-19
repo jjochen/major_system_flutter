@@ -76,7 +76,12 @@ void main() {
         find.byKey(const Key('add_word_dialog_text_field')),
         'new word',
       );
+      await tester.pumpAndSettle();
+
       await tester.tap(find.byKey(const Key('add_word_dialog_save_button')));
+      // An extra pump or pumpAndSettle is needed.
+      // Otherwise the test finishes before add Word is called.
+      await tester.pump();
       await tester.pumpAndSettle();
 
       verify(() => cubit.addWord('new word')).called(1);
