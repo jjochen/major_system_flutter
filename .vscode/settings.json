@@ -1,7 +1,7 @@
 {
   "editor.tabSize": 2,
   "dart.lineLength": 80,
-  "dart.flutterSdkPath": ".fvm/versions/3.22.2",
+  "dart.flutterSdkPath": ".fvm/versions/3.24.0",
   "search.exclude": {
     "**/.fvm": true
   },
