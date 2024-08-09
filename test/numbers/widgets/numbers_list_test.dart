@@ -17,6 +17,7 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 void main() {
   setUpAll(() async {
     registerFallbackValue(number1);
+    registerFallbackValue(word1);
   });
 
   group('Numbers Widget', () {

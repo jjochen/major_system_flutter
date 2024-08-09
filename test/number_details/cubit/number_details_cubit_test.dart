@@ -9,6 +9,7 @@ import '../../mocks/number_repository_mocks.dart';
 void main() {
   setUpAll(() async {
     registerFallbackValue(number1);
+    registerFallbackValue(word1);
   });
 
   group('NumberDetailsCubit', () {
@@ -100,6 +101,60 @@ void main() {
           verifyNever(
             () => numbersRepository.setWordAsMain(
               word2,
+              number: any(named: 'number'),
+            ),
+          );
+        },
+      );
+    });
+
+    group('addWord', () {
+      const value = 'new word';
+
+      blocTest<NumberDetailsCubit, NumberDetailsState>(
+        'should add the word to the repository',
+        build: buildCubit,
+        seed: () =>
+            const NumberDetailsState(number: number1, words: [word1, word2]),
+        act: (cubit) => cubit.addWord(value),
+        expect: () => const <NumberDetailsState>[],
+        verify: (bloc) {
+          verify(
+            () => numbersRepository.addNewWord(
+              const Word(id: '', value: value),
+              number: number1,
+            ),
+          ).called(1);
+        },
+      );
+
+      blocTest<NumberDetailsCubit, NumberDetailsState>(
+        'should not add the word to the repository when value is empty',
+        build: buildCubit,
+        seed: () =>
+            const NumberDetailsState(number: number1, words: [word1, word2]),
+        act: (cubit) => cubit.addWord(''),
+        expect: () => const <NumberDetailsState>[],
+        verify: (bloc) {
+          verifyNever(
+            () => numbersRepository.addNewWord(
+              any(),
+              number: any(named: 'number'),
+            ),
+          );
+        },
+      );
+
+      blocTest<NumberDetailsCubit, NumberDetailsState>(
+        'should not add the word to the repository when number is null',
+        build: buildCubit,
+        seed: () => const NumberDetailsState(),
+        act: (cubit) => cubit.addWord(value),
+        expect: () => const <NumberDetailsState>[],
+        verify: (bloc) {
+          verifyNever(
+            () => numbersRepository.addNewWord(
+              any(),
               number: any(named: 'number'),
             ),
           );

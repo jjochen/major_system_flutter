@@ -14,12 +14,12 @@ class MockNumberDetailsCubit extends MockCubit<NumberDetailsState>
 
 void main() {
   group('WordsList', () {
-    late MockNumberDetailsCubit mockCubit;
+    late NumberDetailsCubit cubit;
 
     setUp(() {
-      mockCubit = MockNumberDetailsCubit();
+      cubit = MockNumberDetailsCubit();
       whenListen(
-        mockCubit,
+        cubit,
         Stream<NumberDetailsState>.empty(),
         initialState: NumberDetailsState(),
       );
@@ -29,7 +29,7 @@ void main() {
       return MaterialApp(
         home: Scaffold(
           body: BlocProvider<NumberDetailsCubit>.value(
-            value: mockCubit,
+            value: cubit,
             child: const WordsList(),
           ),
         ),
@@ -46,7 +46,7 @@ void main() {
 
     testWidgets('displays words correctly', (WidgetTester tester) async {
       whenListen(
-        mockCubit,
+        cubit,
         Stream<NumberDetailsState>.fromIterable([
           NumberDetailsState(number: number1, words: const [word1, word2]),
         ]),
@@ -62,7 +62,7 @@ void main() {
 
     testWidgets('selects main word on tap', (WidgetTester tester) async {
       whenListen(
-        mockCubit,
+        cubit,
         Stream<NumberDetailsState>.fromIterable([
           NumberDetailsState(number: number1, words: const [word1, word2]),
         ]),
@@ -73,7 +73,7 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('one'));
-      verify(() => mockCubit.selectMainWord(word1)).called(1);
+      verify(() => cubit.selectMainWord(word1)).called(1);
     });
   });
 }
