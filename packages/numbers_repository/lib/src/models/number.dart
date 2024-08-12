@@ -9,7 +9,14 @@ class Number extends Equatable {
     required this.numberOfDigits,
     required this.value,
     this.mainWord,
-  });
+  }) : assert(numberOfDigits > 0, 'numberOfDigits must be greater than 0');
+
+  const Number.transient({
+    required this.numberOfDigits,
+    required this.value,
+    this.mainWord,
+  })  : id = '',
+        assert(numberOfDigits > 0, 'numberOfDigits must be greater than 0');
 
   factory Number.fromEntity(NumberEntity entity) {
     return Number(

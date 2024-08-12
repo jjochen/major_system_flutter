@@ -11,6 +11,10 @@ abstract class NumbersRepository {
 
   Future<String> addNewNumber(Number number);
 
+  Future<bool> hasNumber(Number number);
+
+  Future<void> addMissingNumbers({required int maximumNumberOfDigits});
+
   Future<void> updateNumber(Number number);
 
   Future<void> deleteNumber(Number number);

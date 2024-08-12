@@ -10,6 +10,19 @@ void main() {
       isMain: true,
     );
 
+    test('instantiates without crashing', () {
+      expect(word, isNotNull);
+    });
+
+    test('transient constructor', () {
+      const transientWord = Word.transient(
+        value: 'example',
+      );
+
+      expect(transientWord, isNotNull);
+      expect(transientWord.id, '');
+    });
+
     test('should create a Word instance', () {
       expect(word, isA<Word>());
     });

@@ -10,6 +10,11 @@ class Word extends Equatable {
     this.isMain = false,
   });
 
+  const Word.transient({
+    required this.value,
+    this.isMain = false,
+  }) : id = '';
+
   factory Word.fromEntity(WordEntity entity) {
     return Word(
       id: entity.id,
