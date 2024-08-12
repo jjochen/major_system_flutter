@@ -2,22 +2,17 @@
 
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get_it/get_it.dart';
+import 'package:major_system/attributions/attributions.dart';
 import 'package:major_system/authentication/authentication.dart';
-import 'package:major_system/numbers/numbers.dart';
+import 'package:major_system/settings/settings.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAuthenticationBloc
     extends MockBloc<AuthenticationEvent, AuthenticationState>
     implements AuthenticationBloc {}
-
-class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
-    implements NumbersBloc {}
 
 class MockUserInfo extends Mock implements UserInfo {
   @override
@@ -28,12 +23,12 @@ class MockUserInfo extends Mock implements UserInfo {
 }
 
 void main() {
-  group('NumbersPage', () {
+  const logoutButtonKey = Key('settingsPage_logout_listTile');
+  const attributionsButtonKey = Key('settingsPage_attributions_listTile');
+
+  group('SettingsPage', () {
     registerFallbackValue(const AuthenticationUnauthenticated());
     registerFallbackValue(AuthenticationLogoutRequested());
-
-    registerFallbackValue(NumbersState());
-    registerFallbackValue(LoadNumbers());
 
     late AuthenticationBloc authenticationBloc;
     late UserInfo user;
@@ -41,15 +36,11 @@ void main() {
     Widget buildFrame() => BlocProvider<AuthenticationBloc>(
           create: (context) => authenticationBloc,
           child: MaterialApp(
-            home: NumbersPage(user: user),
+            home: SettingsPage(),
           ),
         );
 
     setUp(() {
-      GetIt.instance.registerLazySingleton<FirebaseFirestore>(
-        FakeFirebaseFirestore.new,
-      );
-
       authenticationBloc = MockAuthenticationBloc();
       user = MockUserInfo();
       whenListen<AuthenticationState>(
@@ -59,21 +50,39 @@ void main() {
       );
     });
 
-    tearDown(() {
-      GetIt.instance.reset();
-    });
-
     group('renders', () {
-      testWidgets('numbers widget', (tester) async {
+      testWidgets('logout button', (tester) async {
         await tester.pumpWidget(buildFrame());
         await tester.pumpAndSettle();
-        expect(find.byType(NumbersList), findsOneWidget);
+        expect(find.byKey(logoutButtonKey), findsOneWidget);
       });
 
-      testWidgets('settings button', (tester) async {
+      testWidgets('attributions button', (tester) async {
         await tester.pumpWidget(buildFrame());
         await tester.pumpAndSettle();
-        expect(find.byKey(Key('homePage_settings_iconButton')), findsOneWidget);
+        expect(find.byKey(attributionsButtonKey), findsOneWidget);
+      });
+    });
+
+    group('calls', () {
+      testWidgets('AuthenticationLogoutRequested when logout is pressed',
+          (tester) async {
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(logoutButtonKey));
+        verify(
+          () => authenticationBloc.add(AuthenticationLogoutRequested()),
+        ).called(1);
+      });
+    });
+    group('navigates', () {
+      testWidgets('to Attributions when attributions list tile is pressed',
+          (tester) async {
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(attributionsButtonKey));
+        await tester.pumpAndSettle();
+        expect(find.byType(AttributionsPage), findsOneWidget);
       });
     });
   });

@@ -21,6 +21,7 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
+            key: const Key('settingsPage_attributions_listTile'),
             leading: const Icon(Icons.info_outline),
             title: const Text('Attributions'),
             onTap: () =>
@@ -28,6 +29,7 @@ class SettingsPage extends StatelessWidget {
           ),
           ListTile(
             // TODO(jjochen): Do not show if user is anonymous
+            key: const Key('settingsPage_logout_listTile'),
             leading: const Icon(Icons.logout_outlined),
             title: const Text('Log out'),
             onTap: () => context
