@@ -10,5 +10,15 @@ void main() {
       await tester.pumpWidget(MaterialApp(home: AttributionsPage()));
       expect(find.byKey(const Key('application_icon_image')), findsOneWidget);
     });
+
+    testWidgets('renders title', (tester) async {
+      await tester.pumpWidget(MaterialApp(home: AttributionsPage()));
+      expect(find.text('Major System'), findsOneWidget);
+    });
+
+    testWidgets('renders current year', (tester) async {
+      await tester.pumpWidget(MaterialApp(home: AttributionsPage()));
+      expect(find.text(DateTime.now().year.toString()), findsOneWidget);
+    });
   });
 }
