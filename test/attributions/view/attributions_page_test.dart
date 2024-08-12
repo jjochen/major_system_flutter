@@ -16,9 +16,10 @@ void main() {
       expect(find.text('Major System'), findsOneWidget);
     });
 
-    testWidgets('renders current year', (tester) async {
+    testWidgets('renders copyright containing current year', (tester) async {
       await tester.pumpWidget(MaterialApp(home: AttributionsPage()));
-      expect(find.text(DateTime.now().year.toString()), findsOneWidget);
+      final currentYear = DateTime.now().year;
+      expect(find.text('©$currentYear Jochen Pfeiffer'), findsOneWidget);
     });
   });
 }
