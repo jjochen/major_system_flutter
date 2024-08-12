@@ -10,5 +10,16 @@ void main() {
       await tester.pumpWidget(MaterialApp(home: AttributionsPage()));
       expect(find.byKey(const Key('application_icon_image')), findsOneWidget);
     });
+
+    testWidgets('renders title', (tester) async {
+      await tester.pumpWidget(MaterialApp(home: AttributionsPage()));
+      expect(find.text('Major System'), findsOneWidget);
+    });
+
+    testWidgets('renders copyright containing current year', (tester) async {
+      await tester.pumpWidget(MaterialApp(home: AttributionsPage()));
+      final currentYear = DateTime.now().year;
+      expect(find.text('©$currentYear Jochen Pfeiffer'), findsOneWidget);
+    });
   });
 }

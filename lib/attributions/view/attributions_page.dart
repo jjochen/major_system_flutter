@@ -19,7 +19,8 @@ class AttributionsPage extends LicensePage {
 
   @override
   String? get applicationLegalese {
-    return '©2021 Jochen Pfeiffer';
+    final currentYear = DateTime.now().year;
+    return '©$currentYear Jochen Pfeiffer';
   }
 
   @override

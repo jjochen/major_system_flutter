@@ -2,9 +2,8 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/app/services/service_locator.dart';
-import 'package:major_system/attributions/attributions.dart';
-import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/numbers/numbers.dart';
+import 'package:major_system/settings/settings.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
 class NumbersPage extends StatelessWidget {
@@ -26,17 +25,10 @@ class NumbersPage extends StatelessWidget {
         title: const Text('Major System'),
         actions: <Widget>[
           IconButton(
-            key: const Key('homePage_attributions_iconButton'),
-            icon: const Icon(Icons.info_outline),
+            key: const Key('homePage_settings_iconButton'),
+            icon: const Icon(Icons.settings_outlined),
             onPressed: () =>
-                Navigator.of(context).push<void>(AttributionsPage.route()),
-          ),
-          IconButton(
-            key: const Key('homePage_logout_iconButton'),
-            icon: const Icon(Icons.logout_outlined),
-            onPressed: () => context
-                .read<AuthenticationBloc>()
-                .add(AuthenticationLogoutRequested()),
+                Navigator.of(context).push<void>(SettingsPage.route()),
           ),
         ],
       ),
