@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:major_system/authentication/authentication.dart';
 import 'package:major_system/numbers/numbers.dart';
+import 'package:major_system/settings/settings.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockAuthenticationBloc
@@ -29,6 +30,8 @@ class MockUserInfo extends Mock implements UserInfo {
 
 void main() {
   group('NumbersPage', () {
+    const settingsButtonKey = Key('homePage_settings_iconButton');
+
     registerFallbackValue(const AuthenticationUnauthenticated());
     registerFallbackValue(AuthenticationLogoutRequested());
 
@@ -73,7 +76,18 @@ void main() {
       testWidgets('settings button', (tester) async {
         await tester.pumpWidget(buildFrame());
         await tester.pumpAndSettle();
-        expect(find.byKey(Key('homePage_settings_iconButton')), findsOneWidget);
+        expect(find.byKey(settingsButtonKey), findsOneWidget);
+      });
+    });
+
+    group('navigates', () {
+      testWidgets('to Settings when settings button is pressed',
+          (tester) async {
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(settingsButtonKey));
+        await tester.pumpAndSettle();
+        expect(find.byType(SettingsPage), findsOneWidget);
       });
     });
   });

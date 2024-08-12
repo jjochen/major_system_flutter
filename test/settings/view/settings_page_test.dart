@@ -75,6 +75,7 @@ void main() {
         ).called(1);
       });
     });
+
     group('navigates', () {
       testWidgets('to Attributions when attributions list tile is pressed',
           (tester) async {
