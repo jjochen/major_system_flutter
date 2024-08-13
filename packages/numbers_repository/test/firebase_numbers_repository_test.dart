@@ -16,18 +16,15 @@ void main() {
   const numberOfDigits = 2;
   const value = 23;
   const mainWordValue = 'main-word';
-  final number = Number(
-    id: '',
+  final number = Number.transient(
     numberOfDigits: numberOfDigits,
     value: value,
     mainWord: mainWordValue,
   );
-  final word = Word(
-    id: '',
+  final word = Word.transient(
     value: 'word',
   );
-  const mainWord = Word(
-    id: '',
+  const mainWord = Word.transient(
     value: mainWordValue,
     isMain: true,
   );
@@ -120,6 +117,20 @@ void main() {
       });
     });
 
+    group('hasNumber', () {
+      test('returns true when number exists', () async {
+        await firebaseNumbersRepository.addNewNumber(number);
+
+        final result = await firebaseNumbersRepository.hasNumber(number);
+        expect(result, isTrue);
+      });
+
+      test('returns false when number does not exist', () async {
+        final result = await firebaseNumbersRepository.hasNumber(number);
+        expect(result, isFalse);
+      });
+    });
+
     group('getNumberWithId', () {
       test('returns correct number', () async {
         final newId = await firebaseNumbersRepository.addNewNumber(number);
@@ -134,6 +145,30 @@ void main() {
         final result =
             await firebaseNumbersRepository.getNumberWithId('non-existing-id');
         expect(result, isNull);
+      });
+    });
+
+    group('addMissingNumbers', () {
+      test('adds missing numbers up to 2 digits', () async {
+        await firebaseNumbersRepository.addMissingNumbers(
+          maximumNumberOfDigits: 2,
+        );
+
+        final result = await firebaseNumbersRepository.watchNumbers().first;
+        expect(result, hasLength(110));
+      });
+
+      test('does not overwrite existing numbers', () async {
+        final newId = await firebaseNumbersRepository.addNewNumber(number);
+        final newNumber = number.copyWith(id: () => newId);
+
+        await firebaseNumbersRepository.addMissingNumbers(
+          maximumNumberOfDigits: 2,
+        );
+
+        final result = await firebaseNumbersRepository.watchNumbers().first;
+        expect(result, contains(newNumber));
+        expect(result, hasLength(110));
       });
     });
 

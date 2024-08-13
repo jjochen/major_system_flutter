@@ -9,6 +9,34 @@ void main() {
     const value = 42;
     const mainWord = 'main-word';
 
+    test('instantiates without crashing', () {
+      expect(
+        const Number(
+          id: id,
+          numberOfDigits: numberOfDigits,
+          value: value,
+          mainWord: mainWord,
+        ),
+        isNotNull,
+      );
+    });
+
+    test('transient constructor', () {
+      const number = Number.transient(
+        numberOfDigits: numberOfDigits,
+        value: value,
+        mainWord: mainWord,
+      );
+      expect(
+        number,
+        isNotNull,
+      );
+      expect(
+        number.id,
+        '',
+      );
+    });
+
     test('uses value equality', () {
       expect(
         const Number(

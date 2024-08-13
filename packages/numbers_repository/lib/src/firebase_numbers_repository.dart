@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:numbers_repository/numbers_repository.dart';
@@ -28,6 +29,16 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
+  Future<bool> hasNumber(Number number) async {
+    final snapshot = await _numbersCollectionRef()
+        .where('number_of_digits', isEqualTo: number.numberOfDigits)
+        .where('value', isEqualTo: number.value)
+        .limit(1)
+        .get();
+    return snapshot.docs.isNotEmpty;
+  }
+
+  @override
   Future<Number?> getNumberWithId(String id) async {
     final snapshot = await _numbersCollectionRef().doc(id).get();
     return snapshot.toNumberOrNull();
@@ -39,6 +50,30 @@ class FirebaseNumbersRepository implements NumbersRepository {
       number.toEntity().getDocumentData(),
     );
     return documentReference.id;
+  }
+
+  @override
+  Future<void> addMissingNumbers({required int maximumNumberOfDigits}) async {
+    final batch = firestore.batch();
+    for (var numberOfDigits = 1;
+        numberOfDigits <= maximumNumberOfDigits;
+        numberOfDigits++) {
+      for (var value = 0; value < pow(10, numberOfDigits); value++) {
+        final number = Number.transient(
+          numberOfDigits: numberOfDigits,
+          value: value,
+        );
+
+        final exists = await hasNumber(number);
+        if (!exists) {
+          batch.set(
+            _numbersCollectionRef().doc(),
+            number.toEntity().getDocumentData(),
+          );
+        }
+      }
+    }
+    return batch.commit();
   }
 
   @override
