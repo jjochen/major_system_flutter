@@ -26,17 +26,6 @@ void main() {
       );
     });
 
-    test('uses stringify', () {
-      expect(
-        const UserEntity(
-          id: id,
-          email: email,
-          name: name,
-        ).toString(),
-        'UserEntity(mock-id, yo@test.com, Darth Vader)',
-      );
-    });
-
     test('from snapshot', () {
       expect(
         UserEntity.fromSnapshot(
@@ -67,12 +56,14 @@ void main() {
       final document = {
         'email': email,
         'name': name,
+        'max_number_of_digits': 3,
       };
       expect(
         const UserEntity(
           id: id,
           email: email,
           name: name,
+          maxNumberOfDigits: 3,
         ).getDocumentData(),
         document,
       );

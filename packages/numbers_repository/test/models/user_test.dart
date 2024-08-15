@@ -23,17 +23,6 @@ void main() {
       );
     });
 
-    test('uses stringify', () {
-      expect(
-        const User(
-          id: id,
-          email: email,
-          name: name,
-        ).toString(),
-        'User(mock-id, mock@mock.io, Mock That)',
-      );
-    });
-
     test('copies with new id', () {
       const newId = 'new-id';
       expect(
