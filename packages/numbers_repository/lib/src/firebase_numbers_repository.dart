@@ -14,6 +14,21 @@ class FirebaseNumbersRepository implements NumbersRepository {
   final String userId;
   final FirebaseFirestore firestore;
 
+  Future<void> setMaxNumberOfDigits(int maxNumberOfDigits) {
+    return _userRef().set(
+      UserEntity.getUpdateData(
+        maxNumberOfDigits: () => maxNumberOfDigits,
+      ),
+      SetOptions(merge: true),
+    );
+  }
+
+  Stream<int> watchMaxNumberOfDigits() {
+    return _userRef().snapshots().map(
+          (snapshot) => snapshot.toUser().maxNumberOfDigits,
+        );
+  }
+
   @override
   Stream<List<Number>> watchNumbers() {
     return _numbersCollectionRef().snapshots().map(
@@ -139,8 +154,11 @@ class FirebaseNumbersRepository implements NumbersRepository {
     return _wordRef(word, number: number).delete();
   }
 
+  DocumentReference<Map<String, dynamic>> _userRef() =>
+      firestore.collection('users').doc(userId);
+
   CollectionReference<Map<String, dynamic>> _numbersCollectionRef() =>
-      firestore.collection('users').doc(userId).collection('numbers');
+      _userRef().collection('numbers');
 
   DocumentReference<Map<String, dynamic>> _numberRef(Number number) =>
       _numbersCollectionRef().doc(number.id);
@@ -158,6 +176,14 @@ class FirebaseNumbersRepository implements NumbersRepository {
 }
 
 extension _SnapshotConverter on DocumentSnapshot<Map<String, dynamic>> {
+  User toUser() {
+    final entity = UserEntity.fromSnapshot(
+      id: id,
+      data: data(),
+    );
+    return User.fromEntity(entity);
+  }
+
   Number toNumber() {
     final entity = NumberEntity.fromSnapshot(
       id: id,

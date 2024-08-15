@@ -44,7 +44,7 @@ class NumberEntity extends Equatable {
   static Map<String, Object?> getUpdateData({
     int Function()? numberOfDigits,
     int Function()? value,
-    String Function()? mainWord,
+    String? Function()? mainWord,
   }) {
     return {
       if (numberOfDigits != null) _Key.numberOfDigits: numberOfDigits(),
