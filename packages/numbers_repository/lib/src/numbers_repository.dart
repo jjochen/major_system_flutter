@@ -3,6 +3,10 @@ import 'dart:async';
 import 'package:numbers_repository/numbers_repository.dart';
 
 abstract class NumbersRepository {
+  Future<void> setMaxNumberOfDigits(int maxNumberOfDigits);
+
+  Stream<int> watchMaxNumberOfDigits();
+
   Stream<List<Number>> watchNumbers();
 
   Stream<Number?> watchNumber(Number number);

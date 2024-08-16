@@ -14,6 +14,7 @@ class FirebaseNumbersRepository implements NumbersRepository {
   final String userId;
   final FirebaseFirestore firestore;
 
+  @override
   Future<void> setMaxNumberOfDigits(int maxNumberOfDigits) {
     return _userRef().set(
       UserEntity.getUpdateData(
@@ -23,6 +24,7 @@ class FirebaseNumbersRepository implements NumbersRepository {
     );
   }
 
+  @override
   Stream<int> watchMaxNumberOfDigits() {
     return _userRef().snapshots().map(
           (snapshot) => snapshot.toUser().maxNumberOfDigits,
