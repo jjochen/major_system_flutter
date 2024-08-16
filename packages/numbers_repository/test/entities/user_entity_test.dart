@@ -6,9 +6,12 @@ void main() {
     const id = 'mock-id';
     const email = 'yo@test.com';
     const name = 'Darth Vader';
+    const maxNumberOfDigits = 3;
+
     const snapshotData = {
       'email': email,
       'name': name,
+      'max_number_of_digits': maxNumberOfDigits,
     };
 
     test('uses name equality', () {
@@ -17,11 +20,81 @@ void main() {
           id: id,
           email: email,
           name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
         ),
         const UserEntity(
           id: id,
           email: email,
           name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
+        ),
+      );
+
+      expect(
+        const UserEntity(
+          id: id,
+          email: email,
+          name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
+        ),
+        isNot(
+          const UserEntity(
+            id: 'different-id',
+            email: email,
+            name: name,
+            maxNumberOfDigits: maxNumberOfDigits,
+          ),
+        ),
+      );
+
+      expect(
+        const UserEntity(
+          id: id,
+          email: email,
+          name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
+        ),
+        isNot(
+          const UserEntity(
+            id: id,
+            email: 'different-email',
+            name: name,
+            maxNumberOfDigits: maxNumberOfDigits,
+          ),
+        ),
+      );
+
+      expect(
+        const UserEntity(
+          id: id,
+          email: email,
+          name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
+        ),
+        isNot(
+          const UserEntity(
+            id: id,
+            email: email,
+            name: 'different-name',
+            maxNumberOfDigits: maxNumberOfDigits,
+          ),
+        ),
+      );
+
+      expect(
+        const UserEntity(
+          id: id,
+          email: email,
+          name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
+        ),
+        isNot(
+          const UserEntity(
+            id: id,
+            email: email,
+            name: name,
+            maxNumberOfDigits: 4,
+          ),
         ),
       );
     });
@@ -36,6 +109,7 @@ void main() {
           id: id,
           email: email,
           name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
         ),
       );
     });
@@ -53,19 +127,14 @@ void main() {
     });
 
     test('get document data', () {
-      final document = {
-        'email': email,
-        'name': name,
-        'max_number_of_digits': 3,
-      };
       expect(
         const UserEntity(
           id: id,
           email: email,
           name: name,
-          maxNumberOfDigits: 3,
+          maxNumberOfDigits: maxNumberOfDigits,
         ).getDocumentData(),
-        document,
+        snapshotData,
       );
     });
   });
