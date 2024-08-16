@@ -52,28 +52,47 @@ void main() {
       );
     });
 
-    group('renders', () {
-      testWidgets('logout button', (tester) async {
-        await tester.pumpWidget(buildFrame());
-        await tester.pumpAndSettle();
-        expect(find.byKey(logoutButtonKey), findsOneWidget);
-      });
-
-      testWidgets('max number of digits list tile', (tester) async {
+    group('Max Number of Digits List Tile', () {
+      testWidgets('renders', (tester) async {
         await tester.pumpWidget(buildFrame());
         await tester.pumpAndSettle();
         expect(find.byKey(maxNumberOfDigitsButtonKey), findsOneWidget);
       });
 
-      testWidgets('attributions button', (tester) async {
+      testWidgets('does nothing for now when pressed', (tester) async {
+        // TODO(jjochen): Adjust test when functionality is implemented
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(maxNumberOfDigitsButtonKey));
+        await tester.pumpAndSettle();
+        expect(find.byKey(maxNumberOfDigitsButtonKey), findsOneWidget);
+      });
+    });
+
+    group('Attributions List Tile', () {
+      testWidgets('renders', (tester) async {
         await tester.pumpWidget(buildFrame());
         await tester.pumpAndSettle();
         expect(find.byKey(attributionsButtonKey), findsOneWidget);
       });
+
+      testWidgets('navigates to AttributionsPage when pressed', (tester) async {
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(attributionsButtonKey));
+        await tester.pumpAndSettle();
+        expect(find.byType(AttributionsPage), findsOneWidget);
+      });
     });
 
-    group('calls', () {
-      testWidgets('AuthenticationLogoutRequested when logout is pressed',
+    group('Logout List Tile', () {
+      testWidgets('renders', (tester) async {
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
+        expect(find.byKey(logoutButtonKey), findsOneWidget);
+      });
+
+      testWidgets('calls AuthenticationLogoutRequested when pressed',
           (tester) async {
         await tester.pumpWidget(buildFrame());
         await tester.pumpAndSettle();
@@ -81,17 +100,6 @@ void main() {
         verify(
           () => authenticationBloc.add(AuthenticationLogoutRequested()),
         ).called(1);
-      });
-    });
-
-    group('navigates', () {
-      testWidgets('to Attributions when attributions list tile is pressed',
-          (tester) async {
-        await tester.pumpWidget(buildFrame());
-        await tester.pumpAndSettle();
-        await tester.tap(find.byKey(attributionsButtonKey));
-        await tester.pumpAndSettle();
-        expect(find.byType(AttributionsPage), findsOneWidget);
       });
     });
   });
