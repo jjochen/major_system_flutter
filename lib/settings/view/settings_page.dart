@@ -21,18 +21,18 @@ class SettingsPage extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
+            key: const Key('settingsPage_maxNumberOfDigits_listTile'),
+            leading: const Icon(Icons.numbers_outlined),
+            title: const Text('Maximum number of digits'),
+            onTap: () {},
+          ),
+          ListTile(
             key: const Key('settingsPage_attributions_listTile'),
             leading: const Icon(Icons.info_outlined),
             title: const Text('Attributions'),
             trailing: const Icon(Icons.chevron_right_outlined),
             onTap: () =>
                 Navigator.of(context).push<void>(AttributionsPage.route()),
-          ),
-          ListTile(
-            key: const Key('settingsPage_maxNumberOfDigits_listTile'),
-            leading: const Icon(Icons.numbers_outlined),
-            title: const Text('Maximum number of digits'),
-            onTap: () {},
           ),
           ListTile(
             // TODO(jjochen): Do not show if user is anonymous
