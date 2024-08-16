@@ -7,6 +7,7 @@ void main() {
     const id = 'mock-id';
     const email = 'mock@mock.io';
     const name = 'Mock That';
+    const maxNumberOfDigits = 3;
 
     test('uses name equality', () {
       expect(
@@ -14,11 +15,81 @@ void main() {
           id: id,
           email: email,
           name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
         ),
         const User(
           id: id,
           email: email,
           name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
+        ),
+      );
+
+      expect(
+        const User(
+          id: id,
+          email: email,
+          name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
+        ),
+        isNot(
+          const User(
+            id: 'different-id',
+            email: email,
+            name: name,
+            maxNumberOfDigits: maxNumberOfDigits,
+          ),
+        ),
+      );
+
+      expect(
+        const User(
+          id: id,
+          email: email,
+          name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
+        ),
+        isNot(
+          const User(
+            id: id,
+            email: 'different-email',
+            name: name,
+            maxNumberOfDigits: maxNumberOfDigits,
+          ),
+        ),
+      );
+
+      expect(
+        const User(
+          id: id,
+          email: email,
+          name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
+        ),
+        isNot(
+          const User(
+            id: id,
+            email: email,
+            name: 'different-name',
+            maxNumberOfDigits: maxNumberOfDigits,
+          ),
+        ),
+      );
+
+      expect(
+        const User(
+          id: id,
+          email: email,
+          name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
+        ),
+        isNot(
+          const User(
+            id: id,
+            email: email,
+            name: name,
+            maxNumberOfDigits: 4,
+          ),
         ),
       );
     });
@@ -99,17 +170,37 @@ void main() {
       );
     });
 
+    test('copies with new maxNumberOfDigits', () {
+      const newMaxNumberOfDigits = 4;
+      expect(
+        const User(
+          id: id,
+          email: email,
+          name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
+        ).copyWith(maxNumberOfDigits: () => newMaxNumberOfDigits),
+        const User(
+          id: id,
+          email: email,
+          name: name,
+          maxNumberOfDigits: newMaxNumberOfDigits,
+        ),
+      );
+    });
+
     test('model to entity', () {
       expect(
         const User(
           id: id,
           email: email,
           name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
         ).toEntity(),
         const UserEntity(
           id: id,
           email: email,
           name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
         ),
       );
     });
@@ -121,12 +212,14 @@ void main() {
             id: id,
             email: email,
             name: name,
+            maxNumberOfDigits: maxNumberOfDigits,
           ),
         ),
         const User(
           id: id,
           email: email,
           name: name,
+          maxNumberOfDigits: maxNumberOfDigits,
         ),
       );
     });
