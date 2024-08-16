@@ -45,6 +45,38 @@ void main() {
       fakeFirebaseFirestore.clearPersistence();
     });
 
+    group('setMaxNumberOfDigits', () {
+      test('sets max number of digits', () async {
+        await firebaseNumbersRepository.setMaxNumberOfDigits(2);
+
+        final result = await fakeFirebaseFirestore
+            .collection('users')
+            .doc(userId)
+            .get()
+            .then((snapshot) => snapshot.data());
+
+        expect(result, {'max_number_of_digits': 2});
+      });
+    });
+
+    group('watchMaxNumberOfDigits', () {
+      test('emits max number of digits', () async {
+        unawaited(
+          expectLater(
+            firebaseNumbersRepository.watchMaxNumberOfDigits(),
+            emitsInOrder([
+              0,
+              2,
+              5,
+            ]),
+          ),
+        );
+
+        await firebaseNumbersRepository.setMaxNumberOfDigits(2);
+        await firebaseNumbersRepository.setMaxNumberOfDigits(5);
+      });
+    });
+
     group('watchNumbers', () {
       test('emits empty list initially', () async {
         expect(
