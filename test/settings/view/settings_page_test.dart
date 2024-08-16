@@ -25,6 +25,8 @@ class MockUserInfo extends Mock implements UserInfo {
 void main() {
   const logoutButtonKey = Key('settingsPage_logout_listTile');
   const attributionsButtonKey = Key('settingsPage_attributions_listTile');
+  const maxNumberOfDigitsButtonKey =
+      Key('settingsPage_maxNumberOfDigits_listTile');
 
   group('SettingsPage', () {
     registerFallbackValue(const AuthenticationUnauthenticated());
@@ -55,6 +57,12 @@ void main() {
         await tester.pumpWidget(buildFrame());
         await tester.pumpAndSettle();
         expect(find.byKey(logoutButtonKey), findsOneWidget);
+      });
+
+      testWidgets('max number of digits list tile', (tester) async {
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
+        expect(find.byKey(maxNumberOfDigitsButtonKey), findsOneWidget);
       });
 
       testWidgets('attributions button', (tester) async {
