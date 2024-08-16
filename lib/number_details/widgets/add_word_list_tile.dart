@@ -16,7 +16,7 @@ class AddWordListTile extends StatelessWidget {
       textColor: foregroundColor,
       titleTextStyle: theme.textTheme.titleMedium,
       title: const Text('Add a new word'),
-      leading: const Icon(Icons.add_circle_outline),
+      leading: const Icon(Icons.add_circle_outlined),
       onTap: () async {
         final word = await _addWord(context);
         if (word == null) return;

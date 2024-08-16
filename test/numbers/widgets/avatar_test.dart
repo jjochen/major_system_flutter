@@ -37,7 +37,7 @@ void main() {
       final avatar = tester.widget<CircleAvatar>(find.byType(CircleAvatar));
       expect(avatar.backgroundImage, isNull);
       final icon = avatar.child as Icon?;
-      expect(icon?.icon, Icons.person_outline);
+      expect(icon?.icon, Icons.person_outlined);
       expect(icon?.size, 48);
     });
   });

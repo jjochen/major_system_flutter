@@ -14,7 +14,7 @@ class Avatar extends StatelessWidget {
       radius: _avatarSize,
       backgroundImage: photo != null ? NetworkImage(photo) : null,
       child: photo == null
-          ? const Icon(Icons.person_outline, size: _avatarSize)
+          ? const Icon(Icons.person_outlined, size: _avatarSize)
           : null,
     );
   }
