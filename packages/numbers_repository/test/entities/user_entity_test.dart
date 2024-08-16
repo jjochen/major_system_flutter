@@ -137,5 +137,20 @@ void main() {
         snapshotData,
       );
     });
+
+    test('get update data', () {
+      expect(
+        UserEntity.getUpdateData(
+          email: () => 'new-email',
+          name: () => 'new-name',
+          maxNumberOfDigits: () => 4,
+        ),
+        {
+          'email': 'new-email',
+          'name': 'new-name',
+          'max_number_of_digits': 4,
+        },
+      );
+    });
   });
 }
