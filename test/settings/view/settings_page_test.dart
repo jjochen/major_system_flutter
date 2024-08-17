@@ -6,21 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:major_system/attributions/attributions.dart';
-import 'package:major_system/authentication/authentication.dart';
+import 'package:major_system/settings/cubit/settings_cubit.dart';
 import 'package:major_system/settings/settings.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:numbers_repository/numbers_repository.dart';
 
-class MockAuthenticationBloc
-    extends MockBloc<AuthenticationEvent, AuthenticationState>
-    implements AuthenticationBloc {}
+import '../../app/view/app_test.dart';
 
-class MockUserInfo extends Mock implements UserInfo {
-  @override
-  String get email => 'test@gmail.com';
-
-  @override
-  String get id => '1234';
-}
+class MockSettingsCubit extends MockCubit<SettingsState>
+    implements SettingsCubit {}
 
 void main() {
   const logoutButtonKey = Key('settingsPage_logout_listTile');
@@ -29,26 +23,54 @@ void main() {
       Key('settingsPage_maxNumberOfDigits_listTile');
 
   group('SettingsPage', () {
-    registerFallbackValue(const AuthenticationUnauthenticated());
-    registerFallbackValue(AuthenticationLogoutRequested());
+    late AuthenticationRepository authenticationRepository;
+    late NumbersRepository numbersRepository;
 
-    late AuthenticationBloc authenticationBloc;
-    late UserInfo user;
-
-    Widget buildFrame() => BlocProvider<AuthenticationBloc>(
-          create: (context) => authenticationBloc,
-          child: MaterialApp(
-            home: SettingsPage(),
+    Widget buildFrame() => MaterialApp(
+          home: SettingsPage(
+            authenticationRepository: authenticationRepository,
+            numbersRepository: numbersRepository,
           ),
         );
 
     setUp(() {
-      authenticationBloc = MockAuthenticationBloc();
-      user = MockUserInfo();
-      whenListen<AuthenticationState>(
-        authenticationBloc,
-        Stream.fromIterable([AuthenticationAuthenticated(user)]),
-        initialState: AuthenticationUnauthenticated(),
+      authenticationRepository = MockAuthenticationRepository();
+      numbersRepository = MockNumbersRepository();
+    });
+
+    group('AppBar', () {
+      testWidgets('renders', (tester) async {
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
+        expect(find.text('Settings'), findsOneWidget);
+      });
+    });
+
+    group('SettingsBody', () {
+      testWidgets('renders', (tester) async {
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
+        expect(find.byType(SettingsBody), findsOneWidget);
+      });
+    });
+  });
+
+  group('SettingsBody', () {
+    late SettingsCubit settingsCubit;
+
+    Widget buildFrame() => BlocProvider<SettingsCubit>(
+          create: (context) => settingsCubit,
+          child: MaterialApp(
+            home: SettingsBody(),
+          ),
+        );
+
+    setUp(() {
+      settingsCubit = MockSettingsCubit();
+      whenListen<SettingsState>(
+        settingsCubit,
+        Stream.fromIterable([]),
+        initialState: SettingsState(maxNumberOfDigits: 2),
       );
     });
 
@@ -98,7 +120,7 @@ void main() {
         await tester.pumpAndSettle();
         await tester.tap(find.byKey(logoutButtonKey));
         verify(
-          () => authenticationBloc.add(AuthenticationLogoutRequested()),
+          () => settingsCubit.logOut(),
         ).called(1);
       });
     });
