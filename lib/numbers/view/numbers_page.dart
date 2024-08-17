@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/app/services/service_locator.dart';
 import 'package:major_system/numbers/numbers.dart';
-import 'package:major_system/settings/settings.dart';
+import 'package:major_system/settings/view/view.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
 class NumbersPage extends StatelessWidget {
@@ -20,28 +20,35 @@ class NumbersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Major System'),
-        actions: <Widget>[
-          IconButton(
-            key: const Key('homePage_settings_iconButton'),
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () =>
-                Navigator.of(context).push<void>(SettingsPage.route()),
-          ),
-        ],
+    return RepositoryProvider<NumbersRepository>(
+      create: (context) => FirebaseNumbersRepository(
+        userId: user.id,
+        firestore: getIt(),
       ),
-      body: RepositoryProvider<NumbersRepository>(
-        create: (context) => FirebaseNumbersRepository(
-          userId: user.id,
-          firestore: getIt(),
-        ),
-        child: BlocProvider(
-          create: (context) => NumbersBloc(
-            numbersRepository: context.read<NumbersRepository>(),
-          )..add(const LoadNumbers()),
-          child: const NumbersList(),
+      child: Builder(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: const Text('Major System'),
+            actions: <Widget>[
+              IconButton(
+                key: const Key('homePage_settings_iconButton'),
+                icon: const Icon(Icons.settings_outlined),
+                onPressed: () => Navigator.of(context).push<void>(
+                  SettingsPage.route(
+                    authenticationRepository:
+                        context.read<AuthenticationRepository>(),
+                    numbersRepository: context.read<NumbersRepository>(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          body: BlocProvider(
+            create: (context) => NumbersBloc(
+              numbersRepository: context.read<NumbersRepository>(),
+            )..add(const LoadNumbers()),
+            child: const NumbersList(),
+          ),
         ),
       ),
     );
