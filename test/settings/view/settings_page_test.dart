@@ -36,6 +36,10 @@ void main() {
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();
       numbersRepository = MockNumbersRepository();
+      when(() => authenticationRepository.logOut()).thenAnswer((_) async {});
+      when(() => numbersRepository.watchMaxNumberOfDigits()).thenAnswer(
+        (_) => Stream.empty(),
+      );
     });
 
     group('AppBar', () {
@@ -61,7 +65,9 @@ void main() {
     Widget buildFrame() => BlocProvider<SettingsCubit>(
           create: (context) => settingsCubit,
           child: MaterialApp(
-            home: SettingsBody(),
+            home: Scaffold(
+              body: SettingsBody(),
+            ),
           ),
         );
 
