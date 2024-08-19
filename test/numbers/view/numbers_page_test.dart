@@ -13,6 +13,9 @@ import 'package:major_system/numbers/numbers.dart';
 import 'package:major_system/settings/settings.dart';
 import 'package:mocktail/mocktail.dart';
 
+class MockAuthenticationRepository extends Mock
+    implements AuthenticationRepository {}
+
 class MockAuthenticationBloc
     extends MockBloc<AuthenticationEvent, AuthenticationState>
     implements AuthenticationBloc {}
@@ -38,13 +41,17 @@ void main() {
     registerFallbackValue(NumbersState());
     registerFallbackValue(LoadNumbers());
 
+    late AuthenticationRepository authenticationRepository;
     late AuthenticationBloc authenticationBloc;
     late UserInfo user;
 
-    Widget buildFrame() => BlocProvider<AuthenticationBloc>(
-          create: (context) => authenticationBloc,
-          child: MaterialApp(
-            home: NumbersPage(user: user),
+    Widget buildFrame() => RepositoryProvider<AuthenticationRepository>(
+          create: (context) => authenticationRepository,
+          child: BlocProvider<AuthenticationBloc>(
+            create: (context) => authenticationBloc,
+            child: MaterialApp(
+              home: NumbersPage(user: user),
+            ),
           ),
         );
 
@@ -53,6 +60,7 @@ void main() {
         FakeFirebaseFirestore.new,
       );
 
+      authenticationRepository = MockAuthenticationRepository();
       authenticationBloc = MockAuthenticationBloc();
       user = MockUserInfo();
       whenListen<AuthenticationState>(
