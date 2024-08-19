@@ -21,6 +21,10 @@ void main() {
   const attributionsButtonKey = Key('settingsPage_attributions_listTile');
   const maxNumberOfDigitsButtonKey =
       Key('settingsPage_maxNumberOfDigits_listTile');
+  const maxNumberOfDigitsDropdownButtonKey =
+      Key('settingsPage_maxNumberOfDigits_dropdownButton');
+  Key maxNumberOfDigitsDropdownKey(int index) =>
+      Key('settingsPage_maxNumberOfDigits_dropdownItem_$index');
 
   group('SettingsPage', () {
     late AuthenticationRepository authenticationRepository;
@@ -94,6 +98,30 @@ void main() {
         await tester.tap(find.byKey(maxNumberOfDigitsButtonKey));
         await tester.pumpAndSettle();
         expect(find.byKey(maxNumberOfDigitsButtonKey), findsOneWidget);
+      });
+
+      testWidgets('calls setMaxNumberOfDigits when dropdown value changes',
+          (tester) async {
+        await tester.pumpWidget(buildFrame());
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(maxNumberOfDigitsDropdownButtonKey));
+        await tester.pumpAndSettle();
+        expect(find.byKey(maxNumberOfDigitsDropdownKey(0)), findsOneWidget);
+        expect(
+          find.byKey(maxNumberOfDigitsDropdownKey(1)),
+          findsAtLeast(1),
+        ); // Why two?
+        expect(find.byKey(maxNumberOfDigitsDropdownKey(2)), findsOneWidget);
+        expect(find.byKey(maxNumberOfDigitsDropdownKey(3)), findsOneWidget);
+
+        await tester.tap(
+          find.byKey(maxNumberOfDigitsDropdownKey(2)),
+          warnIfMissed: false,
+        );
+        await tester.pumpAndSettle();
+        verify(
+          () => settingsCubit.setMaxNumberOfDigits(3),
+        ).called(1);
       });
     });
 

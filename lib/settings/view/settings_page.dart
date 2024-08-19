@@ -62,6 +62,7 @@ class SettingsBody extends StatelessWidget {
               leading: const Icon(Icons.numbers_outlined),
               title: const Text('Max number of digits'),
               trailing: DropdownButton<int>(
+                key: const Key('settingsPage_maxNumberOfDigits_dropdownButton'),
                 value: maxDigitsValue,
                 onChanged: (int? newValue) {
                   if (newValue == null) return;
@@ -70,6 +71,9 @@ class SettingsBody extends StatelessWidget {
                 items: List.generate(
                   4,
                   (index) => DropdownMenuItem<int>(
+                    key: Key(
+                      'settingsPage_maxNumberOfDigits_dropdownItem_$index',
+                    ),
                     value: index + 1,
                     child: Text('${index + 1}'),
                   ),
