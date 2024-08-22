@@ -17,7 +17,7 @@ abstract class NumbersRepository {
 
   Future<bool> hasNumber(Number number);
 
-  Future<void> addMissingNumbers({required int maximumNumberOfDigits});
+  Future<void> addMissingNumbers({required int maxNumberOfDigits});
 
   Future<void> updateNumber(Number number);
 

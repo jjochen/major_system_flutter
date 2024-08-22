@@ -1,4 +1,4 @@
-part of 'numbers_bloc.dart';
+part of 'numbers_cubit.dart';
 
 class NumbersState extends Equatable {
   const NumbersState({

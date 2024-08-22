@@ -70,10 +70,10 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
-  Future<void> addMissingNumbers({required int maximumNumberOfDigits}) async {
+  Future<void> addMissingNumbers({required int maxNumberOfDigits}) async {
     final batch = firestore.batch();
     for (var numberOfDigits = 1;
-        numberOfDigits <= maximumNumberOfDigits;
+        numberOfDigits <= maxNumberOfDigits;
         numberOfDigits++) {
       for (var value = 0; value < pow(10, numberOfDigits); value++) {
         final number = Number.transient(

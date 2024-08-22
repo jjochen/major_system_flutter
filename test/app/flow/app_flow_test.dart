@@ -38,14 +38,14 @@ class MockAuthenticationBloc
     extends MockBloc<AuthenticationEvent, AuthenticationState>
     implements AuthenticationBloc {}
 
-class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
-    implements NumbersBloc {}
+class MockNumbersCubit extends MockCubit<NumbersState>
+    implements NumbersCubit {}
 
 void main() {
   group('AppFlow', () {
     late AuthenticationBloc authenticationBloc;
     late AuthenticationRepository authenticationRepository;
-    late NumbersBloc numbersBloc;
+    late NumbersCubit numbersCubit;
 
     Widget buildFrame() {
       return MaterialApp(
@@ -56,7 +56,7 @@ void main() {
               BlocProvider<AuthenticationBloc>(
                 create: (context) => authenticationBloc,
               ),
-              BlocProvider<NumbersBloc>(create: (context) => numbersBloc),
+              BlocProvider<NumbersCubit>(create: (context) => numbersCubit),
             ],
             child: AppFlow(),
           ),
@@ -70,9 +70,9 @@ void main() {
       );
       authenticationBloc = MockAuthenticationBloc();
       authenticationRepository = MockAuthenticationRepository();
-      numbersBloc = MockNumbersBloc();
+      numbersCubit = MockNumbersCubit();
       whenListen(
-        numbersBloc,
+        numbersCubit,
         Stream<NumbersState>.empty(),
         initialState: NumbersState(),
       );

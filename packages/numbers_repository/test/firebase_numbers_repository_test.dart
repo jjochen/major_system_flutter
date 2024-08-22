@@ -183,7 +183,7 @@ void main() {
     group('addMissingNumbers', () {
       test('adds missing numbers up to 2 digits', () async {
         await firebaseNumbersRepository.addMissingNumbers(
-          maximumNumberOfDigits: 2,
+          maxNumberOfDigits: 2,
         );
 
         final result = await firebaseNumbersRepository.watchNumbers().first;
@@ -195,7 +195,7 @@ void main() {
         final newNumber = number.copyWith(id: () => newId);
 
         await firebaseNumbersRepository.addMissingNumbers(
-          maximumNumberOfDigits: 2,
+          maxNumberOfDigits: 2,
         );
 
         final result = await firebaseNumbersRepository.watchNumbers().first;
