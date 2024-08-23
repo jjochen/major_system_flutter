@@ -62,7 +62,7 @@ void main() {
         'should add a number to the repository',
         setUp: () {
           when(() => numbersRepository.addNewNumber(number)).thenAnswer(
-            (_) => Future<String>.value('new_id'),
+            (_) => Future<Number>.value(number),
           );
         },
         build: buildBloc,

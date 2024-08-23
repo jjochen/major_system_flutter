@@ -13,7 +13,7 @@ abstract class NumbersRepository {
 
   Future<Number?> getNumberWithId(String id);
 
-  Future<String> addNewNumber(Number number);
+  Future<Number> addNewNumber(Number number);
 
   Future<bool> hasNumber(Number number);
 
@@ -27,7 +27,7 @@ abstract class NumbersRepository {
 
   Future<Word?> getWordWithId(String id, {required Number number});
 
-  Future<String> addNewWord(Word word, {required Number number});
+  Future<Word> addNewWord(Word word, {required Number number});
 
   Future<void> updateWord(Word word, {required Number number});
 

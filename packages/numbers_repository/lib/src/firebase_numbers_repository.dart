@@ -62,11 +62,11 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
-  Future<String> addNewNumber(Number number) async {
+  Future<Number> addNewNumber(Number number) async {
     final documentReference = await _numbersCollectionRef().add(
       number.toEntity().getDocumentData(),
     );
-    return documentReference.id;
+    return documentReference.get().then((doc) => doc.toNumber());
   }
 
   @override
@@ -119,11 +119,11 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
-  Future<String> addNewWord(Word word, {required Number number}) async {
+  Future<Word> addNewWord(Word word, {required Number number}) async {
     final documentReference = await _wordsCollectionRef(number).add(
       word.toEntity().getDocumentData(),
     );
-    return documentReference.id;
+    return documentReference.get().then((doc) => doc.toWord());
   }
 
   @override

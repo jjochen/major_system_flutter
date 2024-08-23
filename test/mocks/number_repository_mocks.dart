@@ -36,7 +36,7 @@ class MockNumbersRepository extends Mock implements NumbersRepository {
     when(
       () => addNewWord(any(), number: any(named: 'number')),
     ).thenAnswer(
-      (_) => Future.value('1'),
+      (_) => Future.value(word1),
     );
   }
 }
