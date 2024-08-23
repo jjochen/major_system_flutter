@@ -46,7 +46,7 @@ class NumbersPage extends StatelessWidget {
           body: BlocProvider(
             create: (context) => NumbersCubit(
               numbersRepository: context.read<NumbersRepository>(),
-            )..loadNumbers(),
+            )..initialize(),
             child: const NumbersList(),
           ),
         ),

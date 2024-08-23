@@ -14,11 +14,21 @@ class NumbersCubit extends Cubit<NumbersState> {
 
   final NumbersRepository _numbersRepository;
   StreamSubscription<List<Number>>? _numbersSubscription;
+  StreamSubscription<int>? _maxNumberOfDigitsSubscription;
 
-  Future<void> loadNumbers() async {
+  Future<void> initialize() async {
+    // TODO(jjochen): needs testing
+    await _maxNumberOfDigitsSubscription?.cancel();
+    _maxNumberOfDigitsSubscription = _numbersRepository
+        .watchMaxNumberOfDigits()
+        .listen(maxNumberOfDigitsUpdated);
+  }
+
+  Future<void> reloadNumbers() async {
     await _numbersSubscription?.cancel();
-    _numbersSubscription =
-        _numbersRepository.watchNumbers().listen(numbersUpdated);
+    _numbersSubscription = _numbersRepository
+        .watchNumbers(maxNumberOfDigits: state.maxNumberOfDigits)
+        .listen(numbersUpdated);
   }
 
   Future<void> addNumber(Number number) async {
@@ -42,9 +52,26 @@ class NumbersCubit extends Cubit<NumbersState> {
     );
   }
 
+  Future<void> maxNumberOfDigitsUpdated(int maxNumberOfDigits) async {
+    emit(
+      state.copyWith(
+        maxNumberOfDigits: () => maxNumberOfDigits,
+      ),
+    );
+
+    // TODO(jjochen): does not work correctly
+    await reloadNumbers();
+
+    // TODO(jjochen): is this being called when the app starts?
+    await _numbersRepository.addMissingNumbers(
+      maxNumberOfDigits: maxNumberOfDigits,
+    );
+  }
+
   @override
   Future<void> close() async {
     await _numbersSubscription?.cancel();
+    await _maxNumberOfDigitsSubscription?.cancel();
     return super.close();
   }
 }

@@ -32,9 +32,9 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
-  Stream<List<Number>> watchNumbers() {
+  Stream<List<Number>> watchNumbers({required int maxNumberOfDigits}) {
     return _numbersCollectionRef()
-        // .where('number_of_digits', isLessThan: maxNumberOfDigits)
+        .where('number_of_digits', isLessThanOrEqualTo: maxNumberOfDigits)
         .orderBy('number_of_digits')
         .orderBy('value')
         .snapshots()

@@ -14,10 +14,12 @@ void main() {
       expect(
         NumbersState(
           numbers: [number1, number2],
+          maxNumberOfDigits: 2,
           loading: true,
         ),
         NumbersState(
           numbers: [number1, number2],
+          maxNumberOfDigits: 2,
           loading: true,
         ),
       );
@@ -27,11 +29,13 @@ void main() {
       expect(
         NumbersState(
           numbers: [number1],
+          maxNumberOfDigits: 2,
           loading: true,
         ),
         isNot(
           NumbersState(
             numbers: [number2],
+            maxNumberOfDigits: 2,
             loading: true,
           ),
         ),
@@ -42,12 +46,31 @@ void main() {
       expect(
         NumbersState(
           numbers: [number1, number2],
+          maxNumberOfDigits: 2,
           loading: true,
         ),
         isNot(
           NumbersState(
             numbers: [number1, number2],
+            maxNumberOfDigits: 2,
             loading: false,
+          ),
+        ),
+      );
+    });
+
+    test('should not be equal when maxNumberOfDigits is different', () {
+      expect(
+        NumbersState(
+          numbers: [number1, number2],
+          maxNumberOfDigits: 2,
+          loading: true,
+        ),
+        isNot(
+          NumbersState(
+            numbers: [number1, number2],
+            maxNumberOfDigits: 3,
+            loading: true,
           ),
         ),
       );
@@ -58,13 +81,16 @@ void main() {
         expect(
           NumbersState(
             numbers: [number1],
+            maxNumberOfDigits: 2,
             loading: true,
           ).copyWith(
             numbers: () => [number2],
+            maxNumberOfDigits: () => 3,
             loading: () => false,
           ),
           NumbersState(
             numbers: [number2],
+            maxNumberOfDigits: 3,
             loading: false,
           ),
         );
@@ -74,10 +100,12 @@ void main() {
         expect(
           NumbersState(
             numbers: [number1],
+            maxNumberOfDigits: 2,
             loading: true,
           ).copyWith(),
           NumbersState(
             numbers: [number1],
+            maxNumberOfDigits: 2,
             loading: true,
           ),
         );

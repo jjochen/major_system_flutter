@@ -7,7 +7,7 @@ abstract class NumbersRepository {
 
   Stream<int> watchMaxNumberOfDigits();
 
-  Stream<List<Number>> watchNumbers();
+  Stream<List<Number>> watchNumbers({required int maxNumberOfDigits});
 
   Stream<Number?> watchNumber(Number number);
 

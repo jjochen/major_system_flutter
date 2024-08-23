@@ -30,15 +30,19 @@ void main() {
       );
     });
 
-    group('loadNumbers', () {
+    group('reloadNumbers', () {
       blocTest<NumbersCubit, NumbersState>(
         'should load numbers from the repository',
         setUp: () {
-          when(() => numbersRepository.watchNumbers()).thenAnswer(
+          when(
+            () => numbersRepository.watchNumbers(
+              maxNumberOfDigits: any(named: 'maxNumberOfDigits'),
+            ),
+          ).thenAnswer(
             (_) => Stream.value([number]),
           );
           when(() => numbersRepository.watchMaxNumberOfDigits()).thenAnswer(
-            (_) => Stream.value(2),
+            (_) => const Stream<int>.empty(),
           );
           when(
             () => numbersRepository.addMissingNumbers(
@@ -46,13 +50,15 @@ void main() {
             ),
           ).thenAnswer((_) => Future<void>.value());
         },
+        seed: () => const NumbersState(maxNumberOfDigits: 2),
         build: buildBloc,
-        act: (cubit) => cubit.loadNumbers(),
+        act: (cubit) => cubit.reloadNumbers(),
         expect: () => const <NumbersState>[
-          NumbersState(numbers: [number]),
+          NumbersState(numbers: [number], maxNumberOfDigits: 2),
         ],
         verify: (cubit) {
-          verify(() => numbersRepository.watchNumbers()).called(1);
+          verify(() => numbersRepository.watchNumbers(maxNumberOfDigits: 2))
+              .called(1);
         },
       );
     });

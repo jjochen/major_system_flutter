@@ -80,7 +80,7 @@ void main() {
     group('watchNumbers', () {
       test('emits empty list initially', () async {
         expect(
-          firebaseNumbersRepository.watchNumbers(),
+          firebaseNumbersRepository.watchNumbers(maxNumberOfDigits: 4),
           emits(<Number>[]),
         );
       });
@@ -91,7 +91,9 @@ void main() {
 
         unawaited(
           expectLater(
-            firebaseNumbersRepository.watchNumbers(),
+            firebaseNumbersRepository.watchNumbers(
+              maxNumberOfDigits: numberOfDigits,
+            ),
             emitsInOrder([
               [newNumber],
               [updatedNumber],
@@ -104,10 +106,39 @@ void main() {
         await firebaseNumbersRepository.deleteNumber(newNumber);
       });
 
+      test('emits number up to max number of digits', () async {
+        unawaited(
+          expectLater(
+            firebaseNumbersRepository
+                .watchNumbers(maxNumberOfDigits: 2)
+                .map((numbers) {
+              return numbers.map((number) => number.toString()).toList();
+            }),
+            emitsInOrder([
+              <String>[],
+              ['23'],
+              ['1', '23'],
+            ]),
+          ),
+        );
+
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 2, value: 23),
+        );
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 3, value: 5),
+        );
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 1, value: 1),
+        );
+      });
+
       test('emits numbers in correct order', () async {
         unawaited(
           expectLater(
-            firebaseNumbersRepository.watchNumbers().map((numbers) {
+            firebaseNumbersRepository
+                .watchNumbers(maxNumberOfDigits: 4)
+                .map((numbers) {
               return numbers.map((number) => number.toString()).toList();
             }),
             emitsInOrder([
@@ -207,7 +238,9 @@ void main() {
           maxNumberOfDigits: 2,
         );
 
-        final result = await firebaseNumbersRepository.watchNumbers().first;
+        final result = await firebaseNumbersRepository
+            .watchNumbers(maxNumberOfDigits: 3)
+            .first;
         expect(result, hasLength(110));
       });
 
@@ -218,7 +251,9 @@ void main() {
           maxNumberOfDigits: 2,
         );
 
-        final result = await firebaseNumbersRepository.watchNumbers().first;
+        final result = await firebaseNumbersRepository
+            .watchNumbers(maxNumberOfDigits: 3)
+            .first;
         expect(result, contains(newNumber));
         expect(result, hasLength(110));
       });

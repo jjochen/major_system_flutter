@@ -23,6 +23,7 @@ dependencies:
   google_fonts: ^6.2.1
   meta: ^1.3.0
   numbers_repository: any
+  rxdart: ^0.27.7
 
 dev_dependencies:
   bloc_test: ^9.1.0
