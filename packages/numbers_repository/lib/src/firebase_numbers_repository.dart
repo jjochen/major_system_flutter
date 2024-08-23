@@ -33,7 +33,12 @@ class FirebaseNumbersRepository implements NumbersRepository {
 
   @override
   Stream<List<Number>> watchNumbers() {
-    return _numbersCollectionRef().snapshots().map(
+    return _numbersCollectionRef()
+        // .where('number_of_digits', isLessThan: maxNumberOfDigits)
+        .orderBy('number_of_digits')
+        .orderBy('value')
+        .snapshots()
+        .map(
           (snapshot) => snapshot.docs.map((doc) => doc.toNumber()).toList(),
         );
   }

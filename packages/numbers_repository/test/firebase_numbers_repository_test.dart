@@ -103,6 +103,32 @@ void main() {
         await firebaseNumbersRepository.updateNumber(updatedNumber);
         await firebaseNumbersRepository.deleteNumber(newNumber);
       });
+
+      test('emits numbers in correct order', () async {
+        unawaited(
+          expectLater(
+            firebaseNumbersRepository.watchNumbers().map((numbers) {
+              return numbers.map((number) => number.toString()).toList();
+            }),
+            emitsInOrder([
+              <String>[],
+              ['001'],
+              ['2', '001'],
+              ['2', '4', '001'],
+            ]),
+          ),
+        );
+
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 3, value: 1),
+        );
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 1, value: 2),
+        );
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 1, value: 4),
+        );
+      });
     });
 
     group('watchNumber', () {
