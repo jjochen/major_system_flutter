@@ -21,12 +21,39 @@ void main() {
 
     setUp(() {
       numbersRepository = MockNumbersRepository();
+      when(
+        () => numbersRepository.addMissingNumbers(
+          maxNumberOfDigits: any(named: 'maxNumberOfDigits'),
+        ),
+      ).thenAnswer((_) => Future<void>.value());
+      when(() => numbersRepository.watchMaxNumberOfDigits()).thenAnswer(
+        (_) => const Stream.empty(),
+      );
+      when(
+        () => numbersRepository.watchNumbers(
+          maxNumberOfDigits: any(named: 'maxNumberOfDigits'),
+        ),
+      ).thenAnswer(
+        (_) => const Stream.empty(),
+      );
     });
 
     test('initial state should be NumbersState()', () {
       expect(
         buildBloc().state,
         equals(const NumbersState()),
+      );
+    });
+
+    group('initialize', () {
+      blocTest<NumbersCubit, NumbersState>(
+        'should initialize the cubit',
+        build: buildBloc,
+        act: (cubit) => cubit.initialize(),
+        expect: () => const <NumbersState>[],
+        verify: (cubit) {
+          verify(() => numbersRepository.watchMaxNumberOfDigits()).called(1);
+        },
       );
     });
 
@@ -41,14 +68,6 @@ void main() {
           ).thenAnswer(
             (_) => Stream.value([number]),
           );
-          when(() => numbersRepository.watchMaxNumberOfDigits()).thenAnswer(
-            (_) => const Stream<int>.empty(),
-          );
-          when(
-            () => numbersRepository.addMissingNumbers(
-              maxNumberOfDigits: any(named: 'maxNumberOfDigits'),
-            ),
-          ).thenAnswer((_) => Future<void>.value());
         },
         seed: () => const NumbersState(maxNumberOfDigits: 2),
         build: buildBloc,
@@ -122,6 +141,42 @@ void main() {
         expect: () => const <NumbersState>[
           NumbersState(numbers: [number]),
         ],
+      );
+    });
+
+    group('maxNumberOfDigitsUpdated', () {
+      blocTest<NumbersCubit, NumbersState>(
+        'should emit NumbersLoaded when maxNumberOfDigits is updated',
+        build: buildBloc,
+        seed: () => const NumbersState(maxNumberOfDigits: 3),
+        act: (bloc) => bloc.maxNumberOfDigitsUpdated(2),
+        expect: () => const <NumbersState>[
+          NumbersState(maxNumberOfDigits: 2),
+        ],
+      );
+
+      blocTest<NumbersCubit, NumbersState>(
+        'should reload numbers when maxNumberOfDigits is updated',
+        setUp: () {
+          when(
+            () => numbersRepository.watchNumbers(
+              maxNumberOfDigits: any(named: 'maxNumberOfDigits'),
+            ),
+          ).thenAnswer(
+            (_) => Stream.value([number]),
+          );
+        },
+        build: buildBloc,
+        seed: () => const NumbersState(maxNumberOfDigits: 3),
+        act: (bloc) => bloc.maxNumberOfDigitsUpdated(2),
+        expect: () => const <NumbersState>[
+          NumbersState(maxNumberOfDigits: 2),
+          NumbersState(maxNumberOfDigits: 2, numbers: [number]),
+        ],
+        verify: (bloc) {
+          verify(() => numbersRepository.watchNumbers(maxNumberOfDigits: 2))
+              .called(1);
+        },
       );
     });
   });
