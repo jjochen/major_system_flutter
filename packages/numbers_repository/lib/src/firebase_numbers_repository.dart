@@ -76,11 +76,13 @@ class FirebaseNumbersRepository implements NumbersRepository {
 
   @override
   Future<void> addMissingNumbers({required int maxNumberOfDigits}) async {
+    // TODO(jjochen): Takes to long to add all numbers. Optimize this.
     final batch = firestore.batch();
     for (var numberOfDigits = 1;
         numberOfDigits <= maxNumberOfDigits;
         numberOfDigits++) {
-      for (var value = 0; value < pow(10, numberOfDigits); value++) {
+      final numberOfDigitsLimit = pow(10, numberOfDigits);
+      for (var value = 0; value < numberOfDigitsLimit; value++) {
         final number = Number.transient(
           numberOfDigits: numberOfDigits,
           value: value,
