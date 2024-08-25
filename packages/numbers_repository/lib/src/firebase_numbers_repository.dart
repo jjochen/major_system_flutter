@@ -76,7 +76,11 @@ class FirebaseNumbersRepository implements NumbersRepository {
 
   @override
   Future<void> addMissingNumbers({required int maxNumberOfDigits}) async {
-    // TODO(jjochen): Takes to long to add all numbers. Optimize this.
+    final existingNumberSnapshots = await _numbersCollectionRef().get();
+    final existingNumberStrings = existingNumberSnapshots.docs
+        .map((doc) => doc.toNumber().toString())
+        .toSet();
+
     final batch = firestore.batch();
     for (var numberOfDigits = 1;
         numberOfDigits <= maxNumberOfDigits;
@@ -87,9 +91,9 @@ class FirebaseNumbersRepository implements NumbersRepository {
           numberOfDigits: numberOfDigits,
           value: value,
         );
-
-        final exists = await hasNumber(number);
-        if (!exists) {
+        if (existingNumberStrings.contains(number.toString())) {
+          continue;
+        } else {
           batch.set(
             _numbersCollectionRef().doc(),
             number.toEntity().getDocumentData(),
