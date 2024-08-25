@@ -17,7 +17,6 @@ class NumbersCubit extends Cubit<NumbersState> {
   StreamSubscription<int>? _maxNumberOfDigitsSubscription;
 
   Future<void> initialize() async {
-    // TODO(jjochen): needs testing
     await _maxNumberOfDigitsSubscription?.cancel();
     _maxNumberOfDigitsSubscription = _numbersRepository
         .watchMaxNumberOfDigits()
@@ -59,10 +58,8 @@ class NumbersCubit extends Cubit<NumbersState> {
       ),
     );
 
-    // TODO(jjochen): does not work correctly
     await reloadNumbers();
 
-    // TODO(jjochen): is this being called when the app starts?
     await _numbersRepository.addMissingNumbers(
       maxNumberOfDigits: maxNumberOfDigits,
     );
