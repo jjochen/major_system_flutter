@@ -112,7 +112,6 @@ void main() {
           findsAtLeast(1),
         ); // Why two?
         expect(find.byKey(maxNumberOfDigitsDropdownKey(2)), findsOneWidget);
-        expect(find.byKey(maxNumberOfDigitsDropdownKey(3)), findsOneWidget);
 
         await tester.tap(
           find.byKey(maxNumberOfDigitsDropdownKey(2)),

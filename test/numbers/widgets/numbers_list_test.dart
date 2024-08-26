@@ -9,8 +9,8 @@ import 'package:numbers_repository/numbers_repository.dart';
 
 import '../../mocks/number_repository_mocks.dart';
 
-class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
-    implements NumbersBloc {}
+class MockNumbersCubit extends MockCubit<NumbersState>
+    implements NumbersCubit {}
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
@@ -21,15 +21,15 @@ void main() {
   });
 
   group('Numbers Widget', () {
-    late NumbersBloc numbersBloc;
+    late NumbersCubit numbersCubit;
     late NumbersRepository numbersRepository;
 
     Widget buildFrame() => MaterialApp(
           home: Scaffold(
             body: RepositoryProvider<NumbersRepository>.value(
               value: numbersRepository,
-              child: BlocProvider<NumbersBloc>.value(
-                value: numbersBloc,
+              child: BlocProvider<NumbersCubit>.value(
+                value: numbersCubit,
                 child: const NumbersList(),
               ),
             ),
@@ -37,14 +37,14 @@ void main() {
         );
 
     setUp(() {
-      numbersBloc = MockNumbersBloc();
+      numbersCubit = MockNumbersCubit();
       numbersRepository = MockNumbersRepository();
     });
 
     testWidgets('renders ListView.builder when state is NumbersLoaded',
         (WidgetTester tester) async {
       whenListen(
-        numbersBloc,
+        numbersCubit,
         Stream<NumbersState>.fromIterable(
           const [NumbersState(numbers: numbers)],
         ),
@@ -62,7 +62,7 @@ void main() {
     testWidgets('pushes NumberDetailPage when NumberItem is tapped',
         (WidgetTester tester) async {
       whenListen(
-        numbersBloc,
+        numbersCubit,
         Stream<NumbersState>.fromIterable(
           [const NumbersState(numbers: numbers)],
         ),

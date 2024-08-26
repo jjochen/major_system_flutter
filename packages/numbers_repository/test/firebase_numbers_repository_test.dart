@@ -80,19 +80,20 @@ void main() {
     group('watchNumbers', () {
       test('emits empty list initially', () async {
         expect(
-          firebaseNumbersRepository.watchNumbers(),
+          firebaseNumbersRepository.watchNumbers(maxNumberOfDigits: 4),
           emits(<Number>[]),
         );
       });
 
       test('emits updated list of numbers', () async {
-        final newId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => newId);
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
         final updatedNumber = newNumber.copyWith(value: () => 42);
 
         unawaited(
           expectLater(
-            firebaseNumbersRepository.watchNumbers(),
+            firebaseNumbersRepository.watchNumbers(
+              maxNumberOfDigits: numberOfDigits,
+            ),
             emitsInOrder([
               [newNumber],
               [updatedNumber],
@@ -104,12 +105,66 @@ void main() {
         await firebaseNumbersRepository.updateNumber(updatedNumber);
         await firebaseNumbersRepository.deleteNumber(newNumber);
       });
+
+      test('emits number up to max number of digits', () async {
+        unawaited(
+          expectLater(
+            firebaseNumbersRepository
+                .watchNumbers(maxNumberOfDigits: 2)
+                .map((numbers) {
+              return numbers.map((number) => number.toString()).toList();
+            }),
+            emitsInOrder([
+              <String>[],
+              ['23'],
+              ['1', '23'],
+            ]),
+          ),
+        );
+
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 2, value: 23),
+        );
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 3, value: 5),
+        );
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 1, value: 1),
+        );
+      });
+
+      test('emits numbers in correct order', () async {
+        unawaited(
+          expectLater(
+            firebaseNumbersRepository
+                .watchNumbers(maxNumberOfDigits: 4)
+                .map((numbers) {
+              return numbers.map((number) => number.toString()).toList();
+            }),
+            emitsInOrder([
+              <String>[],
+              ['001'],
+              ['2', '001'],
+              ['2', '4', '001'],
+            ]),
+          ),
+        );
+
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 3, value: 1),
+        );
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 1, value: 2),
+        );
+        await firebaseNumbersRepository.addNewNumber(
+          Number.transient(numberOfDigits: 1, value: 4),
+        );
+      });
     });
 
     group('watchNumber', () {
       test('emits number', () async {
-        final newId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => newId);
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
 
         expect(
           firebaseNumbersRepository.watchNumber(newNumber),
@@ -118,8 +173,7 @@ void main() {
       });
 
       test('emits updated number when number is changed', () async {
-        final newId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => newId);
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
         final updatedNumber = newNumber.copyWith(value: () => 100);
 
         expect(
@@ -134,8 +188,7 @@ void main() {
       });
 
       test('emits null when number is deleted', () async {
-        final newId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => newId);
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
 
         expect(
           firebaseNumbersRepository.watchNumber(newNumber),
@@ -165,11 +218,10 @@ void main() {
 
     group('getNumberWithId', () {
       test('returns correct number', () async {
-        final newId = await firebaseNumbersRepository.addNewNumber(number);
-        final result = await firebaseNumbersRepository.getNumberWithId(newId);
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
         expect(
-          result,
-          number.copyWith(id: () => newId),
+          newNumber,
+          number.copyWith(id: () => newNumber.id),
         );
       });
 
@@ -183,22 +235,25 @@ void main() {
     group('addMissingNumbers', () {
       test('adds missing numbers up to 2 digits', () async {
         await firebaseNumbersRepository.addMissingNumbers(
-          maximumNumberOfDigits: 2,
+          maxNumberOfDigits: 2,
         );
 
-        final result = await firebaseNumbersRepository.watchNumbers().first;
+        final result = await firebaseNumbersRepository
+            .watchNumbers(maxNumberOfDigits: 3)
+            .first;
         expect(result, hasLength(110));
       });
 
       test('does not overwrite existing numbers', () async {
-        final newId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => newId);
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
 
         await firebaseNumbersRepository.addMissingNumbers(
-          maximumNumberOfDigits: 2,
+          maxNumberOfDigits: 2,
         );
 
-        final result = await firebaseNumbersRepository.watchNumbers().first;
+        final result = await firebaseNumbersRepository
+            .watchNumbers(maxNumberOfDigits: 3)
+            .first;
         expect(result, contains(newNumber));
         expect(result, hasLength(110));
       });
@@ -206,46 +261,36 @@ void main() {
 
     group('deleteNumber', () {
       test('removes number', () async {
-        final newId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => newId);
-        final intermediateResult =
-            await firebaseNumbersRepository.getNumberWithId(newId);
-        expect(
-          intermediateResult,
-          newNumber,
-        );
-
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
         await firebaseNumbersRepository.deleteNumber(newNumber);
-        final result = await firebaseNumbersRepository.getNumberWithId(newId);
+        final result =
+            await firebaseNumbersRepository.getNumberWithId(newNumber.id);
         expect(result, isNull);
       });
     });
 
     group('updateNumber', () {
       test('updates number', () async {
-        final newId = await firebaseNumbersRepository.addNewNumber(number);
-        final updatedNumber = number.copyWith(
-          id: () => newId,
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
+        final updatedNumber = newNumber.copyWith(
           value: () => 42,
         );
 
         await firebaseNumbersRepository.updateNumber(updatedNumber);
 
-        final result = await firebaseNumbersRepository.getNumberWithId(newId);
+        final result =
+            await firebaseNumbersRepository.getNumberWithId(newNumber.id);
         expect(result, updatedNumber);
       });
     });
 
     group('addWord', () {
       test('adds word for given number', () async {
-        final numberId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => numberId);
-
-        final wordId =
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
+        final newWord =
             await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-        final newWord = word.copyWith(id: () => wordId);
         final result = await firebaseNumbersRepository.getWordWithId(
-          wordId,
+          newWord.id,
           number: newNumber,
         );
 
@@ -255,12 +300,10 @@ void main() {
 
     group('getWordWithId', () {
       test('gets word for a given number', () async {
-        final numberId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => numberId);
-
-        final wordId =
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
+        final newWord =
             await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-        final newWord = word.copyWith(id: () => wordId);
+        final wordId = newWord.id;
         final result = await firebaseNumbersRepository.getWordWithId(
           wordId,
           number: newNumber,
@@ -270,9 +313,7 @@ void main() {
       });
 
       test('returns null when no word is found', () async {
-        final numberId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => numberId);
-
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
         final result = await firebaseNumbersRepository.getWordWithId(
           'non-existing-id',
           number: newNumber,
@@ -284,19 +325,11 @@ void main() {
 
     group('deleteWord', () {
       test('deletes word for given number', () async {
-        final numberId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => numberId);
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
 
-        final wordId =
+        final newWord =
             await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-        final newWord = word.copyWith(id: () => wordId);
-        final intermediateResult =
-            await firebaseNumbersRepository.getWordWithId(
-          wordId,
-          number: newNumber,
-        );
-        expect(intermediateResult, newWord);
-
+        final wordId = newWord.id;
         await firebaseNumbersRepository.deleteWord(newWord, number: newNumber);
         final result = await firebaseNumbersRepository.getWordWithId(
           wordId,
@@ -309,12 +342,10 @@ void main() {
 
     group('updateWord', () {
       test('updates word for given number', () async {
-        final numberId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => numberId);
-
-        final wordId =
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
+        final newWord =
             await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-        final newWord = word.copyWith(id: () => wordId);
+        final wordId = newWord.id;
         final updatedWord = newWord.copyWith(value: () => 'updated-word');
 
         await firebaseNumbersRepository.updateWord(
@@ -333,12 +364,10 @@ void main() {
 
     group('setWordAsMain', () {
       test('sets word as main for given number', () async {
-        final numberId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => numberId);
-
-        final wordId =
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
+        final newWord =
             await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-        final newWord = word.copyWith(id: () => wordId);
+        final wordId = newWord.id;
 
         await firebaseNumbersRepository.setWordAsMain(
           newWord,
@@ -364,11 +393,9 @@ void main() {
 
       test('words stream emits updated list of words for a given number',
           () async {
-        final newId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => newId);
-        final newWordId =
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
+        final newWord =
             await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-        final newWord = word.copyWith(id: () => newWordId);
         final updatedWord = newWord.copyWith(value: () => 'updated-word');
 
         unawaited(
@@ -400,16 +427,16 @@ void main() {
 
     group('setNewWordAsMain', () {
       test('sets new word as main', () async {
-        final numberId = await firebaseNumbersRepository.addNewNumber(number);
-        final newNumber = number.copyWith(id: () => numberId);
-        final newWordId =
+        final newNumber = await firebaseNumbersRepository.addNewNumber(number);
+        final newWord =
             await firebaseNumbersRepository.addNewWord(word, number: newNumber);
-        final newWord = word.copyWith(id: () => newWordId);
-        final mainWordId = await firebaseNumbersRepository.addNewWord(
+        final newWordId = newWord.id;
+
+        final newMainWord = await firebaseNumbersRepository.addNewWord(
           mainWord,
           number: newNumber,
         );
-        final newMainWord = mainWord.copyWith(id: () => mainWordId);
+        final mainWordId = newMainWord.id;
 
         await firebaseNumbersRepository.setWordAsMain(
           newWord,
@@ -417,7 +444,7 @@ void main() {
         );
 
         final result =
-            await firebaseNumbersRepository.getNumberWithId(numberId);
+            await firebaseNumbersRepository.getNumberWithId(newNumber.id);
         expect(result, newNumber.copyWith(mainWord: () => newWord.value));
 
         final mainWordResult = await firebaseNumbersRepository.getWordWithId(

@@ -44,9 +44,9 @@ class NumbersPage extends StatelessWidget {
             ],
           ),
           body: BlocProvider(
-            create: (context) => NumbersBloc(
+            create: (context) => NumbersCubit(
               numbersRepository: context.read<NumbersRepository>(),
-            )..add(const LoadNumbers()),
+            )..initialize(),
             child: const NumbersList(),
           ),
         ),

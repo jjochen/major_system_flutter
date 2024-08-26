@@ -5,6 +5,8 @@ import 'package:major_system/attributions/attributions.dart';
 import 'package:major_system/settings/cubit/settings_cubit.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
+const int _kMaxNumberOfDigits = 3;
+
 class SettingsPage extends StatelessWidget {
   const SettingsPage({
     required this.authenticationRepository,
@@ -69,7 +71,7 @@ class SettingsBody extends StatelessWidget {
                   context.read<SettingsCubit>().setMaxNumberOfDigits(newValue);
                 },
                 items: List.generate(
-                  4,
+                  _kMaxNumberOfDigits,
                   (index) => DropdownMenuItem<int>(
                     key: Key(
                       'settingsPage_maxNumberOfDigits_dropdownItem_$index',

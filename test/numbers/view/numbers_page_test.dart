@@ -20,8 +20,8 @@ class MockAuthenticationBloc
     extends MockBloc<AuthenticationEvent, AuthenticationState>
     implements AuthenticationBloc {}
 
-class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
-    implements NumbersBloc {}
+class MockNumbersCubit extends MockCubit<NumbersState>
+    implements NumbersCubit {}
 
 class MockUserInfo extends Mock implements UserInfo {
   @override
@@ -39,7 +39,6 @@ void main() {
     registerFallbackValue(AuthenticationLogoutRequested());
 
     registerFallbackValue(NumbersState());
-    registerFallbackValue(LoadNumbers());
 
     late AuthenticationRepository authenticationRepository;
     late AuthenticationBloc authenticationBloc;

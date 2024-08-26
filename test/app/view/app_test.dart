@@ -33,8 +33,8 @@ class MockAuthenticationBloc
     extends MockBloc<AuthenticationEvent, AuthenticationState>
     implements AuthenticationBloc {}
 
-class MockNumbersBloc extends MockBloc<NumbersEvent, NumbersState>
-    implements NumbersBloc {}
+class MockNumbersCubit extends MockCubit<NumbersState>
+    implements NumbersCubit {}
 
 void main() {
   group('App', () {
@@ -45,7 +45,6 @@ void main() {
     late AuthenticationRepository authenticationRepository;
 
     registerFallbackValue(const NumbersState());
-    registerFallbackValue(const NumbersUpdated([]));
 
     setUp(() {
       authenticationRepository = MockAuthenticationRepository();

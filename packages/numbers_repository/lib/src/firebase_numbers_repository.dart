@@ -32,8 +32,13 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
-  Stream<List<Number>> watchNumbers() {
-    return _numbersCollectionRef().snapshots().map(
+  Stream<List<Number>> watchNumbers({required int maxNumberOfDigits}) {
+    return _numbersCollectionRef()
+        .where('number_of_digits', isLessThanOrEqualTo: maxNumberOfDigits)
+        .orderBy('number_of_digits')
+        .orderBy('value')
+        .snapshots()
+        .map(
           (snapshot) => snapshot.docs.map((doc) => doc.toNumber()).toList(),
         );
   }
@@ -62,27 +67,33 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
-  Future<String> addNewNumber(Number number) async {
+  Future<Number> addNewNumber(Number number) async {
     final documentReference = await _numbersCollectionRef().add(
       number.toEntity().getDocumentData(),
     );
-    return documentReference.id;
+    return documentReference.get().then((doc) => doc.toNumber());
   }
 
   @override
-  Future<void> addMissingNumbers({required int maximumNumberOfDigits}) async {
+  Future<void> addMissingNumbers({required int maxNumberOfDigits}) async {
+    final existingNumberSnapshots = await _numbersCollectionRef().get();
+    final existingNumberStrings = existingNumberSnapshots.docs
+        .map((doc) => doc.toNumber().toString())
+        .toSet();
+
     final batch = firestore.batch();
     for (var numberOfDigits = 1;
-        numberOfDigits <= maximumNumberOfDigits;
+        numberOfDigits <= maxNumberOfDigits;
         numberOfDigits++) {
-      for (var value = 0; value < pow(10, numberOfDigits); value++) {
+      final numberOfDigitsLimit = pow(10, numberOfDigits);
+      for (var value = 0; value < numberOfDigitsLimit; value++) {
         final number = Number.transient(
           numberOfDigits: numberOfDigits,
           value: value,
         );
-
-        final exists = await hasNumber(number);
-        if (!exists) {
+        if (existingNumberStrings.contains(number.toString())) {
+          continue;
+        } else {
           batch.set(
             _numbersCollectionRef().doc(),
             number.toEntity().getDocumentData(),
@@ -119,11 +130,11 @@ class FirebaseNumbersRepository implements NumbersRepository {
   }
 
   @override
-  Future<String> addNewWord(Word word, {required Number number}) async {
+  Future<Word> addNewWord(Word word, {required Number number}) async {
     final documentReference = await _wordsCollectionRef(number).add(
       word.toEntity().getDocumentData(),
     );
-    return documentReference.id;
+    return documentReference.get().then((doc) => doc.toWord());
   }
 
   @override

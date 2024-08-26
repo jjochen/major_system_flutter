@@ -7,17 +7,17 @@ abstract class NumbersRepository {
 
   Stream<int> watchMaxNumberOfDigits();
 
-  Stream<List<Number>> watchNumbers();
+  Stream<List<Number>> watchNumbers({required int maxNumberOfDigits});
 
   Stream<Number?> watchNumber(Number number);
 
   Future<Number?> getNumberWithId(String id);
 
-  Future<String> addNewNumber(Number number);
+  Future<Number> addNewNumber(Number number);
 
   Future<bool> hasNumber(Number number);
 
-  Future<void> addMissingNumbers({required int maximumNumberOfDigits});
+  Future<void> addMissingNumbers({required int maxNumberOfDigits});
 
   Future<void> updateNumber(Number number);
 
@@ -27,7 +27,7 @@ abstract class NumbersRepository {
 
   Future<Word?> getWordWithId(String id, {required Number number});
 
-  Future<String> addNewWord(Word word, {required Number number});
+  Future<Word> addNewWord(Word word, {required Number number});
 
   Future<void> updateWord(Word word, {required Number number});
 

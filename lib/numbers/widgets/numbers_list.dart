@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:major_system/number_details/view/number_details_page.dart';
-import 'package:major_system/numbers/bloc/numbers_bloc.dart';
+import 'package:major_system/numbers/cubit/numbers_cubit.dart';
 import 'package:major_system/numbers/widgets/widgets.dart';
 import 'package:numbers_repository/numbers_repository.dart';
 
@@ -10,7 +10,7 @@ class NumbersList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NumbersBloc, NumbersState>(
+    return BlocBuilder<NumbersCubit, NumbersState>(
       builder: (context, state) {
         final numbers = state.numbers;
         return ListView.separated(

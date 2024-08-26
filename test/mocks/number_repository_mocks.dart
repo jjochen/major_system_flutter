@@ -17,7 +17,9 @@ const word2 = Word(id: 'id-2', value: 'two');
 
 class MockNumbersRepository extends Mock implements NumbersRepository {
   MockNumbersRepository() {
-    when(watchNumbers).thenAnswer(
+    when(
+      () => watchNumbers(maxNumberOfDigits: any(named: 'maxNumberOfDigits')),
+    ).thenAnswer(
       (_) => const Stream.empty(),
     );
     when(() => watchNumber(any())).thenAnswer(
@@ -36,7 +38,7 @@ class MockNumbersRepository extends Mock implements NumbersRepository {
     when(
       () => addNewWord(any(), number: any(named: 'number')),
     ).thenAnswer(
-      (_) => Future.value('1'),
+      (_) => Future.value(word1),
     );
   }
 }
