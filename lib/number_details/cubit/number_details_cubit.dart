@@ -46,6 +46,11 @@ class NumberDetailsCubit extends Cubit<NumberDetailsState> {
         words: () => words,
       ),
     );
+
+    final hasMainWord = state.number?.mainWord != null;
+    if (!hasMainWord && words.isNotEmpty) {
+      selectMainWord(words.first);
+    }
   }
 
   void selectMainWord(Word word) {
