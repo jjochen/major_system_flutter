@@ -134,7 +134,13 @@ class FirebaseNumbersRepository implements NumbersRepository {
     final documentReference = await _wordsCollectionRef(number).add(
       word.toEntity().getDocumentData(),
     );
-    return documentReference.get().then((doc) => doc.toWord());
+    final insertedWord =
+        await documentReference.get().then((doc) => doc.toWord());
+    final hasMainWord = number.mainWord != null;
+    if (!hasMainWord) {
+      await setWordAsMain(insertedWord, number: number);
+    }
+    return insertedWord;
   }
 
   @override
