@@ -41,7 +41,7 @@ void main() {
       numbersRepository = MockNumbersRepository();
     });
 
-    testWidgets('renders ListView.builder when state is NumbersLoaded',
+    testWidgets('renders GridView when state is NumbersLoaded',
         (WidgetTester tester) async {
       whenListen(
         numbersCubit,
@@ -54,9 +54,8 @@ void main() {
       await tester.pumpWidget(buildFrame());
       await tester.pumpAndSettle();
 
-      expect(find.byType(ListView), findsOneWidget);
+      expect(find.byType(GridView), findsOneWidget);
       expect(find.byType(NumberItem), findsNWidgets(numbers.length));
-      expect(find.byType(Divider), findsOneWidget);
     });
 
     testWidgets('pushes NumberDetailPage when NumberItem is tapped',

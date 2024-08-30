@@ -13,8 +13,14 @@ class NumbersList extends StatelessWidget {
     return BlocBuilder<NumbersCubit, NumbersState>(
       builder: (context, state) {
         final numbers = state.numbers;
-        return ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 24),
+        return GridView.builder(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            mainAxisSpacing: 4,
+            crossAxisSpacing: 4,
+            childAspectRatio: 1.618,
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           itemCount: numbers.length,
           itemBuilder: (context, index) {
             final number = numbers[index];
@@ -33,9 +39,6 @@ class NumbersList extends StatelessWidget {
                 );
               },
             );
-          },
-          separatorBuilder: (context, index) {
-            return const Divider();
           },
         );
       },

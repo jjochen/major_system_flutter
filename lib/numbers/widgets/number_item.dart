@@ -28,6 +28,13 @@ class NumberItem extends StatelessWidget {
               subtitle,
               style: textTheme.bodyMedium,
             ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+        side: const BorderSide(
+          color: Colors.grey,
+          width: 0.5,
+        ),
+      ),
     );
   }
 }
